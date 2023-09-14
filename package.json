@@ -36,11 +36,6 @@
     "last 2 versions",
     "not dead"
   ],
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "pnpm lint"
-    ]
-  },
   "optionalDependencies": {
     "@commitlint/cli": "^17.7.1",
     "@commitlint/config-conventional": "^17.7.0",
