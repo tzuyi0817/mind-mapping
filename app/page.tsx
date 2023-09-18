@@ -1,3 +1,13 @@
+import { Button } from '@/components/ui/button';
+import Navigator from '@/components/index/Navigator';
+import Toolbar from '@/components/index/Toolbar';
+
 export default function Page() {
-  return <h1>Hello, Next.js!</h1>
+  return (
+    <>
+      <Button variant="outline">Button</Button>
+      <Toolbar />
+      <Navigator />
+    </>
+  );
 }
