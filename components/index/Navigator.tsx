@@ -1,5 +1,5 @@
 function Navigator() {
-  return <header>123</header>;
+  return <header></header>;
 }
 
 export default Navigator;

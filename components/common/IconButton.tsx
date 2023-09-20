@@ -12,6 +12,11 @@ import {
   GitCommit,
   GitPullRequest,
   Trello,
+  FilePlus,
+  FolderOpen,
+  FolderInput,
+  FolderOutput,
+  Save,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { Button } from '@/components/ui/button';
@@ -30,6 +35,11 @@ const ICON_MAP = {
   GitCommit,
   GitPullRequest,
   Trello,
+  FilePlus,
+  FolderOpen,
+  FolderInput,
+  FolderOutput,
+  Save,
 } as const;
 
 interface Props {
@@ -51,7 +61,7 @@ function IconButton({ icon, children, disabled = false }: Props) {
       >
         <Comp size={16} />
       </Button>
-      <p className={clsx('text-xs', disabled && 'opacity-50')}>{children}</p>
+      <p className={clsx('text-xs whitespace-nowrap', disabled && 'opacity-50')}>{children}</p>
     </div>
   );
 }
