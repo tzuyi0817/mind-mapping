@@ -56,7 +56,7 @@ function IconButton({ icon, children, disabled = false }: Props) {
       <Button
         variant="outline"
         size="icon"
-        className="w-full min-w-[40px]"
+        className="w-full min-w-[36px] h-9"
         disabled={disabled}
       >
         <Comp size={16} />
