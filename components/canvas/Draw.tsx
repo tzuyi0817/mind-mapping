@@ -2,6 +2,7 @@
 
 import { useRef, useEffect } from 'react';
 import MindMapping from '@/mindMapping';
+import { DEFAULT_MAPPING } from '@/mindMapping/configs/defaultMapping';
 
 function Draw() {
   const container = useRef(null);
@@ -12,6 +13,7 @@ function Draw() {
 
     mindMapping.current = new MindMapping({
       element: container.current,
+      data: DEFAULT_MAPPING,
     });
   }, []);
 

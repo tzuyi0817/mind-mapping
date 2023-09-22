@@ -1,5 +1,6 @@
-import { SVG, type Svg } from '@svgdotjs/svg.js';
-import type { MindMappingOptions } from '@/mindMapping/types/options';
+import { SVG, type Svg, type G } from '@svgdotjs/svg.js';
+import Renderer from './core/render/renderer';
+import type { MindMappingOptions } from './types/options';
 
 class MindMapping {
   options: MindMappingOptions;
@@ -8,6 +9,8 @@ class MindMapping {
   width: number;
   height: number;
   draw: Svg;
+  group: G;
+  renderer: Renderer;
 
   constructor(options: MindMappingOptions) {
     this.options = this.createOption(options);
@@ -20,6 +23,8 @@ class MindMapping {
     //   throw new Error('The width and height of the container element cannot be 0');
 
     this.draw = SVG().addTo(this.element).size(this.width, this.height);
+    this.group = this.draw.group();
+    this.renderer = new Renderer({ mindMapping: this });
   }
   createOption(options: MindMappingOptions) {
     return options;
