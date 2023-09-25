@@ -2,10 +2,11 @@ import { G } from '@svgdotjs/svg.js';
 import Renderer from '../../core/render/renderer';
 import MindMapping from '../../index';
 import Shape from './shape';
+import CreateNode from './createNode';
 import type { MindNodeOptions } from '../../types/options';
 import type { MappingBase } from '../../types/mapping';
 
-class MindNode {
+class MindNode extends CreateNode {
   nodeGroup: G | null = null;
 
   nodeData: MappingBase;
@@ -15,6 +16,7 @@ class MindNode {
   shape: Shape;
 
   constructor(options: MindNodeOptions) {
+    super();
     this.nodeData = options.data;
     this.renderer = options.renderer;
     this.mindMapping = options.mindMapping;
