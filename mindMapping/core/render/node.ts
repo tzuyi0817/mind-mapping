@@ -2,11 +2,12 @@ import { G } from '@svgdotjs/svg.js';
 import Renderer from '../../core/render/renderer';
 import MindMapping from '../../index';
 import type { MindNodeOptions } from '../../types/options';
+import type { MappingBase } from '../../types/mapping';
 
 class MindNode {
   nodeGroup: G | null = null;
 
-  nodeData: MindNodeOptions;
+  nodeData: MappingBase;
   renderer: Renderer;
   mindMapping: MindMapping;
   group: G;

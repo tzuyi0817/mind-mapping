@@ -29,6 +29,12 @@ class MindMapping {
   createOption(options: MindMappingOptions) {
     return options;
   }
+  render() {
+    this.renderer.render();
+  }
+  rerender() {
+    this.group.clear();
+  }
 }
 
 export default MindMapping;

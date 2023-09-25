@@ -8,6 +8,12 @@ interface MappingBase {
     generalization?: {
       text: string;
     };
-    children: Array<MappingBase>;
   };
+  children: Array<MappingBase>;
+}
+
+export interface RenderTree {
+  node: MappingBase;
+  parent?: MappingBase;
+  isRoot: boolean;
 }

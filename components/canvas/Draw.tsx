@@ -1,20 +1,22 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import MindMapping from '@/mindMapping';
 import { DEFAULT_MAPPING } from '@/mindMapping/configs/defaultMapping';
 
 function Draw() {
   const container = useRef(null);
-  const mindMapping = useRef<MindMapping | null>(null);
+  const [mindMapping, setMindMapping] = useState<MindMapping | null>(null);
 
   useEffect(() => {
     if (!container.current) return;
-
-    mindMapping.current = new MindMapping({
+    const mapping = new MindMapping({
       element: container.current,
       data: DEFAULT_MAPPING,
     });
+
+    setMindMapping(mapping);
+    mapping.render();
   }, []);
 
   return (
