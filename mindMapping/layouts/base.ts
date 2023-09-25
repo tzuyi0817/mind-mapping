@@ -28,7 +28,7 @@ class Base {
     return node;
   }
   startLayout() {
-    const tasks = [this.renderNodes];
+    const tasks = [this.renderNodes()];
 
     Promise.all(tasks);
   }

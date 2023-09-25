@@ -23,6 +23,7 @@ class Renderer {
   }
   render() {
     this.isRendering = true;
+    this.layout.startLayout();
   }
 }
 

@@ -25,6 +25,7 @@ class MindMapping {
     this.draw = SVG().addTo(this.element).size(this.width, this.height);
     this.group = this.draw.group();
     this.renderer = new Renderer({ mindMapping: this });
+    this.render();
   }
   createOption(options: MindMappingOptions) {
     return options;
