@@ -43,6 +43,9 @@ class MindMapping {
   rerender() {
     this.group.clear();
   }
+  removeDraw() {
+    this.draw.remove();
+  }
 }
 
 export default MindMapping;

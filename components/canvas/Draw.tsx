@@ -17,6 +17,7 @@ function Draw() {
 
     setMindMapping(mapping);
     mapping.render();
+    return () => mapping.removeDraw();
   }, []);
 
   return (
