@@ -19,7 +19,7 @@ class Base {
   }
   createNode(renderTree: RenderTree) {
     const node = new MindNode({
-      data: renderTree.node,
+      renderTree,
       renderer: this.renderer,
       mindMapping: this.mindMapping,
       group: this.group,

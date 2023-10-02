@@ -1,5 +1,6 @@
 import { SVG, type Svg, type G } from '@svgdotjs/svg.js';
 import Renderer from './core/render/renderer';
+import Style from './core/render/style';
 import * as themes from './themes';
 import type { MindMappingOptions } from './types/options';
 import type { Theme } from './types/theme';
@@ -13,7 +14,7 @@ class MindMapping {
   draw: Svg;
   group: G;
   renderer: Renderer;
-  theme: Theme;
+  theme!: Theme;
 
   constructor(options: MindMappingOptions) {
     this.options = this.createOption(options);
@@ -28,14 +29,15 @@ class MindMapping {
     this.draw = SVG().addTo(this.element).size(this.width, this.height);
     this.group = this.draw.group();
     this.renderer = new Renderer({ mindMapping: this });
-    this.theme = this.initTheme();
+    this.initTheme();
     this.render();
   }
   createOption(options: MindMappingOptions) {
     return options;
   }
   initTheme() {
-    return themes.DEFAULT;
+    this.theme = themes.SKY_BLUE;
+    Style.setBackgroundStyle(this.theme, this.element);
   }
   render() {
     this.renderer.render();

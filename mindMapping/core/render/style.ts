@@ -1,6 +1,7 @@
 import { Text } from '@svgdotjs/svg.js';
 import MindNode from './node';
 import type { Theme, ThemeNode } from '../../types/theme';
+import type { ShapeNode } from '../../types/shape';
 
 class Style {
   node: MindNode;
@@ -8,16 +9,25 @@ class Style {
   constructor(node: MindNode) {
     this.node = node;
   }
-  getCommonStyle(prop: keyof Omit<Theme, 'root' | 'second' | 'node' | 'generalization'>) {
+  static setBackgroundStyle(theme: Theme, element: HTMLElement) {
+    const { backgroundColor } = theme;
+
+    element.style.backgroundColor = backgroundColor;
+  }
+  getCommonStyle<T extends keyof Omit<Theme, 'root' | 'second' | 'node' | 'generalization'>>(prop: T): Theme[T] {
     return this.node.mindMapping.theme[prop];
   }
-  getStyle(prop: keyof ThemeNode) {
-    const theme = this.node.mindMapping.theme;
+  getStyle<T extends keyof ThemeNode>(prop: T): ThemeNode[T] {
+    const {
+      mindMapping: { theme },
+      renderTree: { deep = 0 },
+    } = this.node;
     const themeMap = {
-      node: theme.node,
-    } as const;
-
-    return themeMap['node'][prop];
+      0: theme.root,
+      1: theme.second,
+    };
+    // @ts-ignore
+    return themeMap[deep][prop] ?? theme.node[prop];
   }
   getTextStyle() {
     return {
@@ -37,6 +47,13 @@ class Style {
         weight: this.getStyle('fontWeight'),
       })
       .attr('text-decoration', this.getStyle('textDecoration'));
+  }
+  setShapeStyle(shape: ShapeNode) {
+    shape.fill({ color: this.getStyle('fillColor') }).stroke({
+      color: this.getStyle('borderColor'),
+      width: this.getStyle('borderWidth'),
+      dasharray: this.getStyle('borderDasharray'),
+    });
   }
 }
 

@@ -1,16 +1,16 @@
 import { G } from '@svgdotjs/svg.js';
 import Style from './style';
-import type { MappingBase } from '../../types/mapping';
+import type { RenderTree } from '../../types/mapping';
 
 class CreateNode {
-  nodeData!: MappingBase;
+  renderTree!: RenderTree;
   style!: Style;
 
   constructor() {}
   createTextNode() {
     const group = new G();
     // const fontStyle = this.style.getTextStyle();
-    const { text } = this.nodeData.data;
+    const { text } = this.renderTree.node.data;
     const textNode = group.text(text);
 
     this.style.setTextStyle(textNode);

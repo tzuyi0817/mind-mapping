@@ -34,7 +34,7 @@ class Shape {
   }
   createRect() {
     const { width, height } = this.node;
-    const borderRadius = +this.node.style.getStyle('borderRadius');
+    const borderRadius = this.node.style.getStyle('borderRadius');
 
     return new Path().plot(`
       M${borderRadius},0

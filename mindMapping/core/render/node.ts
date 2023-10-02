@@ -5,7 +5,7 @@ import Style from './style';
 import Shape from './shape';
 import CreateNode from './createNode';
 import type { MindNodeOptions } from '../../types/options';
-import type { MappingBase } from '../../types/mapping';
+import type { MappingBase, RenderTree } from '../../types/mapping';
 import type { NodeMap } from '../../types/node';
 
 class MindNode extends CreateNode {
@@ -13,7 +13,7 @@ class MindNode extends CreateNode {
   width = 0;
   height = 0;
 
-  nodeData: MappingBase;
+  renderTree: RenderTree;
   renderer: Renderer;
   mindMapping: MindMapping;
   group: G;
@@ -23,7 +23,7 @@ class MindNode extends CreateNode {
 
   constructor(options: MindNodeOptions) {
     super();
-    this.nodeData = options.data;
+    this.renderTree = options.renderTree;
     this.renderer = options.renderer;
     this.mindMapping = options.mindMapping;
     this.group = options.group;
@@ -45,8 +45,8 @@ class MindNode extends CreateNode {
   }
   getBounding() {
     const textBounding = { width: 0, height: 0 };
-    const paddingX = this.style.getCommonStyle('paddingX') as number;
-    const paddingY = this.style.getCommonStyle('paddingY') as number;
+    const paddingX = this.style.getCommonStyle('paddingX');
+    const paddingY = this.style.getCommonStyle('paddingY');
 
     if (this.text) {
       textBounding.width += this.text.width;
@@ -73,6 +73,7 @@ class MindNode extends CreateNode {
     this.nodeGroup.clear();
     const shapeNode = this.shape.createShape();
 
+    this.style.setShapeStyle(shapeNode);
     this.nodeGroup.add(shapeNode);
   }
 }

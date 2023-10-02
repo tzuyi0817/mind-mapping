@@ -16,4 +16,5 @@ export interface RenderTree {
   node: MappingBase;
   parent?: MappingBase;
   isRoot: boolean;
+  deep?: number;
 }
