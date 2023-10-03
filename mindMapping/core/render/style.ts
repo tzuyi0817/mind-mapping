@@ -27,7 +27,7 @@ class Style {
       1: theme.second,
     };
     // @ts-ignore
-    return themeMap[deep][prop] ?? theme.node[prop];
+    return themeMap[deep]?.[prop] ?? theme.node[prop];
   }
   getTextStyle() {
     return {

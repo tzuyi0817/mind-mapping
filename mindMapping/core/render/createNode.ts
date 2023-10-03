@@ -9,9 +9,8 @@ class CreateNode {
   constructor() {}
   createTextNode() {
     const group = new G();
-    // const fontStyle = this.style.getTextStyle();
     const { text } = this.renderTree.node.data;
-    const textNode = group.text(text);
+    const textNode = group.text(text).y(0);
 
     this.style.setTextStyle(textNode);
     const { width, height } = group.bbox();

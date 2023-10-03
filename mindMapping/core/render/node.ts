@@ -5,7 +5,7 @@ import Style from './style';
 import Shape from './shape';
 import CreateNode from './createNode';
 import type { MindNodeOptions } from '../../types/options';
-import type { MappingBase, RenderTree } from '../../types/mapping';
+import type { RenderTree } from '../../types/mapping';
 import type { NodeMap } from '../../types/node';
 
 class MindNode extends CreateNode {
@@ -72,9 +72,25 @@ class MindNode extends CreateNode {
     if (!this.nodeGroup) return;
     this.nodeGroup.clear();
     const shapeNode = this.shape.createShape();
+    const textGroup = this.createTextGroup();
 
     this.style.setShapeStyle(shapeNode);
     this.nodeGroup.add(shapeNode);
+    this.nodeGroup.add(textGroup);
+  }
+  createTextGroup() {
+    const { width, height } = this;
+    const textGroup = new G();
+
+    if (this.text) {
+      textGroup.add(this.text.node);
+    }
+    const textBox = textGroup.bbox();
+    const moveX = width / 2 - textBox.width / 2;
+    const moveY = this.style.getCommonStyle('paddingY');
+
+    textGroup.translate(moveX, moveY);
+    return textGroup;
   }
 }
 
