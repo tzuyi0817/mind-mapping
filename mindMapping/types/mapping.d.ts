@@ -1,3 +1,5 @@
+import MindNode from '../core/render/node';
+
 export interface MappingRoot {
   root: MappingBase;
 }
@@ -10,6 +12,7 @@ interface MappingBase {
     };
   };
   children: Array<MappingBase>;
+  instance?: MindNode;
 }
 
 export interface RenderTree {

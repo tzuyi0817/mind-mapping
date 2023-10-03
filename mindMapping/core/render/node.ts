@@ -10,8 +10,11 @@ import type { NodeMap } from '../../types/node';
 
 class MindNode extends CreateNode {
   nodeGroup: G | null = null;
+  children: MindNode[] = [];
   width = 0;
   height = 0;
+  #top = 0;
+  #left = 0;
 
   renderTree: RenderTree;
   renderer: Renderer;
@@ -32,6 +35,25 @@ class MindNode extends CreateNode {
 
     this.init();
     this.render();
+  }
+  get parent() {
+    return this.renderTree.parent?.instance;
+  }
+  get top() {
+    return this.#top;
+  }
+  get left() {
+    return this.#left;
+  }
+  get childrenAreaHeight() {
+    console.log(this.children);
+    return this.children.reduce((total, { height }) => total + height, 0);
+  }
+  set top(value: number) {
+    this.#top = value;
+  }
+  set left(value: number) {
+    this.#left = value;
   }
   init() {
     this.createContent();
@@ -77,6 +99,10 @@ class MindNode extends CreateNode {
     this.style.setShapeStyle(shapeNode);
     this.nodeGroup.add(shapeNode);
     this.nodeGroup.add(textGroup);
+  }
+  setPosition() {
+    if (!this.nodeGroup) return;
+    this.nodeGroup.translate(this.left, this.top);
   }
   createTextGroup() {
     const { width, height } = this;

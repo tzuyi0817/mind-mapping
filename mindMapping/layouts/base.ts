@@ -3,6 +3,7 @@ import Renderer from '../core/render/renderer';
 import MindNode from '../core/render/node';
 import MindMapping from '../index';
 import { dfsRenderTree } from '../utils/dfs';
+import { PositionEnum, INIT_POSITION_MAP } from '../configs/position';
 import type { MappingBase, RenderTree } from '../types/mapping';
 
 class Base {
@@ -25,6 +26,8 @@ class Base {
       group: this.group,
     });
 
+    renderTree.node.instance = node;
+    node.parent?.children.push(node);
     return node;
   }
   startLayout() {
@@ -35,7 +38,29 @@ class Base {
   renderNodes() {
     dfsRenderTree({ node: this.renderTreeRoot, isRoot: true }, renderTree => {
       const node = this.createNode(renderTree);
+      const { isRoot, deep } = renderTree;
+      const { left = 0, width = 0, top = 0, height = 0 } = node.parent ?? {};
+
+      isRoot ? this.setNodeCenter(node) : (node.left = left + width + this.getMargin('marginX', deep));
+      window.requestIdleCallback(() => {
+        if (!isRoot) {
+          node.top = top + height / 2 - node.childrenAreaHeight / 2 + this.getMargin('marginY', deep);
+        }
+        node.setPosition();
+      });
     });
+  }
+  setNodeCenter(node: MindNode) {
+    const { CENTER } = PositionEnum;
+
+    node.top = this.mindMapping.height * INIT_POSITION_MAP[CENTER];
+    node.left = this.mindMapping.width * INIT_POSITION_MAP[CENTER];
+  }
+  getMargin(direction: 'marginX' | 'marginY', deep = 1) {
+    const { theme } = this.mindMapping;
+    const { second, node } = theme;
+
+    return deep > 1 ? node[direction] : second[direction];
   }
 }
 
