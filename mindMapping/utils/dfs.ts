@@ -2,12 +2,14 @@ import type { RenderTree } from '../types/mapping';
 
 export function dfsRenderTree(
   { node: root, parent, isRoot, deep = 0 }: RenderTree,
-  callback: (renderTree: RenderTree) => void,
+  beforeCallback?: (renderTree: RenderTree) => void,
+  afterCallback?: (renderTree: RenderTree) => void,
 ) {
+  beforeCallback?.({ node: root, parent, isRoot, deep });
   if (root.children?.length) {
     root.children.forEach(node => {
-      dfsRenderTree({ node, parent: root, isRoot: false, deep: deep + 1 }, callback);
+      dfsRenderTree({ node, parent: root, isRoot: false, deep: deep + 1 }, beforeCallback, afterCallback);
     });
   }
-  callback?.({ node: root, parent, isRoot, deep });
+  afterCallback?.({ node: root, parent, isRoot, deep });
 }

@@ -29,7 +29,6 @@ class MindMapping {
     this.draw = SVG().addTo(this.element).size(this.width, this.height);
     this.group = this.draw.group();
     this.renderer = new Renderer({ mindMapping: this });
-    this.initTheme();
     this.render();
   }
   createOption(options: MindMappingOptions) {
@@ -40,10 +39,12 @@ class MindMapping {
     Style.setBackgroundStyle(this.theme, this.element);
   }
   render() {
+    this.initTheme();
     this.renderer.render();
   }
   rerender() {
     this.group.clear();
+    this.render();
   }
   removeDraw() {
     this.draw.remove();

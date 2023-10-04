@@ -34,7 +34,6 @@ class MindNode extends CreateNode {
     this.style = new Style(this);
 
     this.init();
-    this.render();
   }
   get parent() {
     return this.renderTree.parent?.instance;
@@ -46,7 +45,6 @@ class MindNode extends CreateNode {
     return this.#left;
   }
   get childrenAreaHeight() {
-    console.log(this.children);
     return this.children.reduce((total, { height }) => total + height, 0);
   }
   set top(value: number) {
@@ -89,6 +87,7 @@ class MindNode extends CreateNode {
     }
     this.group.add(this.nodeGroup);
     this.setLayout();
+    this.setPosition();
   }
   setLayout() {
     if (!this.nodeGroup) return;

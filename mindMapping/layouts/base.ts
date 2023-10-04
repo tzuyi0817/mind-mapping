@@ -38,23 +38,28 @@ class Base {
   renderNodes() {
     dfsRenderTree({ node: this.renderTreeRoot, isRoot: true }, renderTree => {
       const node = this.createNode(renderTree);
-      const { isRoot, deep } = renderTree;
-      const { left = 0, width = 0, top = 0, height = 0 } = node.parent ?? {};
+      const { isRoot, deep = 0 } = renderTree;
+      const { left = 0, width = 0 } = node.parent ?? {};
 
       isRoot ? this.setNodeCenter(node) : (node.left = left + width + this.getMargin('marginX', deep));
-      window.requestIdleCallback(() => {
-        if (!isRoot) {
-          node.top = top + height / 2 - node.childrenAreaHeight / 2 + this.getMargin('marginY', deep);
-        }
-        node.setPosition();
+      window.requestAnimationFrame(() => {
+        const marginY = this.getMargin('marginY', deep + 1);
+        const childrenMarginY = (node.children.length + 1) * marginY;
+        let top = node.top + node.height / 2 - (node.childrenAreaHeight + childrenMarginY) / 2 + marginY;
+
+        node.children.forEach(child => {
+          child.top = top;
+          top += child.height + marginY;
+        });
+        node.render();
       });
     });
   }
   setNodeCenter(node: MindNode) {
     const { CENTER } = PositionEnum;
 
-    node.top = this.mindMapping.height * INIT_POSITION_MAP[CENTER];
-    node.left = this.mindMapping.width * INIT_POSITION_MAP[CENTER];
+    node.top = this.mindMapping.height * INIT_POSITION_MAP[CENTER] - node.height;
+    node.left = this.mindMapping.width * INIT_POSITION_MAP[CENTER] - node.width;
   }
   getMargin(direction: 'marginX' | 'marginY', deep = 1) {
     const { theme } = this.mindMapping;
