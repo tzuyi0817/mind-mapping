@@ -5,6 +5,7 @@ import MindMapping from '../index';
 import { dfsRenderTree } from '../utils/dfs';
 import { PositionEnum, INIT_POSITION_MAP } from '../configs/position';
 import type { MappingBase, RenderTree } from '../types/mapping';
+import type { LayoutRenderLine } from '../types/layout';
 
 class Base {
   renderer: Renderer;
@@ -53,6 +54,37 @@ class Base {
         });
         node.render();
       });
+    });
+  }
+  renderLine(params: LayoutRenderLine) {
+    const { lineStyle } = params;
+    if (lineStyle !== 'straight') return;
+    const renderLineMap = {
+      straight: this.renderStraightLine.bind(this),
+    };
+
+    renderLineMap[lineStyle](params);
+  }
+  renderStraightLine({ node, lines, setStyle }: LayoutRenderLine) {
+    const {
+      left,
+      top,
+      width,
+      height,
+      renderTree: { deep = 0, isRoot },
+    } = node;
+    const marginX = this.getMargin('marginX', deep + 1);
+    const s = marginX * 0.6;
+
+    node.children.forEach((child, index) => {
+      const x1 = left + width;
+      const x2 = child.left;
+      const y1 = top + height / 2;
+      const y2 = child.top + child.height / 2;
+      const path = `M ${x1},${y1} L ${x1 + s},${y1} L ${x1 + s},${y2} L ${x2},${y2}`;
+
+      lines[index].plot(path);
+      setStyle?.(lines[index]);
     });
   }
   setNodeCenter(node: MindNode) {

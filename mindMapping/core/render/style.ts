@@ -1,7 +1,7 @@
-import { Text } from '@svgdotjs/svg.js';
+import { Text, Path } from '@svgdotjs/svg.js';
 import MindNode from './node';
 import type { Theme, ThemeNode } from '../../types/theme';
-import type { ShapeNode } from '../../types/shape';
+import type { Shape } from '../../types/shape';
 
 class Style {
   node: MindNode;
@@ -48,11 +48,18 @@ class Style {
       })
       .attr('text-decoration', this.getStyle('textDecoration'));
   }
-  setShapeStyle(shape: ShapeNode) {
+  setShapeStyle(shape: Shape) {
     shape.fill({ color: this.getStyle('fillColor') }).stroke({
       color: this.getStyle('borderColor'),
       width: this.getStyle('borderWidth'),
       dasharray: this.getStyle('borderDasharray'),
+    });
+  }
+  setLineStyle(line: Path) {
+    line.fill({ color: 'none' }).stroke({
+      width: this.getCommonStyle('lineWidth'),
+      color: this.getCommonStyle('lineColor'),
+      dasharray: this.getCommonStyle('lineDasharray'),
     });
   }
 }

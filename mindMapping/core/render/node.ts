@@ -1,4 +1,4 @@
-import { G } from '@svgdotjs/svg.js';
+import { G, Path } from '@svgdotjs/svg.js';
 import Renderer from '../../core/render/renderer';
 import MindMapping from '../../index';
 import Style from './style';
@@ -11,6 +11,7 @@ import type { NodeMap } from '../../types/node';
 class MindNode extends CreateNode {
   nodeGroup: G | null = null;
   children: MindNode[] = [];
+  lines: Path[] = [];
   width = 0;
   height = 0;
   #top = 0;
@@ -86,8 +87,26 @@ class MindNode extends CreateNode {
       this.nodeGroup = new G();
     }
     this.group.add(this.nodeGroup);
+    this.renderLine();
     this.setLayout();
     this.setPosition();
+  }
+  renderLine() {
+    const diffSize = this.children.length - this.lines.length;
+
+    if (diffSize > 0) {
+      for (let index = 0; index < diffSize; index++) {
+        this.lines.push(this.group.path());
+      }
+    }
+    this.renderer.layout.renderLine({
+      node: this,
+      lineStyle: this.style.getCommonStyle('lineStyle'),
+      lines: this.lines,
+      setStyle: line => {
+        this.style.setLineStyle(line);
+      },
+    });
   }
   setLayout() {
     if (!this.nodeGroup) return;
