@@ -44,21 +44,22 @@ class Base {
 
       isRoot ? this.setNodeCenter(node) : (node.left = left + width + this.getMargin('marginX', deep));
       window.requestAnimationFrame(() => {
-        const marginY = this.getMargin('marginY', deep + 1);
-        const childrenMarginY = (node.children.length + 1) * marginY;
-        let top = node.top + node.height / 2 - (node.childrenAreaHeight + childrenMarginY) / 2 + marginY;
+        if (node.children.length) {
+          const marginY = this.getMargin('marginY', deep + 1);
+          const childrenMarginY = (node.children.length + 1) * marginY;
+          let top = node.top + node.height / 2 - (node.childrenAreaHeight + childrenMarginY) / 2 + marginY;
 
-        node.children.forEach(child => {
-          child.top = top;
-          top += child.height + marginY;
-        });
+          node.children.forEach(child => {
+            child.top = top;
+            top += child.height + marginY;
+          });
+        }
         node.render();
       });
     });
   }
   renderLine(params: LayoutRenderLine) {
     const { lineStyle } = params;
-    if (lineStyle !== 'straight') return;
     const renderLineMap = {
       straight: this.renderStraightLine.bind(this),
     };

@@ -1,4 +1,4 @@
-import { Text, Path } from '@svgdotjs/svg.js';
+import { Text, Path, Rect } from '@svgdotjs/svg.js';
 import MindNode from './node';
 import type { Theme, ThemeNode } from '../../types/theme';
 import type { Shape } from '../../types/shape';
@@ -60,6 +60,11 @@ class Style {
       width: this.getCommonStyle('lineWidth'),
       color: this.getCommonStyle('lineColor'),
       dasharray: this.getCommonStyle('lineDasharray'),
+    });
+  }
+  setHoverStyle(node: Rect) {
+    node.radius(5).fill('none').stroke({
+      color: this.node.mindMapping.options.hoverRectColor,
     });
   }
 }

@@ -1,0 +1,11 @@
+.mind-mapping-hover-node {
+  @apply hidden opacity-60 stroke-1;
+}
+
+.mind-mapping-node:hover .mind-mapping-hover-node {
+  @apply block;
+}
+
+.mind-mapping-node.active .mind-mapping-hover-node {
+  @apply block opacity-100 stroke-2;
+}

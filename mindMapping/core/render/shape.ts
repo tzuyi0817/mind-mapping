@@ -1,13 +1,7 @@
 import { Rect, Polygon, Path } from '@svgdotjs/svg.js';
 import MindNode from './node';
 import { SHAPE } from '../../configs/shape';
-
-interface ShapePadding {
-  width: number;
-  height: number;
-  paddingX: number;
-  paddingY: number;
-}
+import type { ShapePadding } from '../../types/shape';
 
 class Shape {
   node: MindNode;
@@ -15,22 +9,29 @@ class Shape {
   constructor(node: MindNode) {
     this.node = node;
   }
-  static shape() {
-    return SHAPE.RECTANGLE;
+  get shape() {
+    return this.node.style.getStyle('shape');
   }
   getShapePadding({ width, height, paddingX, paddingY }: ShapePadding) {
-    const shape = Shape.shape();
+    const shape = this.shape;
     const shapeMap = {} as const;
 
     return { shapePaddingX: 0, shapePaddingY: 0 };
   }
   createShape() {
-    const shape = Shape.shape();
     const shapeMap = {
       [SHAPE.RECTANGLE]: this.createRect.bind(this),
+      [SHAPE.DIAMOND]: this.createRect.bind(this),
+      [SHAPE.PARALLELOGRAM]: this.createRect.bind(this),
+      [SHAPE.ROUNDED_RECTANGLE]: this.createRect.bind(this),
+      [SHAPE.OCTAGONAL_RECTANGLE]: this.createRect.bind(this),
+      [SHAPE.OUTER_TRIANGULAR_RECTANGLE]: this.createRect.bind(this),
+      [SHAPE.INNER_TRIANGULAR_RECTANGLE]: this.createRect.bind(this),
+      [SHAPE.ELLIPSE]: this.createRect.bind(this),
+      [SHAPE.CIRCLE]: this.createRect.bind(this),
     } as const;
 
-    return shapeMap[shape]();
+    return shapeMap[this.shape]();
   }
   createRect() {
     const { width, height } = this.node;

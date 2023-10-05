@@ -24,6 +24,7 @@ class MindNode extends CreateNode {
   shape: Shape;
   style: Style;
   text?: NodeMap;
+  isGeneralization: boolean;
 
   constructor(options: MindNodeOptions) {
     super();
@@ -31,6 +32,7 @@ class MindNode extends CreateNode {
     this.renderer = options.renderer;
     this.mindMapping = options.mindMapping;
     this.group = options.group;
+    this.isGeneralization = options.isGeneralization ?? false;
     this.shape = new Shape(this);
     this.style = new Style(this);
 
@@ -76,15 +78,17 @@ class MindNode extends CreateNode {
     const width = textBounding.width;
     const height = textBounding.height;
     const { shapePaddingX, shapePaddingY } = this.shape.getShapePadding({ width, height, paddingX, paddingY });
+    const borderWidth = this.style.getStyle('borderWidth');
 
     return {
-      width: width + paddingX * 2 + shapePaddingX * 2,
-      height: height + paddingY * 2 + shapePaddingY * 2,
+      width: width + paddingX * 2 + shapePaddingX * 2 + borderWidth * 2,
+      height: height + paddingY * 2 + shapePaddingY * 2 + borderWidth * 2,
     };
   }
   render() {
     if (!this.nodeGroup) {
       this.nodeGroup = new G();
+      this.nodeGroup.addClass('mind-mapping-node');
     }
     this.group.add(this.nodeGroup);
     this.renderLine();
@@ -113,10 +117,12 @@ class MindNode extends CreateNode {
     this.nodeGroup.clear();
     const shapeNode = this.shape.createShape();
     const textGroup = this.createTextGroup();
+    const hoverNode = this.createHoverNode();
 
     this.style.setShapeStyle(shapeNode);
     this.nodeGroup.add(shapeNode);
     this.nodeGroup.add(textGroup);
+    this.nodeGroup.add(hoverNode);
   }
   setPosition() {
     if (!this.nodeGroup) return;

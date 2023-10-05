@@ -1,3 +1,7 @@
+import { SHAPE } from '../configs/shape';
+
+export type ThemeLineStyle = 'straight';
+
 export interface Theme {
   paddingX: number;
   paddingY: number;
@@ -7,7 +11,7 @@ export interface Theme {
   lineWidth: number;
   lineColor: string;
   lineDasharray: string;
-  lineStyle: string;
+  lineStyle: ThemeLineStyle;
   rootLineKeepSameInCurve: boolean;
   generalizationLineWidth: number;
   generalizationLineColor: string;
@@ -34,7 +38,7 @@ export interface Theme {
 }
 
 export interface ThemeNode {
-  shape: string;
+  shape: (typeof SHAPE)[keyof typeof SHAPE];
   marginX: number;
   marginY: number;
   fillColor: string;
