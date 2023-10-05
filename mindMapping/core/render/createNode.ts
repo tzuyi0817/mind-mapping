@@ -2,6 +2,7 @@ import { G, Rect } from '@svgdotjs/svg.js';
 import MindMapping from '../../index';
 import Style from './style';
 import type { RenderTree } from '../../types/mapping';
+import type { NodeMap } from '../../types/node';
 
 class CreateNode {
   renderTree!: RenderTree;
@@ -9,6 +10,7 @@ class CreateNode {
   style!: Style;
   width!: number;
   height!: number;
+  text?: NodeMap;
 
   constructor() {}
   get content() {
@@ -30,6 +32,20 @@ class CreateNode {
       width: Math.ceil(width),
       height: Math.ceil(height),
     };
+  }
+  createTextGroup() {
+    const { width, height } = this;
+    const textGroup = new G();
+
+    if (this.text) {
+      textGroup.add(this.text.node);
+    }
+    const textBox = textGroup.bbox();
+    const moveX = width / 2 - textBox.width / 2;
+    const moveY = this.style.getCommonStyle('paddingY');
+
+    textGroup.translate(moveX, moveY);
+    return textGroup;
   }
   createHoverNode() {
     const hoverRectPadding = this.hoverRectPadding;

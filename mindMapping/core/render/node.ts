@@ -50,6 +50,9 @@ class MindNode extends CreateNode {
   get childrenAreaHeight() {
     return this.children.reduce((total, { height }) => total + height, 0);
   }
+  get isActive() {
+    return this.renderTree.node.isActive;
+  }
   set top(value: number) {
     this.#top = value;
   }
@@ -94,6 +97,7 @@ class MindNode extends CreateNode {
     this.renderLine();
     this.setLayout();
     this.setPosition();
+    this.onNodeGroup();
   }
   renderLine() {
     const diffSize = this.children.length - this.lines.length;
@@ -128,19 +132,17 @@ class MindNode extends CreateNode {
     if (!this.nodeGroup) return;
     this.nodeGroup.translate(this.left, this.top);
   }
-  createTextGroup() {
-    const { width, height } = this;
-    const textGroup = new G();
-
-    if (this.text) {
-      textGroup.add(this.text.node);
-    }
-    const textBox = textGroup.bbox();
-    const moveX = width / 2 - textBox.width / 2;
-    const moveY = this.style.getCommonStyle('paddingY');
-
-    textGroup.translate(moveX, moveY);
-    return textGroup;
+  onNodeGroup() {
+    this.nodeGroup?.on('click', event => {
+      this.renderer.clearActiveNodes();
+      this.renderer.activeNodes.add(this);
+      this.renderTree.node.isActive = true;
+      this.updateActive();
+    });
+  }
+  updateActive() {
+    if (!this.nodeGroup) return;
+    this.isActive ? this.nodeGroup.addClass('active') : this.nodeGroup.removeClass('active');
   }
 }
 

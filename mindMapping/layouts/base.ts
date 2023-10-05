@@ -95,10 +95,12 @@ class Base {
     node.left = this.mindMapping.width * INIT_POSITION_MAP[CENTER] - node.width;
   }
   getMargin(direction: 'marginX' | 'marginY', deep = 1) {
-    const { theme } = this.mindMapping;
-    const { second, node } = theme;
+    const {
+      theme: { second, node },
+      options: { hoverRectPadding },
+    } = this.mindMapping;
 
-    return deep > 1 ? node[direction] : second[direction];
+    return (deep > 1 ? node[direction] : second[direction]) + hoverRectPadding * 2;
   }
 }
 

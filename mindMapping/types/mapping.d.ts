@@ -13,6 +13,7 @@ interface MappingBase {
   };
   children: Array<MappingBase>;
   instance?: MindNode;
+  isActive?: boolean;
 }
 
 export interface RenderTree {
