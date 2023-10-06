@@ -1,13 +1,15 @@
 import { SVG, type Svg, type G } from '@svgdotjs/svg.js';
 import Renderer from './core/render/renderer';
 import Style from './core/render/style';
+import Event from './core/event';
+import Draw from './core/draw';
 import * as themes from './themes';
 import { DEFAULT_OPTIONS } from './configs/options';
 import './styles/index.css';
 import type { MindMappingMergeOptions, MindMappingOptions } from './types/options';
 import type { Theme } from './types/theme';
 
-class MindMapping {
+class MindMapping extends Draw {
   options: MindMappingMergeOptions;
   element: MindMappingOptions['element'];
   elementRect: DOMRect;
@@ -17,8 +19,10 @@ class MindMapping {
   group: G;
   renderer: Renderer;
   theme!: Theme;
+  event: Event;
 
   constructor(options: MindMappingOptions) {
+    super();
     this.options = this.mergeOption(options);
     this.element = this.options.element;
     this.elementRect = this.element.getBoundingClientRect();
@@ -29,6 +33,8 @@ class MindMapping {
     //   throw new Error('The width and height of the container element cannot be 0');
     this.draw = SVG().addTo(this.element).size(this.width, this.height);
     this.group = this.draw.group();
+    this.event = new Event({ draw: this.draw, element: this.element });
+    this.onEvents();
     this.renderer = new Renderer({ mindMapping: this });
     this.render();
   }
@@ -55,6 +61,7 @@ class MindMapping {
   }
   destroy() {
     this.draw.remove();
+    this.event.removeEventListeners();
   }
 }
 
