@@ -47,7 +47,13 @@ class MindMapping {
     this.group.clear();
     this.render();
   }
-  removeDraw() {
+  resize() {
+    this.elementRect = this.element.getBoundingClientRect();
+    this.width = this.elementRect.width;
+    this.height = this.elementRect.height;
+    this.draw.size(this.width, this.height);
+  }
+  destroy() {
     this.draw.remove();
   }
 }

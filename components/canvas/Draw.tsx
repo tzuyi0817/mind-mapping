@@ -16,7 +16,7 @@ function Draw() {
     });
 
     setMindMapping(mapping);
-    return () => mapping.removeDraw();
+    return () => mapping.destroy();
   }, []);
 
   return (
