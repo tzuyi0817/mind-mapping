@@ -25,16 +25,19 @@ class Event extends EventEmitter {
     this.onMousedown = this.onMousedown.bind(this);
     this.onMousemove = this.onMousemove.bind(this);
     this.onMouseup = this.onMouseup.bind(this);
+    this.onMousewheel = this.onMousewheel.bind(this);
   }
   addEventListeners() {
     this.element.addEventListener('mousedown', this.onMousedown);
     this.element.addEventListener('mousemove', this.onMousemove);
     this.element.addEventListener('mouseup', this.onMouseup);
+    this.element.addEventListener('wheel', this.onMousewheel);
   }
   removeEventListeners() {
     this.element.removeEventListener('mousedown', this.onMousedown);
     this.element.removeEventListener('mousemove', this.onMousemove);
     this.element.removeEventListener('mouseup', this.onMouseup);
+    this.element.removeEventListener('wheel', this.onMousewheel);
     this.removeAllListeners();
   }
   onMousedown(event: MouseEvent) {
@@ -55,6 +58,9 @@ class Event extends EventEmitter {
   }
   onMouseup() {
     this.isMousedown = false;
+  }
+  onMousewheel(event: WheelEvent) {
+    this.emit('mousewheel', event);
   }
 }
 
