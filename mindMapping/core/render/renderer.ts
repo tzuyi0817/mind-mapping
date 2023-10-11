@@ -19,15 +19,22 @@ class Renderer {
     this.renderTree = this.mindMapping.options.data;
     this.group = this.mindMapping.group;
     this.initLayout();
+    this.onEvents();
   }
   initLayout() {
     this.layout = new Base(this);
+  }
+  onEvents() {
+    this.mindMapping.event.on('click-draw', () => {
+      this.clearActiveNodes();
+    });
   }
   render() {
     this.isRendering = true;
     this.layout.startLayout();
   }
   clearActiveNodes() {
+    if (!this.activeNodes.size) return;
     this.activeNodes.forEach(node => {
       node.renderTree.node.isActive = false;
       node.updateActive();

@@ -134,6 +134,7 @@ class MindNode extends CreateNode {
   }
   onNodeGroup() {
     this.nodeGroup?.on('click', event => {
+      event.stopPropagation();
       this.renderer.clearActiveNodes();
       this.renderer.activeNodes.add(this);
       this.renderTree.node.isActive = true;

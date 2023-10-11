@@ -74,7 +74,7 @@ class Draw {
     const ratio = 1 - scale / previousScale;
     const moveX = (x - this.currentPosition.x) * ratio;
     const moveY = (y - this.currentPosition.y) * ratio;
-    console.log({ moveX, moveY });
+
     this.currentPosition.x += moveX;
     this.currentPosition.y += moveY;
     this.scale = scale;

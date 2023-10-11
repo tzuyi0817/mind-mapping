@@ -22,23 +22,29 @@ class Event extends EventEmitter {
     this.addEventListeners();
   }
   bindEvents() {
+    this.onDrawClick = this.onDrawClick.bind(this);
     this.onMousedown = this.onMousedown.bind(this);
     this.onMousemove = this.onMousemove.bind(this);
     this.onMouseup = this.onMouseup.bind(this);
     this.onMousewheel = this.onMousewheel.bind(this);
   }
   addEventListeners() {
+    this.draw.on('click', this.onDrawClick);
     this.element.addEventListener('mousedown', this.onMousedown);
     this.element.addEventListener('mousemove', this.onMousemove);
     this.element.addEventListener('mouseup', this.onMouseup);
     this.element.addEventListener('wheel', this.onMousewheel);
   }
   removeEventListeners() {
+    this.draw.off('click', this.onDrawClick);
     this.element.removeEventListener('mousedown', this.onMousedown);
     this.element.removeEventListener('mousemove', this.onMousemove);
     this.element.removeEventListener('mouseup', this.onMouseup);
     this.element.removeEventListener('wheel', this.onMousewheel);
     this.removeAllListeners();
+  }
+  onDrawClick(event: globalThis.Event) {
+    this.emit('click-draw', event);
   }
   onMousedown(event: MouseEvent) {
     this.isMousedown = true;
