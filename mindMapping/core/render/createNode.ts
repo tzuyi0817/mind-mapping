@@ -1,5 +1,7 @@
 import { G, Rect } from '@svgdotjs/svg.js';
 import MindMapping from '../../index';
+import MindNode from './node';
+import Renderer from './renderer';
 import Style from './style';
 import type { RenderTree } from '../../types/mapping';
 import type { NodeMap } from '../../types/node';
@@ -10,6 +12,8 @@ class CreateNode {
   style!: Style;
   width!: number;
   height!: number;
+  renderer!: Renderer;
+  group!: G;
   text?: NodeMap;
 
   constructor() {}
@@ -56,6 +60,24 @@ class CreateNode {
     hoverNode.addClass('mind-mapping-hover-node');
     this.style.setHoverStyle(hoverNode);
     return hoverNode;
+  }
+  createGeneralizationNode() {
+    if (!this.content.generalization) return null;
+    return new MindNode({
+      renderTree: {
+        node: {
+          data: {
+            text: this.content.generalization.text,
+          },
+          children: [],
+        },
+        isRoot: false,
+      },
+      renderer: this.renderer,
+      mindMapping: this.mindMapping,
+      group: this.group,
+      isGeneralization: true,
+    });
   }
 }
 

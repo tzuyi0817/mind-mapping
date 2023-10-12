@@ -21,11 +21,14 @@ class Style {
     const {
       mindMapping: { theme },
       renderTree: { deep = 0 },
+      isGeneralization,
     } = this.node;
     const themeMap = {
       0: theme.root,
       1: theme.second,
+      generalization: theme.generalization,
     };
+    if (isGeneralization) return themeMap.generalization[prop];
     // @ts-ignore
     return themeMap[deep]?.[prop] ?? theme.node[prop];
   }
@@ -65,6 +68,12 @@ class Style {
   setHoverStyle(node: Rect) {
     node.radius(5).fill('none').stroke({
       color: this.node.mindMapping.options.hoverRectColor,
+    });
+  }
+  setGeneralizationLineStyle(line: Path) {
+    line.fill({ color: 'none' }).stroke({
+      width: this.getCommonStyle('generalizationLineWidth'),
+      color: this.getCommonStyle('generalizationLineColor'),
     });
   }
 }

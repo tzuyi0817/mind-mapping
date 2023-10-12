@@ -1,3 +1,7 @@
+.mind-mapping-node {
+  @apply cursor-default;
+}
+
 .mind-mapping-hover-node {
   @apply hidden opacity-60 stroke-1;
 }

@@ -12,6 +12,8 @@ class MindNode extends CreateNode {
   nodeGroup: G | null = null;
   children: MindNode[] = [];
   lines: Path[] = [];
+  generalization: MindNode | null = null;
+  generalizationLine: Path | null = null;
   width = 0;
   height = 0;
   #top = 0;
@@ -49,6 +51,9 @@ class MindNode extends CreateNode {
   }
   get childrenAreaHeight() {
     return this.children.reduce((total, { height }) => total + height, 0);
+  }
+  get node() {
+    return this.renderTree.node;
   }
   get isActive() {
     return this.renderTree.node.isActive;
@@ -96,6 +101,7 @@ class MindNode extends CreateNode {
     this.group.add(this.nodeGroup);
     this.renderLine();
     this.setLayout();
+    this.renderGeneralization();
     this.setPosition();
     this.onNodeGroup();
   }
@@ -128,6 +134,18 @@ class MindNode extends CreateNode {
     this.nodeGroup.add(textGroup);
     this.nodeGroup.add(hoverNode);
   }
+  renderGeneralization() {
+    if (!this.node.data.generalization) return;
+    this.generalization = this.createGeneralizationNode();
+    this.generalizationLine = this.group.path();
+    this.renderer.layout.renderGeneralization({
+      node: this,
+      line: this.generalizationLine,
+      generalization: this.generalization,
+    });
+    this.style.setGeneralizationLineStyle(this.generalizationLine);
+    this.generalization?.render();
+  }
   setPosition() {
     if (!this.nodeGroup) return;
     this.nodeGroup.translate(this.left, this.top);
@@ -137,7 +155,7 @@ class MindNode extends CreateNode {
       event.stopPropagation();
       this.renderer.clearActiveNodes();
       this.renderer.activeNodes.add(this);
-      this.renderTree.node.isActive = true;
+      this.node.isActive = true;
       this.updateActive();
     });
   }

@@ -8,3 +8,9 @@ export interface LayoutRenderLine {
   lines: Array<Path>;
   setStyle?: (line: Path) => void;
 }
+
+export interface LayoutRenderGeneralization {
+  node: MindNode;
+  line: Path;
+  generalization: MindNode | null;
+}

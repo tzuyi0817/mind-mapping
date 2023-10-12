@@ -2,10 +2,10 @@ import { G } from '@svgdotjs/svg.js';
 import Renderer from '../core/render/renderer';
 import MindNode from '../core/render/node';
 import MindMapping from '../index';
-import { dfsRenderTree } from '../utils/dfs';
+import { dfsRenderTree, dfsBoundingNode } from '../utils/dfs';
 import { PositionEnum, INIT_POSITION_MAP } from '../configs/position';
 import type { MappingBase, RenderTree } from '../types/mapping';
-import type { LayoutRenderLine } from '../types/layout';
+import type { LayoutRenderLine, LayoutRenderGeneralization } from '../types/layout';
 
 class Base {
   renderer: Renderer;
@@ -58,6 +58,16 @@ class Base {
       });
     });
   }
+  renderGeneralization({ node, line, generalization }: LayoutRenderGeneralization) {
+    if (!generalization) return;
+    const { generalizationLineMargin, generalizationNodeMargin } = this.mindMapping.theme;
+    const { top, right, bottom } = this.getBoundingNode(node, 'horizontal');
+    const x = right + generalizationLineMargin;
+
+    line.plot(`M ${x},${top} Q ${x + 20},${top + (bottom - top) / 2} ${x},${bottom}`);
+    generalization.left = right + generalizationNodeMargin;
+    generalization.top = top + (bottom - top - generalization.height) / 2;
+  }
   renderLine(params: LayoutRenderLine) {
     const { lineStyle } = params;
     const renderLineMap = {
@@ -101,6 +111,11 @@ class Base {
     } = this.mindMapping;
 
     return (deep > 1 ? node[direction] : second[direction]) + hoverRectPadding * 2;
+  }
+  getBoundingNode(node: MindNode, direction: 'horizontal' | 'vertical') {
+    const { generalizationNodeMargin } = this.mindMapping.theme;
+
+    return dfsBoundingNode(node, generalizationNodeMargin, direction);
   }
 }
 
