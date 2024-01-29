@@ -66,6 +66,8 @@ class Event extends EventEmitter {
     this.isMousedown = false;
   }
   onMousewheel(event: WheelEvent) {
+    event.stopPropagation();
+    event.preventDefault();
     this.emit('mousewheel', event);
   }
 }
