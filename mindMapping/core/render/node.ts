@@ -1,4 +1,4 @@
-import { G, Path } from '@svgdotjs/svg.js';
+import { G, Path, Rect } from '@svgdotjs/svg.js';
 import Renderer from '../../core/render/renderer';
 import MindMapping from '../../index';
 import Style from './style';
@@ -27,6 +27,9 @@ class MindNode extends CreateNode {
   style: Style;
   text?: NodeMap;
   isGeneralization: boolean;
+  shapeNode?: Path;
+  hoverNode?: Rect;
+  expandButtonRect?: Rect;
 
   constructor(options: MindNodeOptions) {
     super();
@@ -101,9 +104,13 @@ class MindNode extends CreateNode {
     this.group.add(this.nodeGroup);
     this.renderLine();
     this.setLayout();
+    this.update();
+    this.renderExpandButtonRect();
+    this.onNodeGroup();
+  }
+  update() {
     this.renderGeneralization();
     this.setPosition();
-    this.onNodeGroup();
   }
   renderLine() {
     const diffSize = this.children.length - this.lines.length;
@@ -125,14 +132,14 @@ class MindNode extends CreateNode {
   setLayout() {
     if (!this.nodeGroup) return;
     this.nodeGroup.clear();
-    const shapeNode = this.shape.createShape();
     const textGroup = this.createTextGroup();
-    const hoverNode = this.createHoverNode();
+    this.shapeNode = this.shape.createShape();
+    this.hoverNode = this.createHoverNode();
 
-    this.style.setShapeStyle(shapeNode);
-    this.nodeGroup.add(shapeNode);
+    this.style.setShapeStyle(this.shapeNode);
+    this.nodeGroup.add(this.shapeNode);
     this.nodeGroup.add(textGroup);
-    this.nodeGroup.add(hoverNode);
+    this.nodeGroup.add(this.hoverNode);
   }
   renderGeneralization() {
     if (!this.node.data.generalization) return;
@@ -145,6 +152,18 @@ class MindNode extends CreateNode {
     });
     this.style.setGeneralizationLineStyle(this.generalizationLine);
     this.generalization?.render();
+  }
+  renderExpandButtonRect() {
+    if (!this.nodeGroup) return;
+    this.expandButtonRect = this.crateExpandButtonRect();
+    if (!this.expandButtonRect) return;
+    this.nodeGroup.add(this.expandButtonRect);
+    this.renderer.layout.renderExpandButtonRect({
+      node: this.expandButtonRect,
+      expandBtnSize: this.mindMapping.options.expandButtonSize,
+      width: this.width,
+      height: this.height,
+    });
   }
   setPosition() {
     if (!this.nodeGroup) return;

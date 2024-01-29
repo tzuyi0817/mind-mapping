@@ -15,6 +15,7 @@ class CreateNode {
   renderer!: Renderer;
   group!: G;
   text?: NodeMap;
+  children!: MindNode[];
 
   constructor() {}
   get content() {
@@ -79,6 +80,11 @@ class CreateNode {
       isGeneralization: true,
     });
   }
+  crateExpandButtonRect() {
+    if (!this.children.length || this.renderTree.isRoot) return;
+    return new Rect().fill({ color: 'transparent' });
+  }
+  createExpandButton() {}
 }
 
 export default CreateNode;

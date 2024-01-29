@@ -5,7 +5,7 @@ import MindMapping from '../index';
 import { dfsRenderTree, dfsBoundingNode } from '../utils/dfs';
 import { PositionEnum, INIT_POSITION_MAP } from '../configs/position';
 import type { MappingBase, RenderTree } from '../types/mapping';
-import type { LayoutRenderLine, LayoutRenderGeneralization } from '../types/layout';
+import type { LayoutRenderLine, LayoutRenderGeneralization, LayoutRenderExpandButtonRect } from '../types/layout';
 
 class Base {
   renderer: Renderer;
@@ -67,6 +67,9 @@ class Base {
     line.plot(`M ${x},${top} Q ${x + 20},${top + (bottom - top) / 2} ${x},${bottom}`);
     generalization.left = right + generalizationNodeMargin;
     generalization.top = top + (bottom - top - generalization.height) / 2;
+  }
+  renderExpandButtonRect({ node, expandBtnSize, width, height }: LayoutRenderExpandButtonRect) {
+    node.size(expandBtnSize, height).x(width).y(0);
   }
   renderLine(params: LayoutRenderLine) {
     const { lineStyle } = params;
