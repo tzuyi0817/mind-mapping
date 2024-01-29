@@ -1,6 +1,5 @@
 # Mind Mapping
 
-This is a web `mind mapping` tool.
+This is a website `mind mapping`.
 
 ## Features
-

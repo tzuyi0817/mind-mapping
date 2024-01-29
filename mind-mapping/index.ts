@@ -5,6 +5,7 @@ import Event from './core/event';
 import Draw from './core/draw';
 import * as themes from './themes';
 import { DEFAULT_OPTIONS } from './configs/options';
+import { DEFAULT_MAPPING } from './configs/defaultMapping';
 import './styles/index.css';
 import type { MindMappingMergeOptions, MindMappingOptions } from './types/options';
 import type { Theme } from './types/theme';
@@ -39,7 +40,7 @@ class MindMapping extends Draw {
     this.render();
   }
   mergeOption(options: MindMappingOptions) {
-    return { ...DEFAULT_OPTIONS, ...options };
+    return { data: DEFAULT_MAPPING, ...DEFAULT_OPTIONS, ...options };
   }
   initTheme() {
     this.theme = themes.SKY_BLUE;

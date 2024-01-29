@@ -1,8 +1,7 @@
 'use client';
 
 import { useRef, useState, useEffect } from 'react';
-import MindMapping from '@/mindMapping';
-import { DEFAULT_MAPPING } from '@/mindMapping/configs/defaultMapping';
+import MindMapping from 'mind-mapping';
 
 function Draw() {
   const container = useRef(null);
@@ -12,7 +11,6 @@ function Draw() {
     if (!container.current) return;
     const mapping = new MindMapping({
       element: container.current,
-      data: DEFAULT_MAPPING,
     });
 
     setMindMapping(mapping);
