@@ -9,7 +9,7 @@ export type MindMappingMergeOptions = MindMappingDefaultOptions & MindMappingOpt
 
 export interface MindMappingOptions {
   element: HTMLElement;
-  data?: MappingRoot;
+  data: MappingRoot;
 }
 
 export interface MindNodeOptions {

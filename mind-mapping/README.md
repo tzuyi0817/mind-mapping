@@ -1,6 +1,5 @@
 # Mind Mapping
 
-This is a web `mind mapping` tool.
+This is a `mind mapping` package.
 
 ## Features
-

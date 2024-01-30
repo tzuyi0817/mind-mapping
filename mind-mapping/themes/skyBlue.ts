@@ -1,5 +1,5 @@
-import { DEFAULT } from './default';
 import merge from 'deepmerge';
+import { DEFAULT } from './default';
 
 export const SKY_BLUE = merge(DEFAULT, {
   lineColor: 'rgb(115, 161, 191)',

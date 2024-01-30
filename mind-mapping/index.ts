@@ -9,6 +9,7 @@ import { DEFAULT_MAPPING } from './configs/defaultMapping';
 import './styles/index.css';
 import type { MindMappingMergeOptions, MindMappingOptions } from './types/options';
 import type { Theme } from './types/theme';
+import type { PickPartial } from './types/common';
 
 class MindMapping extends Draw {
   options: MindMappingMergeOptions;
@@ -22,7 +23,7 @@ class MindMapping extends Draw {
   theme!: Theme;
   event: Event;
 
-  constructor(options: MindMappingOptions) {
+  constructor(options: PickPartial<MindMappingOptions, 'data'>) {
     super();
     this.options = this.mergeOption(options);
     this.element = this.options.element;
@@ -39,7 +40,7 @@ class MindMapping extends Draw {
     this.renderer = new Renderer({ mindMapping: this });
     this.render();
   }
-  mergeOption(options: MindMappingOptions) {
+  mergeOption(options: PickPartial<MindMappingOptions, 'data'>) {
     return { data: DEFAULT_MAPPING, ...DEFAULT_OPTIONS, ...options };
   }
   initTheme() {
