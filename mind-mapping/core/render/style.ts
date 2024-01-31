@@ -77,7 +77,7 @@ class Style {
       color: this.getCommonStyle('generalizationLineColor'),
     });
   }
-  setExpandButtonStyle({ open, close, fill }: Required<NodeExpandButton>) {
+  setExpandButtonStyle({ open, close, fill }: NodeExpandButton) {
     const { expandButtonStyle: style } = this.node.mindMapping.options;
 
     open.fill({ color: style.color });

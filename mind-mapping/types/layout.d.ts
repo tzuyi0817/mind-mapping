@@ -17,7 +17,7 @@ export interface LayoutRenderGeneralization {
 
 export interface LayoutRenderExpandButton {
   node: G;
-  expandBtnSize: number;
+  expandButtonSize: number;
   width: number;
   height: number;
 }

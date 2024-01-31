@@ -68,9 +68,9 @@ class Base {
     generalization.left = right + generalizationNodeMargin;
     generalization.top = top + (bottom - top - generalization.height) / 2;
   }
-  renderExpandButton({ node, expandBtnSize, width, height }: LayoutRenderExpandButton) {
+  renderExpandButton({ node, expandButtonSize, width, height }: LayoutRenderExpandButton) {
     const { translateX = 0, translateY = 0 } = node.transform();
-    const radius = expandBtnSize / 2;
+    const radius = expandButtonSize / 2;
 
     node.translate(width - radius - translateX, height / 2 - radius - translateY);
   }

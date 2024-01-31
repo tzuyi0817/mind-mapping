@@ -3,10 +3,11 @@ import Renderer from '../../core/render/renderer';
 import MindMapping from '../../index';
 import Style from './style';
 import Shape from './shape';
-import CreateNode from './createNode';
+import ExpandButton from './expand-button';
+import CreateNode from './create-node';
 import type { MindNodeOptions } from '../../types/options';
 import type { RenderTree } from '../../types/mapping';
-import type { NodeMap, NodeExpandButton } from '../../types/node';
+import type { NodeMap } from '../../types/node';
 
 class MindNode extends CreateNode {
   nodeGroup: G | null = null;
@@ -25,11 +26,11 @@ class MindNode extends CreateNode {
   group: G;
   shape: Shape;
   style: Style;
+  expandButton: ExpandButton;
   text?: NodeMap;
   isGeneralization: boolean;
   shapeNode?: Path;
   hoverNode?: Rect;
-  expandButton: NodeExpandButton = {};
 
   constructor(options: MindNodeOptions) {
     super();
@@ -40,6 +41,7 @@ class MindNode extends CreateNode {
     this.isGeneralization = options.isGeneralization ?? false;
     this.shape = new Shape(this);
     this.style = new Style(this);
+    this.expandButton = new ExpandButton(this);
 
     this.init();
   }
@@ -110,7 +112,7 @@ class MindNode extends CreateNode {
   update() {
     this.renderGeneralization();
     this.setPosition();
-    this.renderExpandButton();
+    this.expandButton.render();
   }
   renderLine() {
     const diffSize = this.children.length - this.lines.length;
@@ -153,40 +155,20 @@ class MindNode extends CreateNode {
     this.style.setGeneralizationLineStyle(this.generalizationLine);
     this.generalization?.render();
   }
-  renderExpandButton() {
-    if (!this.nodeGroup) return;
-    if (!this.children.length || this.renderTree.isRoot) return;
-    if (!this.expandButton.node || !this.expandButton.fill) {
-      const { node, open, close, fill } = this.crateExpandButton();
-
-      this.expandButton.node = node;
-      this.expandButton.open = open;
-      this.expandButton.close = close;
-      this.expandButton.fill = fill;
-    }
-    const { node, open, close, fill } = this.expandButton;
-
-    this.style.setExpandButtonStyle({ node, open, close, fill });
-    this.nodeGroup.add(node.add(fill).add(close));
-    this.renderer.layout.renderExpandButton({
-      node,
-      expandBtnSize: this.mindMapping.options.expandButtonSize,
-      width: this.width,
-      height: this.height,
-    });
-  }
   setPosition() {
     if (!this.nodeGroup) return;
     this.nodeGroup.translate(this.left, this.top);
   }
   onNodeGroup() {
-    this.nodeGroup?.on('click', event => {
+    if (!this.nodeGroup) return;
+    this.nodeGroup.on('click', event => {
       event.stopPropagation();
       this.renderer.clearActiveNodes();
       this.renderer.activeNodes.add(this);
       this.node.isActive = true;
       this.updateActive();
     });
+    this.nodeGroup.on('mouseenter', () => {});
   }
   updateActive() {
     if (!this.nodeGroup) return;

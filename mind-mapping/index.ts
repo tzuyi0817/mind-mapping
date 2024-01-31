@@ -5,7 +5,7 @@ import Event from './core/event';
 import Draw from './core/draw';
 import * as themes from './themes';
 import { DEFAULT_OPTIONS } from './configs/options';
-import { DEFAULT_MAPPING } from './configs/defaultMapping';
+import { DEFAULT_MAPPING } from './configs/default-mapping';
 import './styles/index.css';
 import type { MindMappingMergeOptions, MindMappingOptions } from './types/options';
 import type { Theme } from './types/theme';
