@@ -6,7 +6,7 @@ import Shape from './shape';
 import CreateNode from './createNode';
 import type { MindNodeOptions } from '../../types/options';
 import type { RenderTree } from '../../types/mapping';
-import type { NodeMap } from '../../types/node';
+import type { NodeMap, NodeExpandButton } from '../../types/node';
 
 class MindNode extends CreateNode {
   nodeGroup: G | null = null;
@@ -29,7 +29,7 @@ class MindNode extends CreateNode {
   isGeneralization: boolean;
   shapeNode?: Path;
   hoverNode?: Rect;
-  expandButtonRect?: Rect;
+  expandButton: NodeExpandButton = {};
 
   constructor(options: MindNodeOptions) {
     super();
@@ -105,12 +105,12 @@ class MindNode extends CreateNode {
     this.renderLine();
     this.setLayout();
     this.update();
-    this.renderExpandButtonRect();
     this.onNodeGroup();
   }
   update() {
     this.renderGeneralization();
     this.setPosition();
+    this.renderExpandButton();
   }
   renderLine() {
     const diffSize = this.children.length - this.lines.length;
@@ -153,13 +153,23 @@ class MindNode extends CreateNode {
     this.style.setGeneralizationLineStyle(this.generalizationLine);
     this.generalization?.render();
   }
-  renderExpandButtonRect() {
+  renderExpandButton() {
     if (!this.nodeGroup) return;
-    this.expandButtonRect = this.crateExpandButtonRect();
-    if (!this.expandButtonRect) return;
-    this.nodeGroup.add(this.expandButtonRect);
-    this.renderer.layout.renderExpandButtonRect({
-      node: this.expandButtonRect,
+    if (!this.children.length || this.renderTree.isRoot) return;
+    if (!this.expandButton.node || !this.expandButton.fill) {
+      const { node, open, close, fill } = this.crateExpandButton();
+
+      this.expandButton.node = node;
+      this.expandButton.open = open;
+      this.expandButton.close = close;
+      this.expandButton.fill = fill;
+    }
+    const { node, open, close, fill } = this.expandButton;
+
+    this.style.setExpandButtonStyle({ node, open, close, fill });
+    this.nodeGroup.add(node.add(fill).add(close));
+    this.renderer.layout.renderExpandButton({
+      node,
       expandBtnSize: this.mindMapping.options.expandButtonSize,
       width: this.width,
       height: this.height,

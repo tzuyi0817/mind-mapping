@@ -2,6 +2,7 @@ import { Text, Path, Rect } from '@svgdotjs/svg.js';
 import MindNode from './node';
 import type { Theme, ThemeNode } from '../../types/theme';
 import type { Shape } from '../../types/shape';
+import type { NodeExpandButton } from '../../types/node';
 
 class Style {
   node: MindNode;
@@ -75,6 +76,13 @@ class Style {
       width: this.getCommonStyle('generalizationLineWidth'),
       color: this.getCommonStyle('generalizationLineColor'),
     });
+  }
+  setExpandButtonStyle({ open, close, fill }: Required<NodeExpandButton>) {
+    const { expandButtonStyle: style } = this.node.mindMapping.options;
+
+    open.fill({ color: style.color });
+    close.fill({ color: style.color });
+    fill.fill({ color: style.fill });
   }
 }
 

@@ -1,4 +1,4 @@
-import { G, Rect } from '@svgdotjs/svg.js';
+import { G, Rect, SVG, Circle } from '@svgdotjs/svg.js';
 import MindMapping from '../../index';
 import MindNode from './node';
 import Renderer from './renderer';
@@ -23,6 +23,9 @@ class CreateNode {
   }
   get hoverRectPadding() {
     return this.mindMapping.options.hoverRectPadding;
+  }
+  static image(src: string, width: number, height: number) {
+    return SVG().image(src).size(width, height).x(0).y(0);
   }
   createTextNode() {
     const group = new G();
@@ -80,11 +83,26 @@ class CreateNode {
       isGeneralization: true,
     });
   }
-  crateExpandButtonRect() {
-    if (!this.children.length || this.renderTree.isRoot) return;
-    return new Rect().fill({ color: 'transparent' });
+  crateExpandButton() {
+    const {
+      expandButtonSvg: { openSvg, closeSvg },
+      expandButtonSize: size,
+    } = this.mindMapping.options;
+    const group = new G();
+    const open = CreateNode.image(openSvg, size, size);
+    const close = CreateNode.image(closeSvg, size, size);
+    const fill = new Circle().size(size).x(0).y(0);
+
+    group.on('click', (event: Event) => {
+      event.stopPropagation();
+      this.mindMapping.event.emit('click-expand', this);
+    });
+    group.on('dblclick', (event: Event) => event.stopPropagation());
+    group.on('mouseover', (event: Event) => event.stopPropagation());
+    group.on('mouseout', (event: Event) => event.stopPropagation());
+    group.addClass('mind-mapping-expand-button');
+    return { node: group, open, close, fill };
   }
-  createExpandButton() {}
 }
 
 export default CreateNode;

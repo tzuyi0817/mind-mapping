@@ -1,4 +1,4 @@
-import { Path, Rect } from '@svgdotjs/svg.js';
+import { Path, Rect, G } from '@svgdotjs/svg.js';
 import MindNode from '../core/render/node';
 import type { ThemeLineStyle } from './theme';
 
@@ -15,8 +15,8 @@ export interface LayoutRenderGeneralization {
   generalization: MindNode | null;
 }
 
-export interface LayoutRenderExpandButtonRect {
-  node: Rect;
+export interface LayoutRenderExpandButton {
+  node: G;
   expandBtnSize: number;
   width: number;
   height: number;

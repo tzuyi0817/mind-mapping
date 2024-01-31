@@ -5,7 +5,7 @@ import MindMapping from '../index';
 import { dfsRenderTree, dfsBoundingNode } from '../utils/dfs';
 import { PositionEnum, INIT_POSITION_MAP } from '../configs/position';
 import type { MappingBase, RenderTree } from '../types/mapping';
-import type { LayoutRenderLine, LayoutRenderGeneralization, LayoutRenderExpandButtonRect } from '../types/layout';
+import type { LayoutRenderLine, LayoutRenderGeneralization, LayoutRenderExpandButton } from '../types/layout';
 
 class Base {
   renderer: Renderer;
@@ -68,8 +68,11 @@ class Base {
     generalization.left = right + generalizationNodeMargin;
     generalization.top = top + (bottom - top - generalization.height) / 2;
   }
-  renderExpandButtonRect({ node, expandBtnSize, width, height }: LayoutRenderExpandButtonRect) {
-    node.size(expandBtnSize, height).x(width).y(0);
+  renderExpandButton({ node, expandBtnSize, width, height }: LayoutRenderExpandButton) {
+    const { translateX = 0, translateY = 0 } = node.transform();
+    const radius = expandBtnSize / 2;
+
+    node.translate(width - radius - translateX, height / 2 - radius - translateY);
   }
   renderLine(params: LayoutRenderLine) {
     const { lineStyle } = params;
