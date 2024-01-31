@@ -62,13 +62,28 @@ class MindNode extends CreateNode {
     return this.renderTree.node;
   }
   get isActive() {
-    return this.renderTree.node.isActive;
+    return this.renderTree.node.isActive ?? false;
+  }
+  get isExpand() {
+    return this.renderTree.node.isExpand ?? true;
+  }
+  get isShowGeneralization() {
+    return this.isExpand && !!this.node.data.generalization;
+  }
+  get childrenCount() {
+    return this.node.children.length;
   }
   set top(value: number) {
     this.#top = value;
   }
   set left(value: number) {
     this.#left = value;
+  }
+  set isActive(value: boolean) {
+    this.renderTree.node.isActive = value;
+  }
+  set isExpand(value: boolean) {
+    this.renderTree.node.isExpand = value;
   }
   init() {
     this.createContent();
@@ -113,7 +128,11 @@ class MindNode extends CreateNode {
   update() {
     this.renderGeneralization();
     this.setPosition();
-    this.isMouseover ? this.expandButton.show() : this.expandButton.hide();
+    if (this.isMouseover || !this.isExpand) {
+      this.expandButton.show();
+      return;
+    }
+    this.expandButton.hide();
   }
   renderLine() {
     const diffSize = this.children.length - this.lines.length;
@@ -145,7 +164,7 @@ class MindNode extends CreateNode {
     this.nodeGroup.add(this.hoverNode);
   }
   renderGeneralization() {
-    if (!this.node.data.generalization) return;
+    if (!this.isShowGeneralization) return;
     this.generalization = this.createGeneralizationNode();
     this.generalizationLine = this.group.path();
     this.renderer.layout.renderGeneralization({
@@ -167,7 +186,7 @@ class MindNode extends CreateNode {
       if (this.isActive) return;
       this.renderer.clearActiveNodes();
       this.renderer.activeNodes.add(this);
-      this.node.isActive = true;
+      this.isActive = true;
       this.updateActive();
     });
     this.nodeGroup.on('mouseenter', () => {

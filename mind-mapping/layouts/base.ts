@@ -58,17 +58,9 @@ class Base {
           }
           node.render();
         });
+        return node.isExpand;
       },
-      renderTree => {
-        const { isRoot } = renderTree;
-
-        if (!isRoot) return;
-        window.requestAnimationFrame(() => {
-          const { width } = this.group.bbox();
-
-          this.mindMapping.moveDraw(-width / 2, 0);
-        });
-      },
+      renderTree => {},
     );
   }
   renderGeneralization({ node, line, generalization }: LayoutRenderGeneralization) {

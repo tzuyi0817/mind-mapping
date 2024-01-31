@@ -16,7 +16,7 @@ class ExpandButton {
   render() {
     const {
       nodeGroup,
-      children,
+      childrenCount,
       renderTree,
       style,
       renderer,
@@ -29,7 +29,7 @@ class ExpandButton {
     } = this.parent;
 
     if (!nodeGroup) return;
-    if (!children.length || renderTree.isRoot) return;
+    if (!childrenCount || renderTree.isRoot) return;
     if (!this.node || !this.fill || !this.open || !this.close) {
       const { node, open, close, fill } = crateExpandButton.call(this.parent);
 
@@ -40,9 +40,10 @@ class ExpandButton {
       this.onEvent();
     }
     const { node, open, close, fill } = this;
+    const svg = this.parent.isExpand ? close : open;
 
     style.setExpandButtonStyle({ node, open, close, fill });
-    nodeGroup.add(node.add(fill).add(close));
+    nodeGroup.add(node.add(fill).add(svg));
     renderer.layout.renderExpandButton({ node, expandButtonSize, width, height });
     this.isShow = true;
   }
@@ -50,7 +51,8 @@ class ExpandButton {
     if (!this.node) return;
     this.node.on('click', (event: Event) => {
       event.stopPropagation();
-      this.parent.mindMapping.event.emit('click-expand', this);
+      this.parent.isExpand = !this.parent.isExpand;
+      this.parent.mindMapping.rerender();
     });
     this.node.on('dblclick', (event: Event) => event.stopPropagation());
     this.node.on('mouseover', (event: Event) => event.stopPropagation());

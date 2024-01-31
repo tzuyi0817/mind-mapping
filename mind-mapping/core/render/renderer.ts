@@ -36,7 +36,7 @@ class Renderer {
   clearActiveNodes() {
     if (!this.activeNodes.size) return;
     this.activeNodes.forEach(node => {
-      node.renderTree.node.isActive = false;
+      node.isActive = false;
       node.updateActive();
     });
     this.activeNodes.clear();

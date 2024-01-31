@@ -6,8 +6,9 @@ export function dfsRenderTree(
   beforeCallback?: (renderTree: RenderTree) => void,
   afterCallback?: (renderTree: RenderTree) => void,
 ) {
-  beforeCallback?.({ node: root, parent, isRoot, deep });
-  if (root.children?.length) {
+  const isExpand = beforeCallback?.({ node: root, parent, isRoot, deep });
+
+  if (root.children?.length && isExpand) {
     root.children.forEach(node => {
       dfsRenderTree({ node, parent: root, isRoot: false, deep: deep + 1 }, beforeCallback, afterCallback);
     });
