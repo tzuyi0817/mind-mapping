@@ -1,4 +1,4 @@
-import IconButton from '@/components/common/IconButton';
+import IconButton from '@/components/common/icon-button';
 import styles from '@/styles/toolbar.module.css';
 
 function Toolbar() {

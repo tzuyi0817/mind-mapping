@@ -15,6 +15,7 @@ class MindNode extends CreateNode {
   lines: Path[] = [];
   generalization: MindNode | null = null;
   generalizationLine: Path | null = null;
+  isMouseover = false;
   width = 0;
   height = 0;
   #top = 0;
@@ -112,7 +113,7 @@ class MindNode extends CreateNode {
   update() {
     this.renderGeneralization();
     this.setPosition();
-    this.expandButton.render();
+    this.isMouseover ? this.expandButton.show() : this.expandButton.hide();
   }
   renderLine() {
     const diffSize = this.children.length - this.lines.length;
@@ -163,16 +164,31 @@ class MindNode extends CreateNode {
     if (!this.nodeGroup) return;
     this.nodeGroup.on('click', event => {
       event.stopPropagation();
+      if (this.isActive) return;
       this.renderer.clearActiveNodes();
       this.renderer.activeNodes.add(this);
       this.node.isActive = true;
       this.updateActive();
     });
-    this.nodeGroup.on('mouseenter', () => {});
+    this.nodeGroup.on('mouseenter', () => {
+      this.isMouseover = true;
+      this.expandButton.show();
+    });
+    this.nodeGroup.on('mouseleave', () => {
+      if (!this.isMouseover) return;
+      this.isMouseover = false;
+      this.expandButton.hide();
+    });
   }
   updateActive() {
     if (!this.nodeGroup) return;
-    this.isActive ? this.nodeGroup.addClass('active') : this.nodeGroup.removeClass('active');
+    if (this.isActive) {
+      this.nodeGroup.addClass('active');
+      this.expandButton.show();
+      return;
+    }
+    this.nodeGroup.removeClass('active');
+    this.expandButton.hide();
   }
 }
 

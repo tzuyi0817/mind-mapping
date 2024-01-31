@@ -37,26 +37,39 @@ class Base {
     Promise.all(tasks);
   }
   renderNodes() {
-    dfsRenderTree({ node: this.renderTreeRoot, isRoot: true }, renderTree => {
-      const node = this.createNode(renderTree);
-      const { isRoot, deep = 0 } = renderTree;
-      const { left = 0, width = 0 } = node.parent ?? {};
+    dfsRenderTree(
+      { node: this.renderTreeRoot, isRoot: true },
+      renderTree => {
+        const node = this.createNode(renderTree);
+        const { isRoot, deep = 0 } = renderTree;
+        const { left = 0, width = 0 } = node.parent ?? {};
 
-      isRoot ? this.setNodeCenter(node) : (node.left = left + width + this.getMargin('marginX', deep));
-      window.requestAnimationFrame(() => {
-        if (node.children.length) {
-          const marginY = this.getMargin('marginY', deep + 1);
-          const childrenMarginY = (node.children.length + 1) * marginY;
-          let top = node.top + node.height / 2 - (node.childrenAreaHeight + childrenMarginY) / 2 + marginY;
+        isRoot ? this.setNodeCenter(node) : (node.left = left + width + this.getMargin('marginX', deep));
+        window.requestAnimationFrame(() => {
+          if (node.children.length) {
+            const marginY = this.getMargin('marginY', deep + 1);
+            const childrenMarginY = (node.children.length + 1) * marginY;
+            let top = node.top + node.height / 2 - (node.childrenAreaHeight + childrenMarginY) / 2 + marginY;
 
-          node.children.forEach(child => {
-            child.top = top;
-            top += child.height + marginY;
-          });
-        }
-        node.render();
-      });
-    });
+            node.children.forEach(child => {
+              child.top = top;
+              top += child.height + marginY;
+            });
+          }
+          node.render();
+        });
+      },
+      renderTree => {
+        const { isRoot } = renderTree;
+
+        if (!isRoot) return;
+        window.requestAnimationFrame(() => {
+          const { width } = this.group.bbox();
+
+          this.mindMapping.moveDraw(-width / 2, 0);
+        });
+      },
+    );
   }
   renderGeneralization({ node, line, generalization }: LayoutRenderGeneralization) {
     if (!generalization) return;
@@ -107,8 +120,8 @@ class Base {
   setNodeCenter(node: MindNode) {
     const { CENTER } = PositionEnum;
 
-    node.top = this.mindMapping.height * INIT_POSITION_MAP[CENTER] - node.height;
-    node.left = this.mindMapping.width * INIT_POSITION_MAP[CENTER] - node.width;
+    node.top = this.mindMapping.height * INIT_POSITION_MAP[CENTER];
+    node.left = this.mindMapping.width * INIT_POSITION_MAP[CENTER];
   }
   getMargin(direction: 'marginX' | 'marginY', deep = 1) {
     const {

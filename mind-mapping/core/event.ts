@@ -11,6 +11,7 @@ class Event extends EventEmitter {
   element: HTMLElement;
 
   isMousedown = false;
+  isMousedownDraw = false;
   mousedownPosition = { x: 0, y: 0 };
   mousemoveOffset = { x: 0, y: 0 };
 
@@ -50,7 +51,9 @@ class Event extends EventEmitter {
     this.isMousedown = true;
     this.mousedownPosition.x = event.clientX;
     this.mousedownPosition.y = event.clientY;
+    this.isMousedownDraw = this.draw.node === event.target;
     this.emit('mousedown', event);
+    this.isMousedownDraw && this.emit('mousedown-draw', event);
   }
   onMousemove(event: MouseEvent) {
     if (!this.isMousedown) return;
@@ -60,7 +63,7 @@ class Event extends EventEmitter {
     this.mousemoveOffset.x = event.clientX - x;
     this.mousemoveOffset.y = event.clientY - y;
     this.emit('mousemove', event);
-    this.emit('drag-draw', event);
+    this.isMousedownDraw && this.emit('drag-draw', event);
   }
   onMouseup() {
     this.isMousedown = false;

@@ -93,13 +93,6 @@ class CreateNode {
     const close = CreateNode.image(closeSvg, size, size);
     const fill = new Circle().size(size).x(0).y(0);
 
-    group.on('click', (event: Event) => {
-      event.stopPropagation();
-      this.mindMapping.event.emit('click-expand', this);
-    });
-    group.on('dblclick', (event: Event) => event.stopPropagation());
-    group.on('mouseover', (event: Event) => event.stopPropagation());
-    group.on('mouseout', (event: Event) => event.stopPropagation());
     group.addClass('mind-mapping-expand-button');
     return { node: group, open, close, fill };
   }

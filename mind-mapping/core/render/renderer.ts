@@ -25,7 +25,7 @@ class Renderer {
     this.layout = new Base(this);
   }
   onEvents() {
-    this.mindMapping.event.on('click-draw', () => {
+    this.mindMapping.event.on('mousedown-draw', () => {
       this.clearActiveNodes();
     });
   }
