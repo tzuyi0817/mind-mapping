@@ -13,7 +13,8 @@ class CreateNode {
   width!: number;
   height!: number;
   renderer!: Renderer;
-  group!: G;
+  linesGroup!: G;
+  nodesGroup!: G;
   text?: NodeMap;
   children!: MindNode[];
 
@@ -76,7 +77,8 @@ class CreateNode {
       },
       renderer: this.renderer,
       mindMapping: this.mindMapping,
-      group: this.group,
+      linesGroup: this.linesGroup,
+      nodesGroup: this.nodesGroup,
       isGeneralization: true,
     });
   }

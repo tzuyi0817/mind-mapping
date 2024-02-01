@@ -11,20 +11,23 @@ class Base {
   renderer: Renderer;
   renderTreeRoot: MappingBase;
   mindMapping: MindMapping;
-  group: G;
+  linesGroup: G;
+  nodesGroup: G;
 
   constructor(renderer: Renderer) {
     this.renderer = renderer;
     this.renderTreeRoot = renderer.renderTree.root;
     this.mindMapping = renderer.mindMapping;
-    this.group = renderer.mindMapping.group;
+    this.linesGroup = renderer.mindMapping.linesGroup;
+    this.nodesGroup = renderer.mindMapping.nodesGroup;
   }
   createNode(renderTree: RenderTree) {
     const node = new MindNode({
       renderTree,
       renderer: this.renderer,
       mindMapping: this.mindMapping,
-      group: this.group,
+      linesGroup: this.linesGroup,
+      nodesGroup: this.nodesGroup,
     });
 
     renderTree.node.instance = node;

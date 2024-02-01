@@ -24,7 +24,8 @@ class MindNode extends CreateNode {
   renderTree: RenderTree;
   renderer: Renderer;
   mindMapping: MindMapping;
-  group: G;
+  linesGroup: G;
+  nodesGroup: G;
   shape: Shape;
   style: Style;
   expandButton: ExpandButton;
@@ -38,7 +39,8 @@ class MindNode extends CreateNode {
     this.renderTree = options.renderTree;
     this.renderer = options.renderer;
     this.mindMapping = options.mindMapping;
-    this.group = options.group;
+    this.linesGroup = options.linesGroup;
+    this.nodesGroup = options.nodesGroup;
     this.isGeneralization = options.isGeneralization ?? false;
     this.shape = new Shape(this);
     this.style = new Style(this);
@@ -119,7 +121,7 @@ class MindNode extends CreateNode {
       this.nodeGroup = new G();
       this.nodeGroup.addClass('mind-mapping-node');
     }
-    this.group.add(this.nodeGroup);
+    this.nodesGroup.add(this.nodeGroup);
     this.renderLine();
     this.setLayout();
     this.update();
@@ -139,7 +141,7 @@ class MindNode extends CreateNode {
 
     if (diffSize > 0) {
       for (let index = 0; index < diffSize; index++) {
-        this.lines.push(this.group.path());
+        this.lines.push(this.linesGroup.path());
       }
     }
     this.renderer.layout.renderLine({
@@ -166,7 +168,7 @@ class MindNode extends CreateNode {
   renderGeneralization() {
     if (!this.isShowGeneralization) return;
     this.generalization = this.createGeneralizationNode();
-    this.generalizationLine = this.group.path();
+    this.generalizationLine = this.linesGroup.path();
     this.renderer.layout.renderGeneralization({
       node: this,
       line: this.generalizationLine,

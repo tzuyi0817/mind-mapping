@@ -13,12 +13,14 @@ import type { PickPartial } from './types/common';
 
 class MindMapping extends Draw {
   options: MindMappingMergeOptions;
-  element: MindMappingOptions['element'];
-  elementRect: DOMRect;
-  width: number;
-  height: number;
-  draw: Svg;
-  group: G;
+  element!: MindMappingOptions['element'];
+  elementRect!: DOMRect;
+  width!: number;
+  height!: number;
+  draw!: Svg;
+  group!: G;
+  linesGroup!: G;
+  nodesGroup!: G;
   renderer: Renderer;
   theme!: Theme;
   event: Event;
@@ -26,15 +28,8 @@ class MindMapping extends Draw {
   constructor(options: PickPartial<MindMappingOptions, 'data'>) {
     super();
     this.options = this.mergeOption(options);
-    this.element = this.options.element;
-    this.elementRect = this.element.getBoundingClientRect();
-    this.width = this.elementRect.width;
-    this.height = this.elementRect.height;
-
-    // if (this.width <= 0 || this.height <= 0)
-    //   throw new Error('The width and height of the container element cannot be 0');
-    this.draw = SVG().addTo(this.element).size(this.width, this.height);
-    this.group = this.draw.group();
+    this.initElement();
+    this.initDraw();
     this.event = new Event({ draw: this.draw, element: this.element });
     this.onEvents();
     this.renderer = new Renderer({ mindMapping: this });
@@ -42,6 +37,28 @@ class MindMapping extends Draw {
   }
   mergeOption(options: PickPartial<MindMappingOptions, 'data'>) {
     return { data: DEFAULT_MAPPING, ...DEFAULT_OPTIONS, ...options };
+  }
+  initElement() {
+    this.element = this.options.element;
+    if (!this.element) throw new Error('The element cannot be empty');
+    this.elementRect = this.element.getBoundingClientRect();
+    this.width = this.elementRect.width;
+    this.height = this.elementRect.height;
+
+    if (!this.width || !this.height) {
+      throw new Error('The width and height of the container element cannot be 0');
+    }
+  }
+  initDraw() {
+    this.draw = SVG().addTo(this.element).size(this.width, this.height);
+    this.group = this.draw.group();
+    this.group.addClass('mind-mapping-group');
+
+    this.linesGroup = this.group.group();
+    this.linesGroup.addClass('mind-mapping-lines-group');
+
+    this.nodesGroup = this.group.group();
+    this.nodesGroup.addClass('mind-mapping-nodes-group');
   }
   initTheme() {
     this.theme = themes.SKY_BLUE;
