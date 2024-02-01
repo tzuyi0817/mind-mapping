@@ -1,6 +1,6 @@
 import { MOUSE_WHEEL_ACTION } from './constants';
-import openSvg from '../assets/svg/expand-open.svg';
-import closeSvg from '../assets/svg/expand-close.svg';
+import openSvg from '../assets/svg/expand-open';
+import closeSvg from '../assets/svg/expand-close';
 
 export const DEFAULT_OPTIONS = {
   scaleRatio: 0.1,
@@ -21,8 +21,8 @@ export const DEFAULT_OPTIONS = {
     strokeColor: '#333333',
   },
   expandButtonSvg: {
-    openSvg: openSvg.src ?? openSvg,
-    closeSvg: closeSvg.src ?? closeSvg,
+    openSvg,
+    closeSvg,
   },
   showExpandNumber: true,
 };

@@ -1,2 +1,2 @@
 export { DEFAULT } from './default';
-export { SKY_BLUE } from './skyBlue';
+export { SKY_BLUE } from './sky-blue';

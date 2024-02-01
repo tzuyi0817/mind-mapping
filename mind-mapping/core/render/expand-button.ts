@@ -1,4 +1,4 @@
-import { G, Circle, Image } from '@svgdotjs/svg.js';
+import { G, Circle, Element } from '@svgdotjs/svg.js';
 import MindNode from './node';
 
 class ExpandButton {
@@ -6,8 +6,8 @@ class ExpandButton {
 
   node?: G;
   fill?: Circle;
-  open?: Image;
-  close?: Image;
+  open?: Element;
+  close?: Element;
   isShow = false;
 
   constructor(node: MindNode) {

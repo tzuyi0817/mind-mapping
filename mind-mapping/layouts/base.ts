@@ -77,7 +77,7 @@ class Base {
     const { translateX = 0, translateY = 0 } = node.transform();
     const radius = expandButtonSize / 2;
 
-    node.translate(width - radius - translateX, height / 2 - radius - translateY);
+    node.translate(width - translateX, height / 2 - radius - translateY);
   }
   renderLine(params: LayoutRenderLine) {
     const { lineStyle } = params;

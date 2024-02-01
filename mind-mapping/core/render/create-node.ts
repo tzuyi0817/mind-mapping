@@ -24,9 +24,6 @@ class CreateNode {
   get hoverRectPadding() {
     return this.mindMapping.options.hoverRectPadding;
   }
-  static image(src: string, width: number, height: number) {
-    return SVG().image(src).size(width, height).x(0).y(0);
-  }
   createTextNode() {
     const group = new G();
     const { text } = this.content;
@@ -89,8 +86,8 @@ class CreateNode {
       expandButtonSize: size,
     } = this.mindMapping.options;
     const group = new G();
-    const open = CreateNode.image(openSvg, size, size);
-    const close = CreateNode.image(closeSvg, size, size);
+    const open = SVG(openSvg).size(size).x(0).y(0);
+    const close = SVG(closeSvg).size(size).x(0).y(0);
     const fill = new Circle().size(size).x(0).y(0);
 
     group.addClass('mind-mapping-expand-button');
