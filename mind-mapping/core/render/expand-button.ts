@@ -52,7 +52,7 @@ class ExpandButton {
     this.node.on('click', (event: Event) => {
       event.stopPropagation();
       this.parent.isExpand = !this.parent.isExpand;
-      this.parent.mindMapping.rerender();
+      this.parent.mindMapping.render();
     });
     this.node.on('dblclick', (event: Event) => event.stopPropagation());
     this.node.on('mouseover', (event: Event) => event.stopPropagation());

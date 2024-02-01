@@ -120,12 +120,12 @@ class MindNode extends CreateNode {
     if (!this.nodeGroup) {
       this.nodeGroup = new G();
       this.nodeGroup.addClass('mind-mapping-node');
+      this.onNodeGroup();
     }
     this.nodesGroup.add(this.nodeGroup);
     this.renderLine();
     this.setLayout();
     this.update();
-    this.onNodeGroup();
   }
   update() {
     this.renderGeneralization();
