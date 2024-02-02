@@ -37,8 +37,8 @@ export function dfsBoundingNode(
     root.children.forEach(node => {
       const { generalization } = node;
       const { top, right, bottom, left } = dfsBoundingNode(node, generalizationNodeMargin, direction);
-      const generalizationWidth = generalization ? generalization.width + generalizationNodeMargin : 0;
-      const generalizationHeight = generalization ? generalization.height + generalizationNodeMargin : 0;
+      const generalizationWidth = generalization.node ? generalization.node.width + generalizationNodeMargin : 0;
+      const generalizationHeight = generalization.node ? generalization.node.height + generalizationNodeMargin : 0;
       const isHorizontal = direction === 'horizontal';
 
       bounding.top = Math.min(top, bounding.top);

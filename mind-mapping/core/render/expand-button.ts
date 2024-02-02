@@ -25,13 +25,12 @@ class ExpandButton {
       mindMapping: {
         options: { expandButtonSize },
       },
-      crateExpandButton,
     } = this.parent;
 
     if (!nodeGroup) return;
     if (!childrenCount || renderTree.isRoot) return;
     if (!this.node || !this.fill || !this.open || !this.close) {
-      const { node, open, close, fill } = crateExpandButton.call(this.parent);
+      const { node, open, close, fill } = this.parent.crateExpandButton();
 
       this.node = node;
       this.open = open;

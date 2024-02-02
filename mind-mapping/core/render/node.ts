@@ -3,6 +3,7 @@ import Renderer from '../../core/render/renderer';
 import MindMapping from '../../index';
 import Style from './style';
 import Shape from './shape';
+import Generalization from './generalization';
 import ExpandButton from './expand-button';
 import CreateNode from './create-node';
 import type { MindNodeOptions } from '../../types/options';
@@ -13,8 +14,6 @@ class MindNode extends CreateNode {
   nodeGroup: G | null = null;
   children: MindNode[] = [];
   lines: Path[] = [];
-  generalization: MindNode | null = null;
-  generalizationLine: Path | null = null;
   isMouseover = false;
   width = 0;
   height = 0;
@@ -29,6 +28,7 @@ class MindNode extends CreateNode {
   shape: Shape;
   style: Style;
   expandButton: ExpandButton;
+  generalization: Generalization;
   text?: NodeMap;
   isGeneralization: boolean;
   shapeNode?: Path;
@@ -45,6 +45,7 @@ class MindNode extends CreateNode {
     this.shape = new Shape(this);
     this.style = new Style(this);
     this.expandButton = new ExpandButton(this);
+    this.generalization = new Generalization(this);
 
     this.init();
   }
@@ -127,7 +128,6 @@ class MindNode extends CreateNode {
       this.renderLine();
       this.setLayout();
       this.update();
-
       window.requestAnimationFrame(async () => {
         if (this.children.length) {
           await Promise.all(this.children.map(child => child.render()));
@@ -137,7 +137,7 @@ class MindNode extends CreateNode {
     });
   }
   update() {
-    this.renderGeneralization();
+    this.generalization.render();
     this.setPosition();
     if (this.isMouseover || !this.isExpand) {
       this.expandButton.show();
@@ -148,10 +148,7 @@ class MindNode extends CreateNode {
   reset() {
     this.left = 0;
     this.top = 0;
-    if (!this.generalization) return;
-    this.generalization.nodesGroup.remove();
-    this.generalizationLine?.remove();
-    this.generalization = this.generalizationLine = null;
+    this.generalization.reset();
   }
   renderLine() {
     const diffSize = this.children.length - this.lines.length;
@@ -181,18 +178,6 @@ class MindNode extends CreateNode {
     this.nodeGroup.add(this.shapeNode);
     this.nodeGroup.add(textGroup);
     this.nodeGroup.add(this.hoverNode);
-  }
-  renderGeneralization() {
-    if (!this.isShowGeneralization || this.generalization) return;
-    this.generalization = this.createGeneralizationNode();
-    this.generalizationLine = this.linesGroup.path();
-    this.renderer.layout.renderGeneralization({
-      node: this,
-      line: this.generalizationLine,
-      generalization: this.generalization,
-    });
-    this.style.setGeneralizationLineStyle(this.generalizationLine);
-    this.generalization?.render();
   }
   setPosition() {
     if (!this.nodeGroup) return;
