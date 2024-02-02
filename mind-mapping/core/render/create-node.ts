@@ -1,4 +1,5 @@
 import { G, Rect, SVG, Circle } from '@svgdotjs/svg.js';
+import { v4 as uuidv4 } from 'uuid';
 import MindMapping from '../../index';
 import MindNode from './node';
 import Renderer from './renderer';
@@ -66,6 +67,7 @@ class CreateNode {
   createGeneralizationNode() {
     if (!this.content.generalization) return null;
     return new MindNode({
+      uid: uuidv4(),
       renderTree: {
         node: {
           data: {

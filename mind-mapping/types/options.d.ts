@@ -13,6 +13,7 @@ export interface MindMappingOptions {
 }
 
 export interface MindNodeOptions {
+  uid: string;
   renderTree: RenderTree;
   renderer: Renderer;
   mindMapping: MindMapping;

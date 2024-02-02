@@ -1,4 +1,5 @@
 import { G } from '@svgdotjs/svg.js';
+import { v4 as uuidv4 } from 'uuid';
 import Renderer from '../core/render/renderer';
 import MindNode from '../core/render/node';
 import MindMapping from '../index';
@@ -22,7 +23,9 @@ class Base {
     this.nodesGroup = renderer.mindMapping.nodesGroup;
   }
   createNode(renderTree: RenderTree) {
+    const uid = uuidv4();
     const node = new MindNode({
+      uid,
       renderTree,
       renderer: this.renderer,
       mindMapping: this.mindMapping,
@@ -32,39 +35,48 @@ class Base {
 
     renderTree.node.instance = node;
     node.parent?.children.push(node);
+    this.renderer.cachedNodes.set(uid, node);
     return node;
   }
-  startLayout() {
+  async startLayout() {
     const tasks = [this.renderNodes()];
+    const [root] = await Promise.all(tasks);
 
-    Promise.all(tasks);
+    return root;
   }
   renderNodes() {
-    dfsRenderTree(
-      { node: this.renderTreeRoot, isRoot: true },
-      renderTree => {
-        const node = this.createNode(renderTree);
-        const { isRoot, deep = 0 } = renderTree;
-        const { left = 0, width = 0 } = node.parent ?? {};
+    return new Promise<MappingBase>(resolve => {
+      dfsRenderTree(
+        { node: this.renderTreeRoot, isRoot: true },
+        renderTree => {
+          const node = this.createNode(renderTree);
+          const { isRoot, deep = 0 } = renderTree;
+          const { left = 0, width = 0 } = node.parent ?? {};
 
-        isRoot ? this.setNodeCenter(node) : (node.left = left + width + this.getMargin('marginX', deep));
-        window.requestAnimationFrame(() => {
-          if (node.children.length) {
-            const marginY = this.getMargin('marginY', deep + 1);
-            const childrenMarginY = (node.children.length + 1) * marginY;
-            let top = node.top + node.height / 2 - (node.childrenAreaHeight + childrenMarginY) / 2 + marginY;
+          isRoot ? this.setNodeCenter(node) : (node.left = left + width + this.getMargin('marginX', deep));
+          window.requestAnimationFrame(() => {
+            if (node.children.length) {
+              const marginY = this.getMargin('marginY', deep + 1);
+              const childrenMarginY = (node.children.length + 1) * marginY;
+              let top = node.top + node.height / 2 - (node.childrenAreaHeight + childrenMarginY) / 2 + marginY;
+              node.children.forEach(child => {
+                child.top = top;
+                top += child.height + marginY;
+              });
+            }
+          });
+          return node.isExpand;
+        },
+        renderTree => {
+          window.requestAnimationFrame(() => {
+            const { isRoot, node } = renderTree;
 
-            node.children.forEach(child => {
-              child.top = top;
-              top += child.height + marginY;
-            });
-          }
-          node.render();
-        });
-        return node.isExpand;
-      },
-      renderTree => {},
-    );
+            if (!isRoot) return;
+            resolve(node);
+          });
+        },
+      );
+    });
   }
   renderGeneralization({ node, line, generalization }: LayoutRenderGeneralization) {
     if (!generalization) return;

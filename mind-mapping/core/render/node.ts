@@ -117,15 +117,24 @@ class MindNode extends CreateNode {
     };
   }
   render() {
-    if (!this.nodeGroup) {
-      this.nodeGroup = new G();
-      this.nodeGroup.addClass('mind-mapping-node');
-      this.onNodeGroup();
-    }
-    this.nodesGroup.add(this.nodeGroup);
-    this.renderLine();
-    this.setLayout();
-    this.update();
+    return new Promise(resolve => {
+      if (!this.nodeGroup) {
+        this.nodeGroup = new G();
+        this.nodeGroup.addClass('mind-mapping-node');
+        this.onNodeGroup();
+      }
+      this.nodesGroup.add(this.nodeGroup);
+      this.renderLine();
+      this.setLayout();
+      this.update();
+
+      window.requestAnimationFrame(async () => {
+        if (this.children.length) {
+          await Promise.all(this.children.map(child => child.render()));
+        }
+        resolve(true);
+      });
+    });
   }
   update() {
     this.renderGeneralization();
@@ -135,6 +144,14 @@ class MindNode extends CreateNode {
       return;
     }
     this.expandButton.hide();
+  }
+  reset() {
+    this.left = 0;
+    this.top = 0;
+    if (!this.generalization) return;
+    this.generalization.nodesGroup.remove();
+    this.generalizationLine?.remove();
+    this.generalization = this.generalizationLine = null;
   }
   renderLine() {
     const diffSize = this.children.length - this.lines.length;
@@ -166,7 +183,7 @@ class MindNode extends CreateNode {
     this.nodeGroup.add(this.hoverNode);
   }
   renderGeneralization() {
-    if (!this.isShowGeneralization) return;
+    if (!this.isShowGeneralization || this.generalization) return;
     this.generalization = this.createGeneralizationNode();
     this.generalizationLine = this.linesGroup.path();
     this.renderer.layout.renderGeneralization({
@@ -179,7 +196,7 @@ class MindNode extends CreateNode {
   }
   setPosition() {
     if (!this.nodeGroup) return;
-    this.nodeGroup.translate(this.left, this.top);
+    this.nodeGroup.transform({ translate: [this.left, this.top] });
   }
   onNodeGroup() {
     if (!this.nodeGroup) return;

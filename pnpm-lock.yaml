@@ -126,6 +126,9 @@ importers:
         specifier: ^10.0.1
         version: 10.0.1(semantic-release@23.0.0)
     devDependencies:
+      '@types/uuid':
+        specifier: ^9.0.8
+        version: 9.0.8
       cssnano:
         specifier: ^6.0.1
         version: 6.0.1(postcss@8.4.33)
@@ -965,6 +968,10 @@ packages:
 
   /@types/scheduler@0.16.3:
     resolution: {integrity: sha512-5cJ8CB4yAx7BH1oMvdU0Jh9lrEXyPkar6F9G/ERswkCuvP4KQZfZkSjcMbAICCpQTN4OuZn8tz0HiKv9TGZgrQ==}
+    dev: true
+
+  /@types/uuid@9.0.8:
+    resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
     dev: true
 
   /@typescript-eslint/parser@6.7.0(eslint@8.56.0)(typescript@5.3.3):

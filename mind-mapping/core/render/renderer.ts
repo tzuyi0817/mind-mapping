@@ -8,6 +8,8 @@ import type { MappingRoot } from '../../types/mapping';
 class Renderer {
   isRendering = false;
   activeNodes: Set<MindNode> = new Set();
+  cachedNodes: Map<string, MindNode> = new Map();
+  previousCachedNodes: Map<string, MindNode> = new Map();
 
   mindMapping: MindMapping;
   renderTree: MappingRoot;
@@ -29,9 +31,14 @@ class Renderer {
       this.clearActiveNodes();
     });
   }
-  render() {
+  async render() {
     this.isRendering = true;
-    this.layout.startLayout();
+    this.previousCachedNodes = new Map(this.cachedNodes);
+    this.cachedNodes.clear();
+    const rootNode = await this.layout.startLayout();
+
+    await rootNode.instance?.render();
+    this.isRendering = false;
   }
   clearActiveNodes() {
     if (!this.activeNodes.size) return;
