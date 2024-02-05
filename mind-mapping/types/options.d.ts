@@ -16,9 +16,6 @@ export interface MindNodeOptions {
   uid: string;
   renderTree: RenderTree;
   renderer: Renderer;
-  mindMapping: MindMapping;
-  linesGroup: G;
-  nodesGroup: G;
   isGeneralization?: boolean;
 }
 

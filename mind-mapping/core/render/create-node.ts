@@ -1,6 +1,5 @@
 import { G, Rect, SVG, Circle } from '@svgdotjs/svg.js';
 import { v4 as uuidv4 } from 'uuid';
-import MindMapping from '../../index';
 import MindNode from './node';
 import Renderer from './renderer';
 import Style from './style';
@@ -9,13 +8,10 @@ import type { NodeMap } from '../../types/node';
 
 class CreateNode {
   renderTree!: RenderTree;
-  mindMapping!: MindMapping;
   style!: Style;
   width!: number;
   height!: number;
   renderer!: Renderer;
-  linesGroup!: G;
-  nodesGroup!: G;
   text?: NodeMap;
   children!: MindNode[];
 
@@ -24,7 +20,7 @@ class CreateNode {
     return this.renderTree.node.data;
   }
   get hoverRectPadding() {
-    return this.mindMapping.options.hoverRectPadding;
+    return this.renderer.options.hoverRectPadding;
   }
   createTextNode() {
     const group = new G();
@@ -78,9 +74,6 @@ class CreateNode {
         isRoot: false,
       },
       renderer: this.renderer,
-      mindMapping: this.mindMapping,
-      linesGroup: this.linesGroup,
-      nodesGroup: this.nodesGroup,
       isGeneralization: true,
     });
   }
@@ -88,7 +81,7 @@ class CreateNode {
     const {
       expandButtonSvg: { openSvg, closeSvg },
       expandButtonSize: size,
-    } = this.mindMapping.options;
+    } = this.renderer.options;
     const group = new G();
     const open = SVG(openSvg).size(size).x(0).y(0);
     const close = SVG(closeSvg).size(size).x(0).y(0);

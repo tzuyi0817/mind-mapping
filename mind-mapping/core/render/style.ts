@@ -16,11 +16,11 @@ class Style {
     element.style.backgroundColor = backgroundColor;
   }
   getCommonStyle<T extends keyof Omit<Theme, 'root' | 'second' | 'node' | 'generalization'>>(prop: T): Theme[T] {
-    return this.node.mindMapping.theme[prop];
+    return this.node.renderer.theme[prop];
   }
   getStyle<T extends keyof ThemeNode>(prop: T): ThemeNode[T] {
     const {
-      mindMapping: { theme },
+      renderer: { theme },
       renderTree: { deep = 0 },
       isGeneralization,
     } = this.node;
@@ -68,7 +68,7 @@ class Style {
   }
   setHoverStyle(node: Rect) {
     node.radius(5).fill('none').stroke({
-      color: this.node.mindMapping.options.hoverRectColor,
+      color: this.node.renderer.options.hoverRectColor,
     });
   }
   setGeneralizationLineStyle(line: Path) {
@@ -78,7 +78,7 @@ class Style {
     });
   }
   setExpandButtonStyle({ open, close, fill }: NodeExpandButton) {
-    const { expandButtonStyle: style } = this.node.mindMapping.options;
+    const { expandButtonStyle: style } = this.node.renderer.options;
 
     open.fill({ color: style.color });
     close.fill({ color: style.color });

@@ -23,14 +23,17 @@ class Base {
     this.nodesGroup = renderer.mindMapping.nodesGroup;
   }
   createNode(renderTree: RenderTree) {
+    const { instance: cacheNode } = renderTree.node;
+
+    if (cacheNode) {
+      cacheNode.reset(this.renderer);
+      return cacheNode;
+    }
     const uid = uuidv4();
     const node = new MindNode({
       uid,
       renderTree,
       renderer: this.renderer,
-      mindMapping: this.mindMapping,
-      linesGroup: this.linesGroup,
-      nodesGroup: this.nodesGroup,
     });
 
     renderTree.node.instance = node;

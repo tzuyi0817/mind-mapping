@@ -23,6 +23,12 @@ class Renderer {
     this.initLayout();
     this.onEvents();
   }
+  get options() {
+    return this.mindMapping.options;
+  }
+  get theme() {
+    return this.mindMapping.theme;
+  }
   initLayout() {
     this.layout = new Base(this);
   }

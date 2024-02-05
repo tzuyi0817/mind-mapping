@@ -1,6 +1,5 @@
 import { G, Path, Rect } from '@svgdotjs/svg.js';
 import Renderer from '../../core/render/renderer';
-import MindMapping from '../../index';
 import Style from './style';
 import Shape from './shape';
 import Generalization from './generalization';
@@ -20,11 +19,9 @@ class MindNode extends CreateNode {
   #top = 0;
   #left = 0;
 
+  uid: string;
   renderTree: RenderTree;
   renderer: Renderer;
-  mindMapping: MindMapping;
-  linesGroup: G;
-  nodesGroup: G;
   shape: Shape;
   style: Style;
   expandButton: ExpandButton;
@@ -36,11 +33,9 @@ class MindNode extends CreateNode {
 
   constructor(options: MindNodeOptions) {
     super();
+    this.uid = options.uid;
     this.renderTree = options.renderTree;
     this.renderer = options.renderer;
-    this.mindMapping = options.mindMapping;
-    this.linesGroup = options.linesGroup;
-    this.nodesGroup = options.nodesGroup;
     this.isGeneralization = options.isGeneralization ?? false;
     this.shape = new Shape(this);
     this.style = new Style(this);
@@ -75,6 +70,12 @@ class MindNode extends CreateNode {
   }
   get childrenCount() {
     return this.node.children.length;
+  }
+  get linesGroup() {
+    return this.renderer.mindMapping.linesGroup;
+  }
+  get nodesGroup() {
+    return this.renderer.mindMapping.nodesGroup;
   }
   set top(value: number) {
     this.#top = value;
@@ -145,9 +146,10 @@ class MindNode extends CreateNode {
     }
     this.expandButton.hide();
   }
-  reset() {
+  reset(renderer: Renderer) {
     this.left = 0;
     this.top = 0;
+    this.renderer = renderer;
     this.generalization.reset();
   }
   renderLine() {

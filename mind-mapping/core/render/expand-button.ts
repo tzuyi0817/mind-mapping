@@ -22,7 +22,7 @@ class ExpandButton {
       renderer,
       width,
       height,
-      mindMapping: {
+      renderer: {
         options: { expandButtonSize },
       },
     } = this.parent;
@@ -51,7 +51,7 @@ class ExpandButton {
     this.node.on('click', (event: Event) => {
       event.stopPropagation();
       this.parent.isExpand = !this.parent.isExpand;
-      this.parent.mindMapping.render();
+      // this.parent.mindMapping.render();
     });
     this.node.on('dblclick', (event: Event) => event.stopPropagation());
     this.node.on('mouseover', (event: Event) => event.stopPropagation());
