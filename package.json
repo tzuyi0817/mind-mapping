@@ -17,8 +17,8 @@
   },
   "devDependencies": {
     "@radix-ui/react-slot": "^1.0.2",
-    "@types/node": "20.10.5",
-    "@types/react": "18.2.45",
+    "@types/node": "20.11.16",
+    "@types/react": "18.2.52",
     "@types/react-dom": "18.2.18",
     "autoprefixer": "10.4.17",
     "class-variance-authority": "^0.7.0",
@@ -28,7 +28,7 @@
     "eslint-config-next": "14.1.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-security": "^2.0.0",
-    "lucide-react": "^0.316.0",
+    "lucide-react": "^0.321.0",
     "postcss": "8.4.33",
     "postcss-nesting": "^12.0.1",
     "postcss-pxtorem": "^6.0.0",
@@ -47,7 +47,7 @@
   "optionalDependencies": {
     "@commitlint/cli": "^18.0.0",
     "@commitlint/config-conventional": "^18.0.0",
-    "husky": "^8.0.3",
+    "husky": "^9.0.0",
     "lint-staged": "^15.0.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1"
