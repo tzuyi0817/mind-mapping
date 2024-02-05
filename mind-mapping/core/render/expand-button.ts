@@ -1,4 +1,4 @@
-import { G, Circle, Element } from '@svgdotjs/svg.js';
+import { G, Circle, Element, Rect } from '@svgdotjs/svg.js';
 import MindNode from './node';
 
 class ExpandButton {
@@ -9,26 +9,21 @@ class ExpandButton {
   open?: Element;
   close?: Element;
   isShow = false;
+  placeholder?: Rect;
 
   constructor(node: MindNode) {
     this.parent = node;
   }
+  get isRequired() {
+    return this.parent.childrenCount && !this.parent.renderTree.isRoot;
+  }
+  get expandButtonSize() {
+    return this.parent.renderer.options.expandButtonSize;
+  }
   render() {
-    const {
-      nodeGroup,
-      childrenCount,
-      renderTree,
-      style,
-      renderer,
-      width,
-      height,
-      renderer: {
-        options: { expandButtonSize },
-      },
-    } = this.parent;
+    const { nodeGroup, style, renderer, width, height } = this.parent;
 
-    if (!nodeGroup) return;
-    if (!childrenCount || renderTree.isRoot) return;
+    if (!nodeGroup || !this.isRequired) return;
     if (!this.node || !this.fill || !this.open || !this.close) {
       const { node, open, close, fill } = this.parent.crateExpandButton();
 
@@ -43,8 +38,21 @@ class ExpandButton {
 
     style.setExpandButtonStyle({ node, open, close, fill });
     nodeGroup.add(node.add(fill).add(svg));
-    renderer.layout.renderExpandButton({ node, expandButtonSize, width, height });
+    renderer.layout.renderExpandButton({ node, expandButtonSize: this.expandButtonSize, width, height });
     this.isShow = true;
+  }
+  renderPlaceholder() {
+    const { nodeGroup, renderer, width, height } = this.parent;
+
+    if (!nodeGroup || !this.isRequired) return;
+    this.placeholder = new Rect().fill('transparent');
+    nodeGroup.add(this.placeholder);
+    renderer.layout.renderExpandPlaceholder({
+      node: this.placeholder,
+      width,
+      height,
+      expandButtonSize: this.expandButtonSize,
+    });
   }
   onEvent() {
     if (!this.node) return;

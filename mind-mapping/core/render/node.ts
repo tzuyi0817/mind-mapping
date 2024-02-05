@@ -16,8 +16,8 @@ class MindNode extends CreateNode {
   isMouseover = false;
   width = 0;
   height = 0;
-  #top = 0;
-  #left = 0;
+  top = 0;
+  left = 0;
 
   uid: string;
   renderTree: RenderTree;
@@ -47,12 +47,6 @@ class MindNode extends CreateNode {
   get parent() {
     return this.renderTree.parent?.instance;
   }
-  get top() {
-    return this.#top;
-  }
-  get left() {
-    return this.#left;
-  }
   get childrenAreaHeight() {
     return this.children.reduce((total, { height }) => total + height, 0);
   }
@@ -76,12 +70,6 @@ class MindNode extends CreateNode {
   }
   get nodesGroup() {
     return this.renderer.mindMapping.nodesGroup;
-  }
-  set top(value: number) {
-    this.#top = value;
-  }
-  set left(value: number) {
-    this.#left = value;
   }
   set isActive(value: boolean) {
     this.renderTree.node.isActive = value;
@@ -180,6 +168,7 @@ class MindNode extends CreateNode {
     this.nodeGroup.add(this.shapeNode);
     this.nodeGroup.add(textGroup);
     this.nodeGroup.add(this.hoverNode);
+    this.expandButton.renderPlaceholder();
   }
   setPosition() {
     if (!this.nodeGroup) return;

@@ -15,9 +15,16 @@ export interface LayoutRenderGeneralization {
   generalization: MindNode | null;
 }
 
-export interface LayoutRenderExpandButton {
-  node: G;
+interface LayoutRenderExpand {
   expandButtonSize: number;
   width: number;
   height: number;
+}
+
+export interface LayoutRenderExpandButton extends LayoutRenderExpand {
+  node: G;
+}
+
+export interface LayoutRenderExpandPlaceholder extends LayoutRenderExpand {
+  node: Rect;
 }

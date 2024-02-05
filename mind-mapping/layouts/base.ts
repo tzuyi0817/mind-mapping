@@ -6,7 +6,12 @@ import MindMapping from '../index';
 import { dfsRenderTree, dfsBoundingNode } from '../utils/dfs';
 import { PositionEnum, INIT_POSITION_MAP } from '../configs/position';
 import type { MappingBase, RenderTree } from '../types/mapping';
-import type { LayoutRenderLine, LayoutRenderGeneralization, LayoutRenderExpandButton } from '../types/layout';
+import type {
+  LayoutRenderLine,
+  LayoutRenderGeneralization,
+  LayoutRenderExpandButton,
+  LayoutRenderExpandPlaceholder,
+} from '../types/layout';
 
 class Base {
   renderer: Renderer;
@@ -96,6 +101,9 @@ class Base {
     const radius = expandButtonSize / 2;
 
     node.translate(width - translateX, height / 2 - radius - translateY);
+  }
+  renderExpandPlaceholder({ node, expandButtonSize, width, height }: LayoutRenderExpandPlaceholder) {
+    node.size(expandButtonSize, height).x(width).y(0);
   }
   renderLine(params: LayoutRenderLine) {
     const { lineStyle } = params;
