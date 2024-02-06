@@ -43,8 +43,15 @@ class Renderer {
     this.cachedNodes.clear();
     const rootNode = await this.layout.startLayout();
 
+    this.destroyExtraNodes();
     await rootNode.instance?.render();
     this.isRendering = false;
+  }
+  destroyExtraNodes() {
+    for (const node of this.previousCachedNodes.values()) {
+      if (this.cachedNodes.has(node.uid)) continue;
+      node.destroy();
+    }
   }
   clearActiveNodes() {
     if (!this.activeNodes.size) return;

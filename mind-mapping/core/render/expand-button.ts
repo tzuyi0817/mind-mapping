@@ -10,6 +10,7 @@ class ExpandButton {
   close?: Element;
   isShow = false;
   placeholder?: Rect;
+  lastStatus = false;
 
   constructor(node: MindNode) {
     this.parent = node;
@@ -21,7 +22,7 @@ class ExpandButton {
     return this.parent.renderer.options.expandButtonSize;
   }
   render() {
-    const { nodeGroup, style, renderer, width, height } = this.parent;
+    const { nodeGroup, style, renderer, width, height, isExpand } = this.parent;
 
     if (!nodeGroup || !this.isRequired) return;
     if (!this.node || !this.fill || !this.open || !this.close) {
@@ -34,12 +35,14 @@ class ExpandButton {
       this.onEvent();
     }
     const { node, open, close, fill } = this;
-    const svg = this.parent.isExpand ? close : open;
+    const svg = isExpand ? close : open;
 
+    node.clear();
     style.setExpandButtonStyle({ node, open, close, fill });
     nodeGroup.add(node.add(fill).add(svg));
     renderer.layout.renderExpandButton({ node, expandButtonSize: this.expandButtonSize, width, height });
     this.isShow = true;
+    this.lastStatus = isExpand;
   }
   renderPlaceholder() {
     const { nodeGroup, renderer, width, height } = this.parent;
@@ -59,18 +62,18 @@ class ExpandButton {
     this.node.on('click', (event: Event) => {
       event.stopPropagation();
       this.parent.isExpand = !this.parent.isExpand;
-      // this.parent.mindMapping.render();
+      this.parent.renderer.render();
     });
     this.node.on('dblclick', (event: Event) => event.stopPropagation());
     this.node.on('mouseover', (event: Event) => event.stopPropagation());
     this.node.on('mouseout', (event: Event) => event.stopPropagation());
   }
   show() {
-    if (this.isShow) return;
-    requestAnimationFrame(() => this.render());
+    if (this.lastStatus === this.parent.isExpand && this.isShow) return;
+    this.render();
   }
   hide() {
-    if (this.parent.isActive) return;
+    if (this.parent.isActive || !this.isShow) return;
     requestAnimationFrame(() => {
       this.node?.remove();
       this.isShow = false;

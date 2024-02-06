@@ -32,6 +32,7 @@ class Base {
 
     if (cacheNode) {
       cacheNode.reset(this.renderer);
+      this.renderer.cachedNodes.set(cacheNode.uid, cacheNode);
       return cacheNode;
     }
     const uid = uuidv4();

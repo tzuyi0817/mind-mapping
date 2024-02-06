@@ -26,7 +26,7 @@ class Generalization {
   }
   reset() {
     if (!this.node || !this.line) return;
-    this.node.nodesGroup.remove();
+    this.node.nodeGroup?.remove();
     this.line.remove();
     this.node = this.line = null;
   }

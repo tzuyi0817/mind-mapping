@@ -112,13 +112,13 @@ class MindNode extends CreateNode {
         this.nodeGroup = new G();
         this.nodeGroup.addClass('mind-mapping-node');
         this.onNodeGroup();
+        this.nodesGroup.add(this.nodeGroup);
       }
-      this.nodesGroup.add(this.nodeGroup);
       this.renderLine();
       this.setLayout();
       this.update();
       window.requestAnimationFrame(async () => {
-        if (this.children.length) {
+        if (this.children.length && this.isExpand) {
           await Promise.all(this.children.map(child => child.render()));
         }
         resolve(true);
@@ -140,7 +140,16 @@ class MindNode extends CreateNode {
     this.renderer = renderer;
     this.generalization.reset();
   }
+  destroy() {
+    if (!this.nodeGroup) return;
+    this.nodeGroup.remove();
+    this.nodeGroup = null;
+    this.removeLine();
+    this.generalization.reset();
+    this.parent?.removeLine();
+  }
   renderLine() {
+    if (!this.isExpand) return;
     const diffSize = this.children.length - this.lines.length;
 
     if (diffSize > 0) {
@@ -156,6 +165,10 @@ class MindNode extends CreateNode {
         this.style.setLineStyle(line);
       },
     });
+  }
+  removeLine() {
+    this.lines.forEach(line => line.remove());
+    this.lines = [];
   }
   setLayout() {
     if (!this.nodeGroup) return;
