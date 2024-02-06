@@ -1,4 +1,4 @@
-import MindNode from '../core/render/node';
+import MindNode from '../core/node';
 
 export interface MappingRoot {
   root: MappingBase;

@@ -1,4 +1,4 @@
-import MindNode from '../core/render/node';
+import MindNode from '../core/node';
 import type { RenderTree } from '../types/mapping';
 
 export function dfsRenderTree(

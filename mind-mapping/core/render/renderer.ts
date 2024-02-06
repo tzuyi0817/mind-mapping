@@ -1,6 +1,6 @@
 import { G } from '@svgdotjs/svg.js';
 import MindMapping from '../../index';
-import MindNode from './node';
+import MindNode from '../node';
 import Base from '../../layouts/base';
 import type { MindRendererOptions } from '../../types/options';
 import type { MappingRoot } from '../../types/mapping';

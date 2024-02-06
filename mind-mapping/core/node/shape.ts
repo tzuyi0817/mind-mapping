@@ -1,5 +1,5 @@
 import { Rect, Polygon, Path } from '@svgdotjs/svg.js';
-import MindNode from './node';
+import MindNode from './index';
 import { SHAPE } from '../../configs/shape';
 import type { ShapePadding } from '../../types/shape';
 

@@ -1,7 +1,7 @@
 import { G } from '@svgdotjs/svg.js';
 import { v4 as uuidv4 } from 'uuid';
 import Renderer from '../core/render/renderer';
-import MindNode from '../core/render/node';
+import MindNode from '../core/node';
 import MindMapping from '../index';
 import { dfsRenderTree, dfsBoundingNode } from '../utils/dfs';
 import { PositionEnum, INIT_POSITION_MAP } from '../configs/position';

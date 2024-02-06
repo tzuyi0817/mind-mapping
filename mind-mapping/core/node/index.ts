@@ -1,7 +1,8 @@
 import { G, Path, Rect } from '@svgdotjs/svg.js';
-import Renderer from '../../core/render/renderer';
-import Style from './style';
+import Renderer from '../render/renderer';
+import Style from '../render/style';
 import Shape from './shape';
+import Line from './line';
 import Generalization from './generalization';
 import ExpandButton from './expand-button';
 import CreateNode from './create-node';
@@ -24,6 +25,7 @@ class MindNode extends CreateNode {
   renderer: Renderer;
   shape: Shape;
   style: Style;
+  line: Line;
   expandButton: ExpandButton;
   generalization: Generalization;
   text?: NodeMap;
@@ -39,6 +41,7 @@ class MindNode extends CreateNode {
     this.isGeneralization = options.isGeneralization ?? false;
     this.shape = new Shape(this);
     this.style = new Style(this);
+    this.line = new Line(this);
     this.expandButton = new ExpandButton(this);
     this.generalization = new Generalization(this);
 
@@ -114,7 +117,7 @@ class MindNode extends CreateNode {
         this.onNodeGroup();
       }
       this.nodesGroup.add(this.nodeGroup);
-      this.renderLine();
+      this.line.render();
       this.setLayout();
       this.update();
       window.requestAnimationFrame(async () => {
@@ -143,36 +146,14 @@ class MindNode extends CreateNode {
   destroy() {
     if (!this.nodeGroup) return;
     this.nodeGroup.remove();
-    this.removeLine();
+    this.line.remove();
     this.generalization.reset();
-    this.parent?.removeLine();
+    this.parent?.line.remove();
     if (this.isActive) {
       this.renderer.activeNodes.delete(this);
       this.updateActive(false);
     }
     this.nodeGroup = null;
-  }
-  renderLine() {
-    if (!this.isExpand) return;
-    const diffSize = this.children.length - this.lines.length;
-
-    if (diffSize > 0) {
-      for (let index = 0; index < diffSize; index++) {
-        this.lines.push(this.linesGroup.path());
-      }
-    }
-    this.renderer.layout.renderLine({
-      node: this,
-      lineStyle: this.style.getCommonStyle('lineStyle'),
-      lines: this.lines,
-      setStyle: line => {
-        this.style.setLineStyle(line);
-      },
-    });
-  }
-  removeLine() {
-    this.lines.forEach(line => line.remove());
-    this.lines = [];
   }
   setLayout() {
     if (!this.nodeGroup) return;

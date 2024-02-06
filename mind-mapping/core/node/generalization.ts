@@ -1,5 +1,5 @@
 import { Path } from '@svgdotjs/svg.js';
-import MindNode from './node';
+import MindNode from './index';
 
 class Generalization {
   parent: MindNode;

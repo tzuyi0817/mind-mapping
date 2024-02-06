@@ -1,8 +1,8 @@
 import { G, Rect, SVG, Circle } from '@svgdotjs/svg.js';
 import { v4 as uuidv4 } from 'uuid';
-import MindNode from './node';
-import Renderer from './renderer';
-import Style from './style';
+import MindNode from './index';
+import Renderer from '../render/renderer';
+import Style from '../render/style';
 import type { RenderTree } from '../../types/mapping';
 import type { NodeMap } from '../../types/node';
 

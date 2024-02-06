@@ -1,5 +1,5 @@
 import { G, Circle, Element, Rect } from '@svgdotjs/svg.js';
-import MindNode from './node';
+import MindNode from './index';
 
 class ExpandButton {
   parent: MindNode;

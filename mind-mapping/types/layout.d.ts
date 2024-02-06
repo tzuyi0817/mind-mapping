@@ -1,5 +1,5 @@
 import { Path, Rect, G } from '@svgdotjs/svg.js';
-import MindNode from '../core/render/node';
+import MindNode from '../core/node';
 import type { ThemeLineStyle } from './theme';
 
 export interface LayoutRenderLine {
