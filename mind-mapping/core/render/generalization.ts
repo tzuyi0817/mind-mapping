@@ -11,24 +11,28 @@ class Generalization {
     this.parent = node;
   }
   render() {
-    if (!this.parent.isShowGeneralization || this.node) return;
+    if (!this.parent.isShowGeneralization) return;
     const { linesGroup, renderer, style } = this.parent;
 
-    this.node = this.parent.createGeneralizationNode();
-    this.line = linesGroup.path();
+    if (!this.node) {
+      this.node = this.parent.createGeneralizationNode();
+    }
+    if (!this.line) {
+      this.line = linesGroup.path();
+    }
     renderer.layout.renderGeneralization({
       node: this.parent,
       line: this.line,
       generalization: this.node,
     });
     style.setGeneralizationLineStyle(this.line);
-    this.node?.render();
+    this.node.render();
   }
   reset() {
-    if (!this.node || !this.line) return;
+    if (!this.node) return;
     this.node.nodeGroup?.remove();
-    this.line.remove();
-    this.node = this.line = null;
+    this.line?.remove();
+    this.line = null;
   }
 }
 

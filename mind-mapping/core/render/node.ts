@@ -112,8 +112,8 @@ class MindNode extends CreateNode {
         this.nodeGroup = new G();
         this.nodeGroup.addClass('mind-mapping-node');
         this.onNodeGroup();
-        this.nodesGroup.add(this.nodeGroup);
       }
+      this.nodesGroup.add(this.nodeGroup);
       this.renderLine();
       this.setLayout();
       this.update();
@@ -143,10 +143,14 @@ class MindNode extends CreateNode {
   destroy() {
     if (!this.nodeGroup) return;
     this.nodeGroup.remove();
-    this.nodeGroup = null;
     this.removeLine();
     this.generalization.reset();
     this.parent?.removeLine();
+    if (this.isActive) {
+      this.renderer.activeNodes.delete(this);
+      this.updateActive(false);
+    }
+    this.nodeGroup = null;
   }
   renderLine() {
     if (!this.isExpand) return;
@@ -194,8 +198,7 @@ class MindNode extends CreateNode {
       if (this.isActive) return;
       this.renderer.clearActiveNodes();
       this.renderer.activeNodes.add(this);
-      this.isActive = true;
-      this.updateActive();
+      this.updateActive(true);
     });
     this.nodeGroup.on('mouseenter', () => {
       this.isMouseover = true;
@@ -207,9 +210,10 @@ class MindNode extends CreateNode {
       this.expandButton.hide();
     });
   }
-  updateActive() {
+  updateActive(isActive: boolean) {
     if (!this.nodeGroup) return;
-    if (this.isActive) {
+    this.isActive = isActive;
+    if (isActive) {
       this.nodeGroup.addClass('active');
       this.expandButton.show();
       return;

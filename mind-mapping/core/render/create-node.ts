@@ -61,14 +61,13 @@ class CreateNode {
     return hoverNode;
   }
   createGeneralizationNode() {
-    if (!this.content.generalization) return null;
+    const text = this.content.generalization?.text ?? '';
+
     return new MindNode({
       uid: uuidv4(),
       renderTree: {
         node: {
-          data: {
-            text: this.content.generalization.text,
-          },
+          data: { text },
           children: [],
         },
         isRoot: false,
