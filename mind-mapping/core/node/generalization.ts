@@ -31,8 +31,10 @@ class Generalization {
   reset() {
     if (!this.node) return;
     this.node.nodeGroup?.remove();
+    this.node.cancelActive();
+    this.node.event.off();
     this.line?.remove();
-    this.line = null;
+    this.line = this.node.nodeGroup = null;
   }
 }
 

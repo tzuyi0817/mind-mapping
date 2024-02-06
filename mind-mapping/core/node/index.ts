@@ -6,6 +6,7 @@ import Line from './line';
 import Generalization from './generalization';
 import ExpandButton from './expand-button';
 import CreateNode from './create-node';
+import NodeEvent from './node-event';
 import type { MindNodeOptions } from '../../types/options';
 import type { RenderTree } from '../../types/mapping';
 import type { NodeMap } from '../../types/node';
@@ -13,12 +14,12 @@ import type { NodeMap } from '../../types/node';
 class MindNode extends CreateNode {
   nodeGroup: G | null = null;
   children: MindNode[] = [];
-  lines: Path[] = [];
   isMouseover = false;
   width = 0;
   height = 0;
   top = 0;
   left = 0;
+  isResize = false;
 
   uid: string;
   renderTree: RenderTree;
@@ -28,6 +29,7 @@ class MindNode extends CreateNode {
   line: Line;
   expandButton: ExpandButton;
   generalization: Generalization;
+  event: NodeEvent;
   text?: NodeMap;
   isGeneralization: boolean;
   shapeNode?: Path;
@@ -44,6 +46,7 @@ class MindNode extends CreateNode {
     this.line = new Line(this);
     this.expandButton = new ExpandButton(this);
     this.generalization = new Generalization(this);
+    this.event = new NodeEvent(this);
 
     this.init();
   }
@@ -114,11 +117,11 @@ class MindNode extends CreateNode {
       if (!this.nodeGroup) {
         this.nodeGroup = new G();
         this.nodeGroup.addClass('mind-mapping-node');
-        this.onNodeGroup();
+        this.event.on();
+        this.setLayout();
+        this.nodesGroup.add(this.nodeGroup);
       }
-      this.nodesGroup.add(this.nodeGroup);
       this.line.render();
-      this.setLayout();
       this.update();
       window.requestAnimationFrame(async () => {
         if (this.children.length && this.isExpand) {
@@ -149,10 +152,8 @@ class MindNode extends CreateNode {
     this.line.remove();
     this.generalization.reset();
     this.parent?.line.remove();
-    if (this.isActive) {
-      this.renderer.activeNodes.delete(this);
-      this.updateActive(false);
-    }
+    this.cancelActive();
+    this.event.off();
     this.nodeGroup = null;
   }
   setLayout() {
@@ -167,29 +168,16 @@ class MindNode extends CreateNode {
     this.nodeGroup.add(textGroup);
     this.nodeGroup.add(this.hoverNode);
     this.expandButton.renderPlaceholder();
+    this.isResize = false;
   }
   setPosition() {
     if (!this.nodeGroup) return;
     this.nodeGroup.transform({ translate: [this.left, this.top] });
   }
-  onNodeGroup() {
-    if (!this.nodeGroup) return;
-    this.nodeGroup.on('click', event => {
-      event.stopPropagation();
-      if (this.isActive) return;
-      this.renderer.clearActiveNodes();
-      this.renderer.activeNodes.add(this);
-      this.updateActive(true);
-    });
-    this.nodeGroup.on('mouseenter', () => {
-      this.isMouseover = true;
-      this.expandButton.show();
-    });
-    this.nodeGroup.on('mouseleave', () => {
-      if (!this.isMouseover) return;
-      this.isMouseover = false;
-      this.expandButton.hide();
-    });
+  cancelActive() {
+    if (!this.isActive) return;
+    this.renderer.activeNodes.delete(this);
+    this.updateActive(false);
   }
   updateActive(isActive: boolean) {
     if (!this.nodeGroup) return;
