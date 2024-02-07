@@ -55,3 +55,10 @@ export function dfsBoundingNode(
     left: Math.min(bounding.left, current.left),
   };
 }
+
+export function getChildrenCount(node: MindNode): number {
+  const count = node.children.length;
+
+  if (!count) return 0;
+  return count + node.children.reduce((total, child) => total + getChildrenCount(child), 0);
+}

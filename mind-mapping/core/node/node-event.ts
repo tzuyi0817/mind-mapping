@@ -12,6 +12,18 @@ class NodeEvent {
     this.onMouseenter = this.onMouseenter.bind(this);
     this.onMouseleave = this.onMouseleave.bind(this);
   }
+  on() {
+    if (!this.node.nodeGroup) return;
+    this.node.nodeGroup.on('click', this.onClick);
+    this.node.nodeGroup.on('mouseenter', this.onMouseenter);
+    this.node.nodeGroup.on('mouseleave', this.onMouseleave);
+  }
+  off() {
+    if (!this.node.nodeGroup) return;
+    this.node.nodeGroup.off('click', this.onClick);
+    this.node.nodeGroup.off('mouseenter', this.onMouseenter);
+    this.node.nodeGroup.off('mouseleave', this.onMouseleave);
+  }
   onClick(event: Event) {
     event.stopPropagation();
     if (this.node.isActive) return;
@@ -27,18 +39,6 @@ class NodeEvent {
     if (!this.node.isMouseover) return;
     this.node.isMouseover = false;
     this.node.expandButton.hide();
-  }
-  on() {
-    if (!this.node.nodeGroup) return;
-    this.node.nodeGroup.on('click', this.onClick);
-    this.node.nodeGroup.on('mouseenter', this.onMouseenter);
-    this.node.nodeGroup.on('mouseleave', this.onMouseleave);
-  }
-  off() {
-    if (!this.node.nodeGroup) return;
-    this.node.nodeGroup.off('click', this.onClick);
-    this.node.nodeGroup.off('mouseenter', this.onMouseenter);
-    this.node.nodeGroup.off('mouseleave', this.onMouseleave);
   }
 }
 

@@ -68,9 +68,6 @@ class MindNode extends CreateNode {
   get isShowGeneralization() {
     return this.isExpand && !!this.node.data.generalization;
   }
-  get childrenCount() {
-    return this.node.children.length;
-  }
   get linesGroup() {
     return this.renderer.mindMapping.linesGroup;
   }

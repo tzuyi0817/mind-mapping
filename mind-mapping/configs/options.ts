@@ -24,5 +24,5 @@ export const DEFAULT_OPTIONS = {
     openSvg,
     closeSvg,
   },
-  showExpandNumber: true,
+  showExpandChildrenCount: true,
 };

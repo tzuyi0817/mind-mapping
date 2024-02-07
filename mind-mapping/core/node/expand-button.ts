@@ -16,13 +16,25 @@ class ExpandButton {
     this.parent = node;
   }
   get isRequired() {
-    return this.parent.childrenCount && !this.parent.renderTree.isRoot;
+    return this.parent.children.length && !this.parent.renderTree.isRoot;
   }
   get expandButtonSize() {
     return this.parent.renderer.options.expandButtonSize;
   }
+  get expandButtonStyle() {
+    return this.parent.renderer.options.expandButtonStyle;
+  }
+  get showExpandChildrenCount() {
+    return this.parent.renderer.options.showExpandChildrenCount;
+  }
+  get isExpand() {
+    return this.parent.isExpand;
+  }
+  set isExpand(value) {
+    this.parent.isExpand = value;
+  }
   render() {
-    const { nodeGroup, style, renderer, width, height, isExpand } = this.parent;
+    const { nodeGroup, style, renderer, width, height } = this.parent;
 
     if (!nodeGroup || !this.isRequired) return;
     if (!this.node || !this.fill || !this.open || !this.close) {
@@ -34,9 +46,14 @@ class ExpandButton {
       this.fill = fill;
       this.onEvent();
     }
-    const { node, open, close, fill } = this;
+    const { node, open, close, fill, isExpand } = this;
     const svg = isExpand ? close : open;
 
+    if (this.showExpandChildrenCount) {
+      const strokeColor = isExpand ? 'transparent' : this.expandButtonStyle.strokeColor;
+
+      fill.stroke({ color: strokeColor });
+    }
     node.clear();
     style.setExpandButtonStyle({ node, open, close, fill });
     nodeGroup.add(node.add(fill).add(svg));
@@ -61,7 +78,7 @@ class ExpandButton {
     if (!this.node) return;
     this.node.on('click', (event: Event) => {
       event.stopPropagation();
-      this.parent.isExpand = !this.parent.isExpand;
+      this.isExpand = !this.isExpand;
       this.parent.renderer.render();
     });
     this.node.on('dblclick', (event: Event) => event.stopPropagation());
@@ -69,11 +86,11 @@ class ExpandButton {
     this.node.on('mouseout', (event: Event) => event.stopPropagation());
   }
   show() {
-    if (this.lastStatus === this.parent.isExpand && this.isShow) return;
+    if (this.lastStatus === this.isExpand && this.isShow) return;
     this.render();
   }
   hide() {
-    if (this.parent.isActive || !this.isShow) return;
+    if (this.parent.isActive || !this.isExpand || !this.isShow) return;
     requestAnimationFrame(() => {
       this.node?.remove();
       this.isShow = false;

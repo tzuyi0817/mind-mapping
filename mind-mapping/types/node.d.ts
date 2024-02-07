@@ -1,4 +1,4 @@
-import { G, Circle, Svg, Element } from '@svgdotjs/svg.js';
+import { G, Circle, Element, Text } from '@svgdotjs/svg.js';
 
 export interface NodeMap {
   node: G;

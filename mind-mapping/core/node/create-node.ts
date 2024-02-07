@@ -1,8 +1,9 @@
-import { G, Rect, SVG, Circle } from '@svgdotjs/svg.js';
+import { G, Rect, SVG, Circle, Text } from '@svgdotjs/svg.js';
 import { v4 as uuidv4 } from 'uuid';
 import MindNode from './index';
 import Renderer from '../render/renderer';
 import Style from '../render/style';
+import { getChildrenCount } from '../../utils/dfs';
 import type { RenderTree } from '../../types/mapping';
 import type { NodeMap } from '../../types/node';
 
@@ -80,12 +81,27 @@ class CreateNode {
     const {
       expandButtonSvg: { openSvg, closeSvg },
       expandButtonSize: size,
+      showExpandChildrenCount: showCount,
+      expandButtonStyle: { color, fontSize },
     } = this.renderer.options;
     const group = new G();
-    const open = SVG(openSvg).size(size).x(0).y(0);
+    const open = (showCount ? SVG().text('') : SVG(openSvg)).size(size).x(0).y(0);
     const close = SVG(closeSvg).size(size).x(0).y(0);
     const fill = new Circle().size(size).x(0).y(0);
 
+    if (showCount && open instanceof Text) {
+      const count = getChildrenCount(this as unknown as MindNode);
+
+      open.text(add => add.tspan(`${count}`).dy(2));
+      open.font({
+        size: fontSize,
+        color,
+        x: size / 2,
+        y: size / 2,
+        anchor: 'middle',
+        'dominant-baseline': 'middle',
+      });
+    }
     group.addClass('mind-mapping-expand-button');
     return { node: group, open, close, fill };
   }
