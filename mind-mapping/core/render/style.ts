@@ -39,6 +39,7 @@ class Style {
       fontWeight: this.getStyle('fontWeight'),
       fontFamily: this.getStyle('fontFamily'),
       lineHeight: this.getStyle('lineHeight'),
+      fontStyle: this.getStyle('fontStyle'),
     };
   }
   setTextStyle(text: Text) {
@@ -51,6 +52,15 @@ class Style {
         weight: this.getStyle('fontWeight'),
       })
       .attr('text-decoration', this.getStyle('textDecoration'));
+  }
+  setDomTextStyle(text: HTMLElement) {
+    const style = this.getTextStyle();
+
+    text.style.fontSize = `${style.fontSize}px`;
+    text.style.fontWeight = style.fontWeight;
+    text.style.fontFamily = style.fontFamily;
+    text.style.lineHeight = `${style.lineHeight}`;
+    text.style.fontStyle = style.fontStyle;
   }
   setShapeStyle(shape: Shape) {
     shape.fill({ color: this.getStyle('fillColor') }).stroke({

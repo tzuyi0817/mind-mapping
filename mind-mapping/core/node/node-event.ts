@@ -11,18 +11,21 @@ class NodeEvent {
     this.onClick = this.onClick.bind(this);
     this.onMouseenter = this.onMouseenter.bind(this);
     this.onMouseleave = this.onMouseleave.bind(this);
+    this.onDblclick = this.onDblclick.bind(this);
   }
   on() {
     if (!this.node.nodeGroup) return;
     this.node.nodeGroup.on('click', this.onClick);
     this.node.nodeGroup.on('mouseenter', this.onMouseenter);
     this.node.nodeGroup.on('mouseleave', this.onMouseleave);
+    this.node.nodeGroup.on('dblclick', this.onDblclick);
   }
   off() {
     if (!this.node.nodeGroup) return;
     this.node.nodeGroup.off('click', this.onClick);
     this.node.nodeGroup.off('mouseenter', this.onMouseenter);
     this.node.nodeGroup.off('mouseleave', this.onMouseleave);
+    this.node.nodeGroup.off('dblclick', this.onDblclick);
   }
   onClick(event: Event) {
     event.stopPropagation();
@@ -39,6 +42,10 @@ class NodeEvent {
     if (!this.node.isMouseover) return;
     this.node.isMouseover = false;
     this.node.expandButton.hide();
+  }
+  onDblclick(event: Event) {
+    event.stopPropagation();
+    this.node.renderer.event.emit('dblclick-node', { node: this.node, event });
   }
 }
 

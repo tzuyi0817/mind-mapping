@@ -156,13 +156,13 @@ class MindNode extends CreateNode {
   setLayout() {
     if (!this.nodeGroup) return;
     this.nodeGroup.clear();
-    const textGroup = this.createTextGroup();
+    const contentGroup = this.createContentGroup();
     this.shapeNode = this.shape.createShape();
     this.hoverNode = this.createHoverNode();
 
     this.style.setShapeStyle(this.shapeNode);
     this.nodeGroup.add(this.shapeNode);
-    this.nodeGroup.add(textGroup);
+    this.nodeGroup.add(contentGroup);
     this.nodeGroup.add(this.hoverNode);
     this.expandButton.renderPlaceholder();
     this.isResize = false;

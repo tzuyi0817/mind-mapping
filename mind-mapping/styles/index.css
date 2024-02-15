@@ -19,3 +19,7 @@
 .mind-mapping-expand-button {
   @apply cursor-pointer;
 }
+
+.mind-mapping-editor {
+  @apply fixed box-border bg-white shadow-[0_0_16px_rgba(0,0,0,0.5)] px-[6px] py-1 outline-none break-all -translate-x-[6px] -translate-y-1;
+}

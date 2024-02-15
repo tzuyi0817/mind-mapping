@@ -1,6 +1,7 @@
 import { G } from '@svgdotjs/svg.js';
 import MindMapping from '../../index';
 import MindNode from '../node';
+import Editor from './editor';
 import Base from '../../layouts/base';
 import type { MindRendererOptions } from '../../types/options';
 import type { MappingRoot } from '../../types/mapping';
@@ -14,12 +15,14 @@ class Renderer {
   mindMapping: MindMapping;
   renderTree: MappingRoot;
   group: G;
+  editor: Editor;
   layout!: Base;
 
   constructor(options: MindRendererOptions) {
     this.mindMapping = options.mindMapping;
     this.renderTree = this.mindMapping.options.data;
     this.group = this.mindMapping.group;
+    this.editor = new Editor(this);
     this.initLayout();
     this.onEvents();
   }
@@ -29,11 +32,14 @@ class Renderer {
   get theme() {
     return this.mindMapping.theme;
   }
+  get event() {
+    return this.mindMapping.event;
+  }
   initLayout() {
     this.layout = new Base(this);
   }
   onEvents() {
-    this.mindMapping.event.on('mousedown-draw', () => {
+    this.event.on('mousedown-draw', () => {
       this.clearActiveNodes();
     });
   }

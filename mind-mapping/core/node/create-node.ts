@@ -37,7 +37,7 @@ class CreateNode {
       height: Math.ceil(height),
     };
   }
-  createTextGroup() {
+  createContentGroup() {
     const { width, height } = this;
     const textGroup = new G();
 
