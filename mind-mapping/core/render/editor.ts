@@ -25,8 +25,10 @@ class Editor {
   }
   onEvents() {
     this.renderer.event.on('dblclick-node', this.show);
-    this.renderer.event.on('click-draw', this.hide);
-    this.renderer.event.on('drag-draw', this.hide);
+    this.renderer.event.on('mousedown', ({ target }) => {
+      if (target === this.frame) return;
+      this.hide();
+    });
   }
   show({ node }: ShowEditorParams) {
     const textNode = node.text?.node;
