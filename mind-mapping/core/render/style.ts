@@ -40,6 +40,9 @@ class Style {
       fontFamily: this.getStyle('fontFamily'),
       lineHeight: this.getStyle('lineHeight'),
       fontStyle: this.getStyle('fontStyle'),
+      color: this.getStyle('color'),
+      textDecoration: this.getStyle('textDecoration'),
+      fillColor: this.getStyle('fillColor'),
     };
   }
   setTextStyle(text: Text) {
@@ -61,6 +64,9 @@ class Style {
     text.style.fontFamily = style.fontFamily;
     text.style.lineHeight = `${style.lineHeight}`;
     text.style.fontStyle = style.fontStyle;
+    text.style.color = style.color;
+    text.style.textDecoration = style.textDecoration;
+    text.style.backgroundColor = style.fillColor;
   }
   setShapeStyle(shape: Shape) {
     shape.fill({ color: this.getStyle('fillColor') }).stroke({

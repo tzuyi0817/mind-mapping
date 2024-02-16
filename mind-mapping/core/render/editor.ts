@@ -7,6 +7,7 @@ interface ShowEditorParams {
 }
 
 class Editor {
+  target: MindNode | null = null;
   isShow = false;
   frame: HTMLParagraphElement | null = null;
   paddingX = 6;
@@ -48,12 +49,22 @@ class Editor {
     this.frame.style.minHeight = `${height + this.paddingY * 2}px`;
     this.frame.style.left = `${left}px`;
     this.frame.style.top = `${top}px`;
-    node.style.setDomTextStyle(this.frame);
     this.frame.style.display = 'block';
+    node.style.setDomTextStyle(this.frame);
+    this.target = node;
     this.isShow = true;
   }
   hide() {
-    if (!this.isShow || !this.frame) return;
+    if (!this.isShow || !this.frame || !this.target) return;
+    const text = this.frame.innerText;
+    const previousText = this.target.content.text;
+
+    if (text !== previousText) {
+      this.target.content.text = text;
+      this.target.rerender().then(isChangeSize => {
+        isChangeSize && this.renderer.render();
+      });
+    }
     this.frame.style.display = 'none';
     this.isShow = false;
   }

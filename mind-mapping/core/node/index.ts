@@ -48,7 +48,7 @@ class MindNode extends CreateNode {
     this.generalization = new Generalization(this);
     this.event = new NodeEvent(this);
 
-    this.init();
+    this.setBounding();
   }
   get parent() {
     return this.renderTree.parent?.instance;
@@ -80,13 +80,6 @@ class MindNode extends CreateNode {
   set isExpand(value: boolean) {
     this.renderTree.node.isExpand = value;
   }
-  init() {
-    this.createContent();
-    const { width, height } = this.getBounding();
-
-    this.width = width;
-    this.height = height;
-  }
   createContent() {
     this.text = this.createTextNode();
   }
@@ -109,6 +102,15 @@ class MindNode extends CreateNode {
       height: height + paddingY * 2 + shapePaddingY * 2 + borderWidth * 2,
     };
   }
+  setBounding() {
+    this.createContent();
+    const { width, height } = this.getBounding();
+    const isChangeSize = this.width !== width || this.height !== height;
+
+    this.width = width;
+    this.height = height;
+    return isChangeSize;
+  }
   render() {
     return new Promise(resolve => {
       if (!this.nodeGroup) {
@@ -126,6 +128,14 @@ class MindNode extends CreateNode {
         }
         resolve(true);
       });
+    });
+  }
+  rerender() {
+    return new Promise<boolean>(resolve => {
+      const isChangeSize = this.setBounding();
+
+      this.setLayout();
+      resolve(isChangeSize);
     });
   }
   update() {
