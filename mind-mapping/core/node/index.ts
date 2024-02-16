@@ -90,7 +90,7 @@ class MindNode extends CreateNode {
 
     if (this.text) {
       textBounding.width += this.text.width;
-      textBounding.height += this.text.height;
+      textBounding.height = Math.max(textBounding.height, this.text.height);
     }
     const width = textBounding.width;
     const height = textBounding.height;

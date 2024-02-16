@@ -26,9 +26,10 @@ class CreateNode {
   createTextNode() {
     const group = new G();
     const { text } = this.content;
-    const textNode = group.text(text).y(0);
+    const textNode = group.text(text);
 
     this.style.setTextStyle(textNode);
+    textNode.y(0);
     const { width, height } = group.bbox();
 
     return {
