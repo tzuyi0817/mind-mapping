@@ -1,5 +1,6 @@
 import MindNode from '../node';
 import Renderer from './renderer';
+import { focusElement } from '../../utils/element';
 
 interface ShowEditorParams {
   node: MindNode;
@@ -53,6 +54,7 @@ class Editor {
     node.style.setDomTextStyle(this.frame);
     this.target = node;
     this.isShow = true;
+    focusElement(this.frame);
   }
   hide() {
     if (!this.isShow || !this.frame || !this.target) return;
@@ -66,6 +68,7 @@ class Editor {
       });
     }
     this.frame.style.display = 'none';
+    this.target = null;
     this.isShow = false;
   }
 }

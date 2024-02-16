@@ -66,7 +66,7 @@ class Style {
     text.style.fontStyle = style.fontStyle;
     text.style.color = style.color;
     text.style.textDecoration = style.textDecoration;
-    text.style.backgroundColor = style.fillColor;
+    text.style.backgroundColor = style.fillColor === 'transparent' ? '#fff' : style.fillColor;
   }
   setShapeStyle(shape: Shape) {
     shape.fill({ color: this.getStyle('fillColor') }).stroke({

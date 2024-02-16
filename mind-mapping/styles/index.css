@@ -1,5 +1,5 @@
 .mind-mapping-node {
-  @apply cursor-default;
+  @apply cursor-default select-none;
   &:hover {
     .mind-mapping-hover-node {
       @apply block;
