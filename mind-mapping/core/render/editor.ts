@@ -1,6 +1,6 @@
 import MindNode from '../node';
 import Renderer from './renderer';
-import { focusElement } from '../../utils/element';
+import { focusElement, replaceHtmlBr, covertToHtml } from '../../utils/element';
 
 interface ShowEditorParams {
   node: MindNode;
@@ -10,7 +10,7 @@ interface ShowEditorParams {
 class Editor {
   target: MindNode | null = null;
   isShow = false;
-  frame: HTMLParagraphElement | null = null;
+  frame: HTMLDivElement | null = null;
   paddingX = 6;
   paddingY = 4;
 
@@ -36,16 +36,15 @@ class Editor {
     const textNode = node.text?.node;
     if (!textNode || this.isShow) return;
     const { width, height, left, top } = textNode.node.getBoundingClientRect();
-
     if (!this.frame) {
-      const paragraph = document.createElement('p');
+      const div = document.createElement('div');
 
-      paragraph.classList.add('mind-mapping-editor');
-      paragraph.setAttribute('contenteditable', 'true');
-      document.body.appendChild(paragraph);
-      this.frame = paragraph;
+      div.classList.add('mind-mapping-editor');
+      div.setAttribute('contenteditable', 'true');
+      document.body.appendChild(div);
+      this.frame = div;
     }
-    this.frame.innerText = node.content.text;
+    this.frame.innerHTML = covertToHtml(node.content.text);
     this.frame.style.minWidth = `${width + this.paddingX * 2}px`;
     this.frame.style.minHeight = `${height + this.paddingY * 2}px`;
     this.frame.style.left = `${left}px`;
@@ -58,7 +57,7 @@ class Editor {
   }
   hide() {
     if (!this.isShow || !this.frame || !this.target) return;
-    const text = this.frame.innerText;
+    const text = replaceHtmlBr(this.frame.innerHTML);
     const previousText = this.target.content.text;
 
     if (text !== previousText) {

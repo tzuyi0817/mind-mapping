@@ -8,3 +8,18 @@ export function focusElement(element: HTMLElement) {
   selection.removeAllRanges();
   selection.addRange(range);
 }
+
+export function htmlEscape(str: string) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+export function covertToHtml(str: string) {
+  return str.split(/\n/).map(htmlEscape).join('<br>');
+}
+
+export function replaceHtmlBr(innerHTML: string) {
+  const div = document.createElement('div');
+
+  div.innerHTML = innerHTML.replace(/<br>|<div>/gim, '\n');
+  return div.textContent ?? '';
+}

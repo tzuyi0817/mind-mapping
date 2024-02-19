@@ -27,9 +27,13 @@ class CreateNode {
     const group = new G();
     const { text } = this.content;
     const textNode = group.text(text);
+    const children = textNode.children();
+    const fontSize = this.style.getStyle('fontSize');
+    const lineHeight = this.style.getStyle('lineHeight');
 
     this.style.setTextStyle(textNode);
     textNode.y(0);
+    children.forEach((child, index) => child.dy((index ? 1 : 0) * fontSize * lineHeight));
     const { width, height } = group.bbox();
 
     return {
