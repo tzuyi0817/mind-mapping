@@ -48,6 +48,9 @@ importers:
       semantic-release:
         specifier: ^23.0.0
         version: 23.0.2(typescript@5.3.3)
+      typescript:
+        specifier: 5.3.3
+        version: 5.3.3
 
   mind-mapping:
     dependencies:
@@ -60,13 +63,6 @@ importers:
       uuid:
         specifier: ^9.0.1
         version: 9.0.1
-    optionalDependencies:
-      '@semantic-release/changelog':
-        specifier: ^6.0.3
-        version: 6.0.3(semantic-release@23.0.2)
-      '@semantic-release/git':
-        specifier: ^10.0.1
-        version: 10.0.1(semantic-release@23.0.2)
     devDependencies:
       '@types/uuid':
         specifier: ^9.0.8
@@ -86,15 +82,9 @@ importers:
       postcss-pxtorem:
         specifier: ^6.0.0
         version: 6.1.0(postcss@8.4.35)
-      semantic-release:
-        specifier: ^23.0.0
-        version: 23.0.2(typescript@5.3.3)
       tailwindcss:
         specifier: 3.4.1
         version: 3.4.1
-      typescript:
-        specifier: 5.3.3
-        version: 5.3.3
       vite:
         specifier: ^5.1.3
         version: 5.1.3(@types/node@20.11.19)
