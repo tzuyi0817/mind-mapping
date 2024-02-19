@@ -1,11 +1,7 @@
 import MindNode from '../node';
 import Renderer from './renderer';
 import { focusElement, replaceHtmlBr, covertToHtml } from '../../utils/element';
-
-interface ShowEditorParams {
-  node: MindNode;
-  event: Event;
-}
+import type { NodeMouseEvent } from '../../types/node';
 
 class Editor {
   target: MindNode | null = null;
@@ -32,7 +28,7 @@ class Editor {
       this.hide();
     });
   }
-  show({ node }: ShowEditorParams) {
+  show({ node }: NodeMouseEvent) {
     const textNode = node.text?.node;
     if (!textNode || this.isShow) return;
     const { width, height, left, top } = textNode.node.getBoundingClientRect();

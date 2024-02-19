@@ -1,4 +1,5 @@
 import { G, Circle, Element, Text } from '@svgdotjs/svg.js';
+import MindNode from '../core/node';
 
 export interface NodeMap {
   node: G;
@@ -11,4 +12,9 @@ export interface NodeExpandButton {
   fill: Circle;
   open: Element;
   close: Element;
+}
+
+export interface NodeMouseEvent {
+  node: MindNode;
+  event: MouseEvent;
 }

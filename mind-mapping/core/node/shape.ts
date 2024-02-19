@@ -18,7 +18,7 @@ class Shape {
 
     return { shapePaddingX: 0, shapePaddingY: 0 };
   }
-  createShape() {
+  createShape(): Path {
     const shapeMap = {
       [SHAPE.RECTANGLE]: this.createRect.bind(this),
       [SHAPE.DIAMOND]: this.createRect.bind(this),

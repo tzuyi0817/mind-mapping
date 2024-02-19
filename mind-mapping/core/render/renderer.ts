@@ -2,6 +2,7 @@ import { G } from '@svgdotjs/svg.js';
 import MindMapping from '../../index';
 import MindNode from '../node';
 import Editor from './editor';
+import Drag from './drag';
 import Base from '../../layouts/base';
 import type { MindRendererOptions } from '../../types/options';
 import type { MappingRoot } from '../../types/mapping';
@@ -16,6 +17,7 @@ class Renderer {
   renderTree: MappingRoot;
   group: G;
   editor: Editor;
+  drag: Drag;
   layout!: Base;
 
   constructor(options: MindRendererOptions) {
@@ -23,6 +25,7 @@ class Renderer {
     this.renderTree = this.mindMapping.options.data;
     this.group = this.mindMapping.group;
     this.editor = new Editor(this);
+    this.drag = new Drag(this);
     this.initLayout();
     this.onEvents();
   }

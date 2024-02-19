@@ -1,5 +1,5 @@
-# Mind Mapping Website
+# Mind Mapping
 
-This is a website `mind mapping`.
+This is a `mind mapping` package.
 
 ## Features

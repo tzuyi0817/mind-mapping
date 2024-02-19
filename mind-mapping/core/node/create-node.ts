@@ -33,7 +33,9 @@ class CreateNode {
 
     this.style.setTextStyle(textNode);
     textNode.y(0);
-    children.forEach((child, index) => child.dy((index ? 1 : 0) * fontSize * lineHeight));
+    for (let index = 1; index < children.length; index++) {
+      children[index].dy(fontSize * lineHeight);
+    }
     const { width, height } = group.bbox();
 
     return {
