@@ -14,5 +14,5 @@ export default function GlobalError({ error, reset }: Props) {
         <button onClick={() => reset()}>Try again</button>
       </body>
     </html>
-  )
+  );
 }

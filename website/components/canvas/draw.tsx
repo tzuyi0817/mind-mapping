@@ -14,9 +14,10 @@ function Draw() {
     });
 
     setMindMapping(mapping);
+    console.log(mindMapping);
     return () => mapping.destroy();
   }, []);
-  console.log(mindMapping);
+
   return (
     <div className="fixed left-0 top-0 bottom-0 right-0">
       <div

@@ -1,6 +1,12 @@
 {
   "root": true,
-  "extends": ["plugin:@typescript-eslint/recommended", "eslint-config-prettier", "plugin:security/recommended-legacy"],
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+    "plugin:prettier/recommended",
+    "plugin:sonarjs/recommended",
+    "plugin:security/recommended-legacy"
+  ],
   "rules": {
     "@typescript-eslint/ban-ts-comment": "off"
   }
