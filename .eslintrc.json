@@ -1,4 +1,7 @@
 {
   "root": true,
-  "extends": ["eslint-config-prettier", "plugin:security/recommended-legacy"]
+  "extends": ["plugin:@typescript-eslint/recommended", "eslint-config-prettier", "plugin:security/recommended-legacy"],
+  "rules": {
+    "@typescript-eslint/ban-ts-comment": "off"
+  }
 }

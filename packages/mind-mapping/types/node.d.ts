@@ -1,4 +1,4 @@
-import { G, Circle, Element, Text } from '@svgdotjs/svg.js';
+import { G, Circle, Element } from '@svgdotjs/svg.js';
 import MindNode from '../core/node';
 
 export interface NodeMap {

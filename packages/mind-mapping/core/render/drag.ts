@@ -1,4 +1,4 @@
-import Renderer from '../render/renderer';
+import Renderer from './renderer';
 import type { NodeMouseEvent } from '../../types/node';
 
 class Drag {
@@ -17,7 +17,7 @@ class Drag {
   onEvents() {
     this.renderer.event.on('mousedown-node', this.start);
   }
-  start({ node, event }: NodeMouseEvent) {
+  start({ event }: NodeMouseEvent) {
     this.startPosition = { x: event.clientX, y: event.clientY };
   }
 }

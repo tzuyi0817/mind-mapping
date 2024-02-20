@@ -1,7 +1,7 @@
 {
   "name": "mind-mapping",
   "version": "0.1.0",
-  "description": "mind-mapping",
+  "description": "mind mapping package",
   "main": "./dist/index.ts",
   "types": "./dist/index.d.ts",
   "dependencies": {

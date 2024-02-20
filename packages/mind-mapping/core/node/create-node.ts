@@ -45,7 +45,7 @@ class CreateNode {
     };
   }
   createContentGroup() {
-    const { width, height } = this;
+    const { width } = this;
     const textGroup = new G();
 
     if (this.text) {

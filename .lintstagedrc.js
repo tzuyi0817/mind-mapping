@@ -6,5 +6,5 @@ const buildEslintCommand = filenames => {
 
 module.exports = {
   'website/**/*.{js,jsx,ts,tsx}': [buildEslintCommand],
-  'mind-mapping/**/*.{js,ts}': ['pnpm --filter -g lint'],
+  'packages/**/*.{js,ts}': ['pnpm lint:packages'],
 };

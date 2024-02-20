@@ -120,7 +120,7 @@ class Base {
       top,
       width,
       height,
-      renderTree: { deep = 0, isRoot },
+      renderTree: { deep = 0 },
     } = node;
     const marginX = this.getMargin('marginX', deep + 1);
     const s = marginX * 0.6;

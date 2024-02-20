@@ -1,4 +1,4 @@
-import { Rect, Polygon, Path } from '@svgdotjs/svg.js';
+import { Path } from '@svgdotjs/svg.js';
 import MindNode from './index';
 import { SHAPE } from '../../configs/shape';
 import type { ShapePadding } from '../../types/shape';
@@ -13,9 +13,9 @@ class Shape {
     return this.node.style.getStyle('shape');
   }
   getShapePadding({ width, height, paddingX, paddingY }: ShapePadding) {
-    const shape = this.shape;
-    const shapeMap = {} as const;
-
+    // const shape = this.shape;
+    // const shapeMap = {} as const;
+    console.log(width, height, paddingX, paddingY);
     return { shapePaddingX: 0, shapePaddingY: 0 };
   }
   createShape(): Path {

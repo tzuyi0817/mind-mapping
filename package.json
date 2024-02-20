@@ -3,11 +3,14 @@
   "private": true,
   "scripts": {
     "dev:website": "pnpm -C website dev",
-    "lint": "eslint --ext .js,.ts --ignore-path .gitignore --fix .",
+    "lint:packages": "eslint packages/**/*.ts --fix",
+    "lint:website": "pnpm -C website lint",
     "prepare": "husky install"
   },
   "devDependencies": {
+    "@rushstack/eslint-patch": "^1.7.2",
     "@types/node": "20.11.19",
+    "@typescript-eslint/eslint-plugin": "^7.0.2",
     "eslint": "8.56.0",
     "eslint-config-next": "14.1.0",
     "eslint-config-prettier": "^9.0.0",
@@ -19,9 +22,9 @@
   "optionalDependencies": {
     "@commitlint/cli": "^18.0.0",
     "@commitlint/config-conventional": "^18.0.0",
-    "husky": "^9.0.0",
-    "lint-staged": "^15.0.0",
     "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/git": "^10.0.1"
+    "@semantic-release/git": "^10.0.1",
+    "husky": "^9.0.0",
+    "lint-staged": "^15.0.0"
   }
 }

@@ -1,4 +1,3 @@
-import { G } from '@svgdotjs/svg.js';
 import MindMapping from '../index';
 import Renderer from '../core/render';
 import { DEFAULT_OPTIONS } from '../configs/options';

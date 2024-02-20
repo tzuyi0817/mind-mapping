@@ -1,2 +1,3 @@
 packages:
-  - 'mind-mapping'
+  - packages/*
+  - website
