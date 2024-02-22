@@ -32,7 +32,7 @@ class MindMapping extends Draw {
     this.initDraw();
     this.event = new Event({ draw: this.draw, element: this.element });
     this.onEvents();
-    this.renderer = new Renderer({ mindMapping: this });
+    this.renderer = new Renderer(this);
     this.render();
   }
   mergeOption(options: PickPartial<MindMappingOptions, 'data'>) {

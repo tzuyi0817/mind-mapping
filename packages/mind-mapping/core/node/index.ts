@@ -7,7 +7,6 @@ import Generalization from './generalization';
 import ExpandButton from './expand-button';
 import CreateNode from './create-node';
 import NodeEvent from './node-event';
-import type { MindNodeOptions } from '../../types/options';
 import type { RenderTree } from '../../types/mapping';
 import type { NodeMap } from '../../types/node';
 
@@ -15,32 +14,29 @@ class MindNode extends CreateNode {
   nodeGroup: G | null = null;
   children: MindNode[] = [];
   isMouseover = false;
-  width = 0;
-  height = 0;
   top = 0;
   left = 0;
   isResize = false;
 
-  uid: string;
-  renderTree: RenderTree;
-  renderer: Renderer;
   shape: Shape;
-  style: Style;
   line: Line;
   expandButton: ExpandButton;
   generalization: Generalization;
   event: NodeEvent;
-  text?: NodeMap;
-  isGeneralization: boolean;
   shapeNode?: Path;
   hoverNode?: Rect;
 
-  constructor(options: MindNodeOptions) {
-    super();
-    this.uid = options.uid;
-    this.renderTree = options.renderTree;
-    this.renderer = options.renderer;
-    this.isGeneralization = options.isGeneralization ?? false;
+  constructor(
+    public uid: string,
+    public renderTree: RenderTree,
+    public renderer: Renderer,
+    public isGeneralization = false,
+
+    public width = 0,
+    public height = 0,
+    public text?: NodeMap,
+  ) {
+    super(renderTree, renderer, width, height, text);
     this.shape = new Shape(this);
     this.style = new Style(this);
     this.line = new Line(this);

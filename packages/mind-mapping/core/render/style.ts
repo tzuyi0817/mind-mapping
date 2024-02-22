@@ -5,11 +5,8 @@ import type { Shape } from '../../types/shape';
 import type { NodeExpandButton } from '../../types/node';
 
 class Style {
-  node: MindNode;
+  constructor(public node: MindNode) {}
 
-  constructor(node: MindNode) {
-    this.node = node;
-  }
   static setBackgroundStyle(theme: Theme, element: HTMLElement) {
     const { backgroundColor } = theme;
 

@@ -2,14 +2,11 @@ import { Path } from '@svgdotjs/svg.js';
 import MindNode from './index';
 
 class Generalization {
-  parent: MindNode;
-
   node: MindNode | null = null;
   line: Path | null = null;
 
-  constructor(node: MindNode) {
-    this.parent = node;
-  }
+  constructor(public parent: MindNode) {}
+
   render() {
     if (!this.parent.isShowGeneralization) return;
     const { linesGroup, renderer, style } = this.parent;

@@ -1,16 +1,14 @@
 import MindNode from './index';
 
 class NodeEvent {
-  node: MindNode;
-
-  constructor(node: MindNode) {
-    this.node = node;
+  constructor(public node: MindNode) {
     this.bindEvents();
   }
   bindEvents() {
     this.onClick = this.onClick.bind(this);
     this.onMouseenter = this.onMouseenter.bind(this);
     this.onMouseleave = this.onMouseleave.bind(this);
+    this.onMouseDown = this.onMouseDown.bind(this);
     this.onDblclick = this.onDblclick.bind(this);
   }
   on() {
@@ -18,6 +16,7 @@ class NodeEvent {
     this.node.nodeGroup.on('click', this.onClick);
     this.node.nodeGroup.on('mouseenter', this.onMouseenter);
     this.node.nodeGroup.on('mouseleave', this.onMouseleave);
+    this.node.nodeGroup.on('mousedown', this.onMouseDown);
     this.node.nodeGroup.on('dblclick', this.onDblclick);
   }
   off() {
@@ -42,6 +41,10 @@ class NodeEvent {
     if (!this.node.isMouseover) return;
     this.node.isMouseover = false;
     this.node.expandButton.hide();
+  }
+  onMouseDown(event: Event) {
+    event.stopPropagation();
+    this.node.renderer.event.emit('mousedown-node', { node: this.node, event });
   }
   onDblclick(event: Event) {
     event.stopPropagation();

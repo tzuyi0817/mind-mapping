@@ -2,13 +2,10 @@ import { Path } from '@svgdotjs/svg.js';
 import MindNode from './index';
 
 class Line {
-  parent: MindNode;
-
   lines: Path[] = [];
 
-  constructor(node: MindNode) {
-    this.parent = node;
-  }
+  constructor(public parent: MindNode) {}
+
   render() {
     if (!this.parent.isExpand) return;
     const { children, linesGroup, style } = this.parent;

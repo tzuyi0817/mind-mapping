@@ -4,10 +4,7 @@ import type { NodeMouseEvent } from '../../types/node';
 class Drag {
   startPosition = { x: 0, y: 0 };
 
-  renderer: Renderer;
-
-  constructor(renderer: Renderer) {
-    this.renderer = renderer;
+  constructor(public renderer: Renderer) {
     this.bindEvents();
     this.onEvents();
   }

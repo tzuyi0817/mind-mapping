@@ -7,16 +7,16 @@ import { getChildrenCount } from '../../utils/dfs';
 import type { RenderTree } from '../../types/mapping';
 import type { NodeMap } from '../../types/node';
 
-class CreateNode {
-  renderTree!: RenderTree;
+abstract class CreateNode {
   style!: Style;
-  width!: number;
-  height!: number;
-  renderer!: Renderer;
-  text?: NodeMap;
-  children!: MindNode[];
 
-  constructor() {}
+  constructor(
+    public renderTree: RenderTree,
+    public renderer: Renderer,
+    public width: number,
+    public height: number,
+    public text?: NodeMap,
+  ) {}
   get content() {
     return this.renderTree.node.data;
   }
@@ -70,19 +70,12 @@ class CreateNode {
   }
   createGeneralizationNode() {
     const text = this.content.generalization?.text ?? '';
+    const generalizationTree = {
+      node: { data: { text }, children: [] },
+      isRoot: false,
+    };
 
-    return new MindNode({
-      uid: uuidv4(),
-      renderTree: {
-        node: {
-          data: { text },
-          children: [],
-        },
-        isRoot: false,
-      },
-      renderer: this.renderer,
-      isGeneralization: true,
-    });
+    return new MindNode(uuidv4(), generalizationTree, this.renderer, true);
   }
   crateExpandButton() {
     const {

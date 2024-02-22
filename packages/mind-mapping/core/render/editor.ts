@@ -10,10 +10,7 @@ class Editor {
   paddingX = 6;
   paddingY = 4;
 
-  renderer: Renderer;
-
-  constructor(renderer: Renderer) {
-    this.renderer = renderer;
+  constructor(public renderer: Renderer) {
     this.bindEvents();
     this.onEvents();
   }

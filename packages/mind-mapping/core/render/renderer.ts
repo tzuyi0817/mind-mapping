@@ -4,7 +4,6 @@ import MindNode from '../node';
 import Editor from './editor';
 import Drag from './drag';
 import Base from '../../layouts/base';
-import type { MindRendererOptions } from '../../types/options';
 import type { MappingRoot } from '../../types/mapping';
 
 class Renderer {
@@ -13,17 +12,15 @@ class Renderer {
   cachedNodes: Map<string, MindNode> = new Map();
   previousCachedNodes: Map<string, MindNode> = new Map();
 
-  mindMapping: MindMapping;
   renderTree: MappingRoot;
   group: G;
   editor: Editor;
   drag: Drag;
   layout!: Base;
 
-  constructor(options: MindRendererOptions) {
-    this.mindMapping = options.mindMapping;
-    this.renderTree = this.mindMapping.options.data;
-    this.group = this.mindMapping.group;
+  constructor(public mindMapping: MindMapping) {
+    this.renderTree = mindMapping.options.data;
+    this.group = mindMapping.group;
     this.editor = new Editor(this);
     this.drag = new Drag(this);
     this.initLayout();

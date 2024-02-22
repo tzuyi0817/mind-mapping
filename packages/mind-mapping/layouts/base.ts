@@ -14,14 +14,12 @@ import type {
 } from '../types/layout';
 
 class Base {
-  renderer: Renderer;
   renderTreeRoot: MappingBase;
   mindMapping: MindMapping;
   linesGroup: G;
   nodesGroup: G;
 
-  constructor(renderer: Renderer) {
-    this.renderer = renderer;
+  constructor(public renderer: Renderer) {
     this.renderTreeRoot = renderer.renderTree.root;
     this.mindMapping = renderer.mindMapping;
     this.linesGroup = renderer.mindMapping.linesGroup;
@@ -36,11 +34,7 @@ class Base {
       return cacheNode;
     }
     const uid = uuidv4();
-    const node = new MindNode({
-      uid,
-      renderTree,
-      renderer: this.renderer,
-    });
+    const node = new MindNode(uid, renderTree, this.renderer);
 
     renderTree.node.instance = node;
     node.parent?.children.push(node);

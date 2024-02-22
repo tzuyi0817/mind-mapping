@@ -1,11 +1,13 @@
-import type { MindMappingOptions, MindNodeOptions } from './types/options';
+import Renderer from './core/render/renderer';
+import type { RenderTree } from './types/mapping';
+import type { MindMappingOptions } from './types/options';
 
 declare class MindMapping {
   element: MindMappingOptions['element'];
 }
 
 declare class MindNode {
-  constructor(options: MindNodeOptions);
+  constructor(uid: string, renderTree: RenderTree, renderer: Renderer, isGeneralization?: boolean);
   // nodeGroup: G | null;
   children: MindNode[];
   isMouseover: boolean;

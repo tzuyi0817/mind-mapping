@@ -2,8 +2,6 @@ import { G, Circle, Element, Rect } from '@svgdotjs/svg.js';
 import MindNode from './index';
 
 class ExpandButton {
-  parent: MindNode;
-
   node?: G;
   fill?: Circle;
   open?: Element;
@@ -12,9 +10,8 @@ class ExpandButton {
   placeholder?: Rect;
   lastStatus = false;
 
-  constructor(node: MindNode) {
-    this.parent = node;
-  }
+  constructor(public parent: MindNode) {}
+
   get isRequired() {
     return this.parent.children.length && !this.parent.renderTree.isRoot;
   }

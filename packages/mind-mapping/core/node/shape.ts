@@ -4,11 +4,8 @@ import { SHAPE } from '../../configs/shape';
 import type { ShapePadding } from '../../types/shape';
 
 class Shape {
-  node: MindNode;
+  constructor(public node: MindNode) {}
 
-  constructor(node: MindNode) {
-    this.node = node;
-  }
   get shape() {
     return this.node.style.getStyle('shape');
   }
