@@ -4,7 +4,7 @@ export interface MappingRoot {
   root: MappingBase;
 }
 
-interface MappingBase {
+export interface MappingBase {
   data: {
     text: string;
     generalization?: {

@@ -15,8 +15,6 @@ class MindMapping extends Draw {
   options: MindMappingMergeOptions;
   element!: MindMappingOptions['element'];
   elementRect!: DOMRect;
-  width!: number;
-  height!: number;
   draw!: Svg;
   group!: G;
   linesGroup!: G;
@@ -25,8 +23,14 @@ class MindMapping extends Draw {
   theme!: Theme;
   event: Event;
 
-  constructor(options: PickPartial<MindMappingOptions, 'data'>) {
-    super();
+  constructor(
+    options: PickPartial<MindMappingOptions, 'data'>,
+    public width = 0,
+    public height = 0,
+    public initialWidth = 0,
+    public initialHeight = 0,
+  ) {
+    super(width, height);
     this.options = this.mergeOption(options);
     this.initElement();
     this.initDraw();
@@ -41,13 +45,9 @@ class MindMapping extends Draw {
   initElement() {
     this.element = this.options.element;
     if (!this.element) throw new Error('The element cannot be empty');
-    this.elementRect = this.element.getBoundingClientRect();
-    this.width = this.elementRect.width;
-    this.height = this.elementRect.height;
-
-    if (!this.width || !this.height) {
-      throw new Error('The width and height of the container element cannot be 0');
-    }
+    this.getElementRect();
+    this.initialWidth = this.width;
+    this.initialHeight = this.height;
   }
   initDraw() {
     this.draw = SVG().addTo(this.element).size(this.width, this.height);
@@ -72,10 +72,17 @@ class MindMapping extends Draw {
     this.group.clear();
     this.render();
   }
-  resize() {
+  getElementRect() {
     this.elementRect = this.element.getBoundingClientRect();
     this.width = this.elementRect.width;
     this.height = this.elementRect.height;
+
+    if (!this.width || !this.height) {
+      throw new Error('The width and height of the container element cannot be 0');
+    }
+  }
+  resize() {
+    this.getElementRect();
     this.draw.size(this.width, this.height);
   }
   destroy() {

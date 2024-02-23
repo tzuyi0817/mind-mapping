@@ -1,4 +1,4 @@
-export enum PositionEnum {
+export enum POSITION_ENUM {
   TOP,
   RIGHT,
   BOTTOM,
@@ -7,9 +7,9 @@ export enum PositionEnum {
 }
 
 export const INIT_POSITION_MAP = {
-  [PositionEnum.TOP]: 0,
-  [PositionEnum.RIGHT]: 1,
-  [PositionEnum.BOTTOM]: 1,
-  [PositionEnum.LEFT]: 0,
-  [PositionEnum.CENTER]: 0.5,
+  [POSITION_ENUM.TOP]: 0,
+  [POSITION_ENUM.RIGHT]: 1,
+  [POSITION_ENUM.BOTTOM]: 1,
+  [POSITION_ENUM.LEFT]: 0,
+  [POSITION_ENUM.CENTER]: 0.5,
 } as const;

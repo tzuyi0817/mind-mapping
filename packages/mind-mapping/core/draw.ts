@@ -1,5 +1,6 @@
 import { G } from '@svgdotjs/svg.js';
 import Event from './event';
+import Renderer from './render/renderer';
 import { MOUSE_WHEEL_ACTION, DIRECTION } from '../configs/constants';
 import type { MindMappingMergeOptions } from '../types/options';
 
@@ -9,7 +10,7 @@ interface ScaleParams {
   scale: number;
 }
 
-class Draw {
+abstract class Draw {
   startPosition = { x: 0, y: 0 };
   currentPosition = { x: 0, y: 0 };
   scale = 1;
@@ -18,10 +19,14 @@ class Draw {
   group!: G;
   event!: Event;
   elementRect!: DOMRect;
-  width!: number;
-  height!: number;
+  renderer!: Renderer;
 
-  constructor() {
+  constructor(
+    public width = 0,
+    public height = 0,
+    public initialWidth = 0,
+    public initialHeight = 0,
+  ) {
     this.bindEvents();
   }
   bindEvents() {
@@ -44,30 +49,35 @@ class Draw {
     this.transform();
   }
   onMouseWheel(event: WheelEvent) {
-    const { mousewheelAction, disableMouseWheelZoom, scaleCenterUseMousePosition, mousewheelMoveStep } = this.options;
-    const { clientX, clientY, deltaX, deltaY } = event;
+    const { mousewheelAction, mousewheelMoveStep } = this.options;
+    const { deltaX, deltaY } = event;
 
     if (!deltaX && !deltaY) return;
     if (mousewheelAction === MOUSE_WHEEL_ACTION.ZOOM) {
-      if (disableMouseWheelZoom) return;
-      const x = scaleCenterUseMousePosition ? clientX - this.elementRect.left : this.width / 2;
-      const y = scaleCenterUseMousePosition ? clientY - this.elementRect.top : this.height / 2;
-      const directionX = deltaX > 0 ? DIRECTION.RIGHT : DIRECTION.LEFT;
-      const directionY = deltaY > 0 ? DIRECTION.DOWN : DIRECTION.UP;
-      const scaleMap = {
-        [DIRECTION.UP]: this.deflation.bind(this),
-        [DIRECTION.DOWN]: this.enlarge.bind(this),
-        [DIRECTION.LEFT]: this.deflation.bind(this),
-        [DIRECTION.RIGHT]: this.enlarge.bind(this),
-      };
-
-      deltaY ? scaleMap[directionY](x, y) : scaleMap[directionX](x, y);
+      this.zoomDraw(event);
       return;
     }
     const moveX = deltaX ? (deltaX > 0 ? -mousewheelMoveStep : mousewheelMoveStep) : 0;
     const moveY = deltaY ? (deltaY > 0 ? -mousewheelMoveStep : mousewheelMoveStep) : 0;
 
     this.moveDraw(moveX, moveY);
+  }
+  zoomDraw(event: WheelEvent) {
+    const { scaleCenterUseMousePosition, disableMouseWheelZoom } = this.options;
+    if (disableMouseWheelZoom) return;
+    const { clientX, clientY, deltaX, deltaY } = event;
+    const x = scaleCenterUseMousePosition ? clientX - this.elementRect.left : this.width / 2;
+    const y = scaleCenterUseMousePosition ? clientY - this.elementRect.top : this.height / 2;
+    const directionX = deltaX > 0 ? DIRECTION.RIGHT : DIRECTION.LEFT;
+    const directionY = deltaY > 0 ? DIRECTION.DOWN : DIRECTION.UP;
+    const scaleMap = {
+      [DIRECTION.UP]: this.deflation.bind(this),
+      [DIRECTION.DOWN]: this.enlarge.bind(this),
+      [DIRECTION.LEFT]: this.deflation.bind(this),
+      [DIRECTION.RIGHT]: this.enlarge.bind(this),
+    };
+
+    deltaY ? scaleMap[directionY](x, y) : scaleMap[directionX](x, y);
   }
   enlarge(x: number, y: number) {
     const scale = this.scale + this.options.scaleRatio;
@@ -94,12 +104,10 @@ class Draw {
     this.transform();
   }
   transform() {
-    const { x, y } = this.currentPosition;
-
     this.group.transform({
       origin: [0, 0],
       scale: this.scale,
-      translate: [x, y],
+      translate: [this.currentPosition.x, this.currentPosition.y],
     });
   }
 }

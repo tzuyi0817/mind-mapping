@@ -4,7 +4,7 @@ import Renderer from '../core/render/renderer';
 import MindNode from '../core/node';
 import MindMapping from '../index';
 import { dfsRenderTree, dfsBoundingNode } from '../utils/dfs';
-import { PositionEnum, INIT_POSITION_MAP } from '../configs/position';
+import { POSITION_ENUM, INIT_POSITION_MAP } from '../configs/position';
 import type { MappingBase, RenderTree } from '../types/mapping';
 import type {
   LayoutRenderLine,
@@ -131,7 +131,7 @@ class Base {
     });
   }
   setNodeCenter(node: MindNode) {
-    const { CENTER } = PositionEnum;
+    const { CENTER } = POSITION_ENUM;
 
     node.top = this.mindMapping.height * INIT_POSITION_MAP[CENTER];
     node.left = this.mindMapping.width * INIT_POSITION_MAP[CENTER];

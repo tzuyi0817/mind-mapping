@@ -4,13 +4,14 @@ import MindNode from '../node';
 import Editor from './editor';
 import Drag from './drag';
 import Base from '../../layouts/base';
-import type { MappingRoot } from '../../types/mapping';
+import type { MappingRoot, MappingBase } from '../../types/mapping';
 
 class Renderer {
   isRendering = false;
   activeNodes: Set<MindNode> = new Set();
   cachedNodes: Map<string, MindNode> = new Map();
   previousCachedNodes: Map<string, MindNode> = new Map();
+  rootNode?: MappingBase;
 
   renderTree: MappingRoot;
   group: G;
@@ -47,10 +48,10 @@ class Renderer {
     this.isRendering = true;
     this.previousCachedNodes = new Map(this.cachedNodes);
     this.cachedNodes.clear();
-    const rootNode = await this.layout.startLayout();
+    this.rootNode = await this.layout.startLayout();
 
     this.destroyExtraNodes();
-    await rootNode.instance?.render();
+    this.rootNode.instance?.render();
     this.isRendering = false;
   }
   destroyExtraNodes() {

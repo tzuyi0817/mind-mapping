@@ -2,6 +2,7 @@ import Renderer from './renderer';
 import type { NodeMouseEvent } from '../../types/node';
 
 class Drag {
+  isDragging = false;
   startPosition = { x: 0, y: 0 };
 
   constructor(public renderer: Renderer) {
@@ -9,13 +10,27 @@ class Drag {
     this.onEvents();
   }
   bindEvents() {
-    this.start = this.start.bind(this);
+    this.onMousedown = this.onMousedown.bind(this);
+    this.onMousemove = this.onMousemove.bind(this);
+    this.onMouseup = this.onMouseup.bind(this);
   }
   onEvents() {
-    this.renderer.event.on('mousedown-node', this.start);
+    this.renderer.event.on('mousedown-node', this.onMousedown);
+    this.renderer.event.on('mousemove', this.onMousemove);
   }
-  start({ event }: NodeMouseEvent) {
+  onMousedown({ node, event }: NodeMouseEvent) {
+    const { renderTree, isGeneralization } = node;
+
+    if (renderTree.isRoot || isGeneralization) return;
     this.startPosition = { x: event.clientX, y: event.clientY };
+    this.isDragging = true;
+  }
+  onMousemove() {
+    if (!this.isDragging) return;
+  }
+  onMouseup() {
+    if (!this.isDragging) return;
+    this.isDragging = false;
   }
 }
 

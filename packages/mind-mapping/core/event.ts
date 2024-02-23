@@ -1,4 +1,5 @@
 import EventEmitter from 'eventemitter3';
+import { MOUSE_BUTTON_ENUM } from '../configs/mouse';
 import type { Svg } from '@svgdotjs/svg.js';
 
 interface props {
@@ -11,7 +12,8 @@ class Event extends EventEmitter {
   element: HTMLElement;
 
   isMousedown = false;
-  isMousedownDraw = false;
+  isFramePoint = true;
+  mousedownButton = MOUSE_BUTTON_ENUM.LEFT;
   mousedownPosition = { x: 0, y: 0 };
   mousemoveOffset = { x: 0, y: 0 };
 
@@ -32,15 +34,15 @@ class Event extends EventEmitter {
   addEventListeners() {
     this.draw.on('click', this.onDrawClick);
     this.element.addEventListener('mousedown', this.onMousedown);
-    this.element.addEventListener('mousemove', this.onMousemove);
-    this.element.addEventListener('mouseup', this.onMouseup);
+    window.addEventListener('mousemove', this.onMousemove);
+    window.addEventListener('mouseup', this.onMouseup);
     this.element.addEventListener('wheel', this.onMousewheel);
   }
   removeEventListeners() {
     this.draw.off('click', this.onDrawClick);
     this.element.removeEventListener('mousedown', this.onMousedown);
-    this.element.removeEventListener('mousemove', this.onMousemove);
-    this.element.removeEventListener('mouseup', this.onMouseup);
+    window.removeEventListener('mousemove', this.onMousemove);
+    window.removeEventListener('mouseup', this.onMouseup);
     this.element.removeEventListener('wheel', this.onMousewheel);
     this.removeAllListeners();
   }
@@ -48,22 +50,30 @@ class Event extends EventEmitter {
     this.emit('click-draw', event);
   }
   onMousedown(event: MouseEvent) {
+    const { target, button } = event;
+    const isMousedownDraw = this.draw.node === target;
+
+    this.mousedownButton = button;
     this.isMousedown = true;
     this.mousedownPosition.x = event.clientX;
     this.mousedownPosition.y = event.clientY;
-    this.isMousedownDraw = this.draw.node === event.target;
     this.emit('mousedown', event);
-    this.isMousedownDraw && this.emit('mousedown-draw', event);
+    isMousedownDraw && this.emit('mousedown-draw', event);
   }
   onMousemove(event: MouseEvent) {
-    if (!this.isMousedown) return;
+    if (!this.isMousedown || !this.isFramePoint) return;
     event.preventDefault();
     const { x, y } = this.mousedownPosition;
+    const isDrag = this.mousedownButton !== MOUSE_BUTTON_ENUM.RIGHT;
 
-    this.mousemoveOffset.x = event.clientX - x;
-    this.mousemoveOffset.y = event.clientY - y;
-    this.emit('mousemove', event);
-    this.isMousedownDraw && this.emit('drag-draw', event);
+    this.isFramePoint = false;
+    window.requestAnimationFrame(() => {
+      this.mousemoveOffset.x = event.clientX - x;
+      this.mousemoveOffset.y = event.clientY - y;
+      this.emit('mousemove', event);
+      isDrag && this.emit('drag-draw', event);
+      this.isFramePoint = true;
+    });
   }
   onMouseup() {
     this.isMousedown = false;

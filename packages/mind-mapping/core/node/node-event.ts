@@ -8,7 +8,8 @@ class NodeEvent {
     this.onClick = this.onClick.bind(this);
     this.onMouseenter = this.onMouseenter.bind(this);
     this.onMouseleave = this.onMouseleave.bind(this);
-    this.onMouseDown = this.onMouseDown.bind(this);
+    this.onMousedown = this.onMousedown.bind(this);
+    this.onMouseup = this.onMouseup.bind(this);
     this.onDblclick = this.onDblclick.bind(this);
   }
   on() {
@@ -16,7 +17,8 @@ class NodeEvent {
     this.node.nodeGroup.on('click', this.onClick);
     this.node.nodeGroup.on('mouseenter', this.onMouseenter);
     this.node.nodeGroup.on('mouseleave', this.onMouseleave);
-    this.node.nodeGroup.on('mousedown', this.onMouseDown);
+    this.node.nodeGroup.on('mousedown', this.onMousedown);
+    this.node.nodeGroup.on('mouseup', this.onMouseup);
     this.node.nodeGroup.on('dblclick', this.onDblclick);
   }
   off() {
@@ -24,6 +26,8 @@ class NodeEvent {
     this.node.nodeGroup.off('click', this.onClick);
     this.node.nodeGroup.off('mouseenter', this.onMouseenter);
     this.node.nodeGroup.off('mouseleave', this.onMouseleave);
+    this.node.nodeGroup.off('mousedown', this.onMousedown);
+    this.node.nodeGroup.off('mouseup', this.onMouseup);
     this.node.nodeGroup.off('dblclick', this.onDblclick);
   }
   onClick(event: Event) {
@@ -42,9 +46,13 @@ class NodeEvent {
     this.node.isMouseover = false;
     this.node.expandButton.hide();
   }
-  onMouseDown(event: Event) {
+  onMousedown(event: Event) {
     event.stopPropagation();
     this.node.renderer.event.emit('mousedown-node', { node: this.node, event });
+  }
+  onMouseup(event: Event) {
+    event.stopPropagation();
+    this.node.renderer.event.emit('mouseup-node', { node: this.node, event });
   }
   onDblclick(event: Event) {
     event.stopPropagation();
