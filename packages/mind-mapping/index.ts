@@ -19,6 +19,7 @@ class MindMapping extends Draw {
   group!: G;
   linesGroup!: G;
   nodesGroup!: G;
+  backupGroup!: G;
   renderer: Renderer;
   theme!: Theme;
   event: Event;
@@ -59,6 +60,9 @@ class MindMapping extends Draw {
 
     this.nodesGroup = this.group.group();
     this.nodesGroup.addClass('mind-mapping-nodes-group');
+
+    this.backupGroup = this.group.group();
+    this.backupGroup.addClass('mind-mapping-backup-group');
   }
   initTheme() {
     this.theme = themes.SKY_BLUE;

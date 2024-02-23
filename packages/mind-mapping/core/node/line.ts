@@ -29,6 +29,12 @@ class Line {
     this.lines.forEach(line => line.remove());
     this.lines = [];
   }
+  setOpacity(opacity: number) {
+    this.lines.forEach(line => line.opacity(opacity));
+  }
+  hide() {
+    this.lines.forEach(line => line.hide());
+  }
 }
 
 export default Line;

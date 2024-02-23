@@ -25,4 +25,9 @@ export const DEFAULT_OPTIONS = {
     closeSvg,
   },
   showExpandChildrenCount: true,
+
+  dragOpacity: {
+    target: 0.3,
+    clone: 0.5,
+  },
 };

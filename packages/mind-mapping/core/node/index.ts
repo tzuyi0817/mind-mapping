@@ -193,6 +193,19 @@ class MindNode extends CreateNode {
     this.nodeGroup.removeClass('active');
     this.expandButton.hide();
   }
+  setOpacity(opacity: number) {
+    if (!this.nodeGroup) return;
+    this.nodeGroup.opacity(opacity);
+    // this.line.setOpacity(opacity);
+    this.generalization.setOpacity(opacity);
+  }
+  hideChildren() {
+    this.children.forEach(child => {
+      child.nodeGroup?.hide();
+      child.line.hide();
+      child.hideChildren();
+    });
+  }
 }
 
 export default MindNode;

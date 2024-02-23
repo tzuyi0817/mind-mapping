@@ -4,6 +4,9 @@ class NodeEvent {
   constructor(public node: MindNode) {
     this.bindEvents();
   }
+  get isRoot() {
+    return this.node.renderTree.isRoot;
+  }
   bindEvents() {
     this.onClick = this.onClick.bind(this);
     this.onMouseenter = this.onMouseenter.bind(this);
@@ -18,7 +21,7 @@ class NodeEvent {
     this.node.nodeGroup.on('mouseenter', this.onMouseenter);
     this.node.nodeGroup.on('mouseleave', this.onMouseleave);
     this.node.nodeGroup.on('mousedown', this.onMousedown);
-    this.node.nodeGroup.on('mouseup', this.onMouseup);
+    // this.node.nodeGroup.on('mouseup', this.onMouseup);
     this.node.nodeGroup.on('dblclick', this.onDblclick);
   }
   off() {
@@ -27,7 +30,7 @@ class NodeEvent {
     this.node.nodeGroup.off('mouseenter', this.onMouseenter);
     this.node.nodeGroup.off('mouseleave', this.onMouseleave);
     this.node.nodeGroup.off('mousedown', this.onMousedown);
-    this.node.nodeGroup.off('mouseup', this.onMouseup);
+    // this.node.nodeGroup.off('mouseup', this.onMouseup);
     this.node.nodeGroup.off('dblclick', this.onDblclick);
   }
   onClick(event: Event) {
@@ -47,7 +50,7 @@ class NodeEvent {
     this.node.expandButton.hide();
   }
   onMousedown(event: Event) {
-    event.stopPropagation();
+    if (!this.isRoot) event.stopPropagation();
     this.node.renderer.event.emit('mousedown-node', { node: this.node, event });
   }
   onMouseup(event: Event) {

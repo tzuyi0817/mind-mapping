@@ -1,5 +1,5 @@
 import EventEmitter from 'eventemitter3';
-import { MOUSE_BUTTON_ENUM } from '../configs/mouse';
+import { isDragButton } from '../utils/element';
 import type { Svg } from '@svgdotjs/svg.js';
 
 interface props {
@@ -11,9 +11,8 @@ class Event extends EventEmitter {
   draw: Svg;
   element: HTMLElement;
 
-  isMousedown = false;
   isFramePoint = true;
-  mousedownButton = MOUSE_BUTTON_ENUM.LEFT;
+  mousedownButton: number | null = null;
   mousedownPosition = { x: 0, y: 0 };
   mousemoveOffset = { x: 0, y: 0 };
 
@@ -54,29 +53,29 @@ class Event extends EventEmitter {
     const isMousedownDraw = this.draw.node === target;
 
     this.mousedownButton = button;
-    this.isMousedown = true;
     this.mousedownPosition.x = event.clientX;
     this.mousedownPosition.y = event.clientY;
     this.emit('mousedown', event);
     isMousedownDraw && this.emit('mousedown-draw', event);
   }
   onMousemove(event: MouseEvent) {
-    if (!this.isMousedown || !this.isFramePoint) return;
+    if (!this.isFramePoint) return;
     event.preventDefault();
     const { x, y } = this.mousedownPosition;
-    const isDrag = this.mousedownButton !== MOUSE_BUTTON_ENUM.RIGHT;
 
     this.isFramePoint = false;
     window.requestAnimationFrame(() => {
+      this.emit('mousemove', event);
+      this.isFramePoint = true;
+      if (!isDragButton(this.mousedownButton)) return;
       this.mousemoveOffset.x = event.clientX - x;
       this.mousemoveOffset.y = event.clientY - y;
-      this.emit('mousemove', event);
-      isDrag && this.emit('drag-draw', event);
-      this.isFramePoint = true;
+      this.emit('drag-draw', event);
     });
   }
-  onMouseup() {
-    this.isMousedown = false;
+  onMouseup(event: MouseEvent) {
+    this.mousedownButton = null;
+    this.emit('mouseup', event);
   }
   onMousewheel(event: WheelEvent) {
     event.stopPropagation();

@@ -33,6 +33,10 @@ class Generalization {
     this.line?.remove();
     this.line = this.node.nodeGroup = null;
   }
+  setOpacity(opacity: number) {
+    this.node?.setOpacity(opacity);
+    this.line?.opacity(opacity);
+  }
 }
 
 export default Generalization;
