@@ -196,8 +196,14 @@ class MindNode extends CreateNode {
   setOpacity(opacity: number) {
     if (!this.nodeGroup) return;
     this.nodeGroup.opacity(opacity);
-    // this.line.setOpacity(opacity);
-    this.generalization.setOpacity(opacity);
+    opacity >= 1 ? this.generalization.show() : this.generalization.hide();
+  }
+  showChildren() {
+    this.children.forEach(child => {
+      child.nodeGroup?.show();
+      child.line.show();
+      child.showChildren();
+    });
   }
   hideChildren() {
     this.children.forEach(child => {

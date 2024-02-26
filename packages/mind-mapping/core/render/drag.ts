@@ -48,11 +48,16 @@ class Drag {
 
     if (!this.isDragging && this.isDragAction(clientX, x) && this.isDragAction(clientY, y)) return;
     this.startDrag();
-    this.dragTarget(clientX, clientY);
+    this.dragCloneNode(clientX, clientY);
   }
   onMouseup() {
     if (!this.isMousedown) return;
     this.isMousedown = this.isDragging = false;
+    if (!this.target) return;
+    this.removeCloneNode();
+    this.target.setOpacity(1);
+    this.target.line.show();
+    this.target.showChildren();
     this.target = null;
   }
   isDragAction(a: number, b: number) {
@@ -84,13 +89,18 @@ class Drag {
     node.line.hide();
     node.hideChildren();
   }
-  dragTarget(clientX: number, clientY: number) {
+  dragCloneNode(clientX: number, clientY: number) {
     if (!this.isDragging || !this.clone) return;
     const { scaleX = 1, scaleY = 1, translateX = 0, translateY = 0 } = this.drawGroupMatrix ?? {};
     const x = (clientX - this.offset.x - translateX) / scaleX;
     const y = (clientY - this.offset.y - translateY) / scaleY;
 
     this.clone.transform({ translate: [x, y] });
+  }
+  removeCloneNode() {
+    if (!this.clone) return;
+    this.clone.remove();
+    this.clone = null;
   }
 }
 

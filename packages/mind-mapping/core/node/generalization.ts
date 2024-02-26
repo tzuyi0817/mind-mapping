@@ -37,6 +37,14 @@ class Generalization {
     this.node?.setOpacity(opacity);
     this.line?.opacity(opacity);
   }
+  show() {
+    this.node?.nodeGroup?.show();
+    this.line?.show();
+  }
+  hide() {
+    this.node?.nodeGroup?.hide();
+    this.line?.hide();
+  }
 }
 
 export default Generalization;
