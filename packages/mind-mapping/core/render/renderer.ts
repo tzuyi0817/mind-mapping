@@ -4,6 +4,7 @@ import MindNode from '../node';
 import Editor from './editor';
 import Drag from './drag';
 import Base from '../../layouts/base';
+import { bfsNodeTree } from '../../utils/bfs';
 import type { MappingRoot, MappingBase } from '../../types/mapping';
 
 class Renderer {
@@ -66,6 +67,21 @@ class Renderer {
       node.updateActive(false);
     });
     this.activeNodes.clear();
+  }
+  createNodesMap(filterNode: MindNode) {
+    const nodesMap = new Map<number, MindNode[]>();
+
+    if (!this.rootNode?.instance) return nodesMap;
+    bfsNodeTree(this.rootNode.instance, node => {
+      const { deep } = node.renderTree;
+      if (deep === undefined || filterNode === node) return true;
+
+      const nodes = nodesMap.get(deep) ?? [];
+
+      nodes.push(node);
+      nodesMap.set(deep, nodes);
+    });
+    return nodesMap;
   }
 }
 

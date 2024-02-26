@@ -14,13 +14,13 @@ export const DEFAULT_MAPPING = {
         children: [
           {
             data: {
-              text: 'branch topic',
+              text: 'branch topic I',
             },
             children: [],
           },
           {
             data: {
-              text: 'branch topic',
+              text: 'branch topic II',
             },
             children: [],
           },

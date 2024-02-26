@@ -3,7 +3,7 @@ import type { RenderTree } from '../types/mapping';
 
 export function dfsRenderTree(
   { node: root, parent, isRoot, deep = 0 }: RenderTree,
-  beforeCallback?: (renderTree: RenderTree) => void,
+  beforeCallback?: (renderTree: RenderTree) => boolean | void,
   afterCallback?: (renderTree: RenderTree) => void,
 ) {
   const isExpand = beforeCallback?.({ node: root, parent, isRoot, deep });

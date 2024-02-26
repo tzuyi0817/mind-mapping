@@ -196,19 +196,36 @@ class MindNode extends CreateNode {
   setOpacity(opacity: number) {
     if (!this.nodeGroup) return;
     this.nodeGroup.opacity(opacity);
-    opacity >= 1 ? this.generalization.show() : this.generalization.hide();
+    this.generalization.setOpacity(opacity);
+    this.line.setOpacity(opacity);
+  }
+  show() {
+    if (!this.nodeGroup) return;
+    this.nodeGroup.show();
+    this.showComponent();
+  }
+  hide() {
+    if (!this.nodeGroup) return;
+    this.nodeGroup.hide();
+    this.hideComponent();
+  }
+  showComponent() {
+    this.line.show();
+    this.generalization.show();
+  }
+  hideComponent() {
+    this.line.hide();
+    this.generalization.hide();
   }
   showChildren() {
     this.children.forEach(child => {
-      child.nodeGroup?.show();
-      child.line.show();
+      child.show();
       child.showChildren();
     });
   }
   hideChildren() {
     this.children.forEach(child => {
-      child.nodeGroup?.hide();
-      child.line.hide();
+      child.hide();
       child.hideChildren();
     });
   }

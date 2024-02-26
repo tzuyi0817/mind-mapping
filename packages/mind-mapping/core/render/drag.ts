@@ -46,7 +46,7 @@ class Drag {
     const { clientX, clientY } = event;
     const { x, y } = this.startPosition;
 
-    if (!this.isDragging && this.isDragAction(clientX, x) && this.isDragAction(clientY, y)) return;
+    if (!this.isDragging && !this.isDragAction(clientX, x) && !this.isDragAction(clientY, y)) return;
     this.startDrag();
     this.dragCloneNode(clientX, clientY);
   }
@@ -56,7 +56,7 @@ class Drag {
     if (!this.target) return;
     this.removeCloneNode();
     this.target.setOpacity(1);
-    this.target.line.show();
+    this.target.showComponent();
     this.target.showChildren();
     this.target = null;
   }
@@ -86,7 +86,8 @@ class Drag {
 
     clone.opacity(dragOpacity.clone);
     node.setOpacity(dragOpacity.target);
-    node.line.hide();
+    node.cancelActive();
+    node.hideComponent();
     node.hideChildren();
   }
   dragCloneNode(clientX: number, clientY: number) {
@@ -96,11 +97,16 @@ class Drag {
     const y = (clientY - this.offset.y - translateY) / scaleY;
 
     this.clone.transform({ translate: [x, y] });
+    this.checkOverlap();
   }
   removeCloneNode() {
     if (!this.clone) return;
     this.clone.remove();
     this.clone = null;
+  }
+  checkOverlap() {
+    if (!this.target) return;
+    console.log(this.renderer.createNodesMap(this.target));
   }
 }
 
