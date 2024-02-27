@@ -68,7 +68,7 @@ class Renderer {
     });
     this.activeNodes.clear();
   }
-  createNodesMap(filterNode: MindNode) {
+  createNodesMap(filterNode?: MindNode) {
     const nodesMap = new Map<number, MindNode[]>();
 
     if (!this.rootNode?.instance) return nodesMap;

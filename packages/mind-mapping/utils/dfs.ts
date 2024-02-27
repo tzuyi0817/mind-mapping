@@ -33,6 +33,7 @@ export function dfsBoundingNode(
     bottom: root.top + root.height,
     left: root.left,
   };
+
   if (root.children?.length) {
     root.children.forEach(node => {
       const { generalization } = node;
@@ -47,7 +48,6 @@ export function dfsBoundingNode(
       bounding.left = Math.min(left - (isHorizontal ? generalizationWidth : 0), bounding.left);
     });
   }
-
   return {
     top: Math.min(bounding.top, current.top),
     right: Math.max(bounding.right, current.right),

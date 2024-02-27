@@ -37,8 +37,7 @@ class NodeEvent {
     event.stopPropagation();
     if (this.node.isActive) return;
     this.node.renderer.clearActiveNodes();
-    this.node.renderer.activeNodes.add(this.node);
-    this.node.updateActive(true);
+    this.node.active();
   }
   onMouseenter() {
     this.node.isMouseover = true;

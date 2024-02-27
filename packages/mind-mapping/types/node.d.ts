@@ -18,3 +18,8 @@ export interface NodeMouseEvent {
   node: MindNode;
   event: MouseEvent;
 }
+
+export interface NodeOverlap {
+  node: MindNode | null;
+  deep: number;
+}

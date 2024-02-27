@@ -1,22 +1,30 @@
-import { G, type MatrixExtract } from '@svgdotjs/svg.js';
+import { G, type MatrixExtract, type Box } from '@svgdotjs/svg.js';
 import Renderer from './renderer';
 import MindNode from '../node';
+import { throttle } from '../../utils/common';
+import { isOverlap } from '../../utils/element';
 import { MOUSE_BUTTON_ENUM } from '../../configs/mouse';
-import type { NodeMouseEvent } from '../../types/node';
+import type { NodeMouseEvent, NodeOverlap } from '../../types/node';
 
 class Drag {
   MIN_DRAG_DISTANCE = 10;
   isMousedown = false;
   isDragging = false;
-  startPosition = { x: 0, y: 0 };
   target: MindNode | null = null;
   drawGroupMatrix: MatrixExtract | null = null;
+  nodesMap: Map<number, MindNode[]> | null = null;
   clone: G | null = null;
+  cloneBbox?: Box;
+  overlapNode: MindNode | null = null;
+
+  startPosition = { x: 0, y: 0 };
   offset = { x: 0, y: 0 };
+  transform = { x: 0, y: 0 };
 
   constructor(public renderer: Renderer) {
     this.bindEvents();
     this.onEvents();
+    this.checkOverlap = throttle(this.checkOverlap);
   }
   get backupGroup() {
     return this.renderer.mindMapping.backupGroup;
@@ -58,7 +66,7 @@ class Drag {
     this.target.setOpacity(1);
     this.target.showComponent();
     this.target.showChildren();
-    this.target = null;
+    this.target = this.nodesMap = this.clone = this.overlapNode = null;
   }
   isDragAction(a: number, b: number) {
     return Math.abs(a - b) > this.MIN_DRAG_DISTANCE;
@@ -73,6 +81,7 @@ class Drag {
     this.offset.x = this.startPosition.x - this.target.left * scaleX - translateX;
     this.offset.y = this.startPosition.y - this.target.top * scaleY - translateY;
     this.cloneNode(this.target);
+    this.generateCheckMap();
   }
   cloneNode(node: MindNode) {
     if (!node.nodeGroup) return;
@@ -82,13 +91,20 @@ class Drag {
 
     expandElement?.remove();
     this.clone = clone;
+    this.cloneBbox = clone.bbox();
     this.backupGroup.add(clone);
 
     clone.opacity(dragOpacity.clone);
     node.setOpacity(dragOpacity.target);
-    node.cancelActive();
+    node.inactive();
     node.hideComponent();
     node.hideChildren();
+  }
+  generateCheckMap() {
+    window.requestAnimationFrame(() => {
+      if (!this.target) return;
+      this.nodesMap = this.renderer.createNodesMap(this.target);
+    });
   }
   dragCloneNode(clientX: number, clientY: number) {
     if (!this.isDragging || !this.clone) return;
@@ -97,6 +113,8 @@ class Drag {
     const y = (clientY - this.offset.y - translateY) / scaleY;
 
     this.clone.transform({ translate: [x, y] });
+    this.transform.x = x;
+    this.transform.y = y;
     this.checkOverlap();
   }
   removeCloneNode() {
@@ -105,8 +123,24 @@ class Drag {
     this.clone = null;
   }
   checkOverlap() {
-    if (!this.target) return;
-    console.log(this.renderer.createNodesMap(this.target));
+    if (!this.cloneBbox || !this.nodesMap) return;
+    const { width, height } = this.cloneBbox;
+    const { x: left, y: top } = this.transform;
+    const rect = { left, top, right: left + width, bottom: top + height };
+    const overlap: NodeOverlap = { node: null, deep: -1 };
+
+    for (const [deep, nodes] of this.nodesMap) {
+      const node = nodes.find(node => isOverlap(node, rect));
+
+      if (!node) continue;
+      overlap.node = node;
+      overlap.deep = deep;
+      break;
+    }
+    // if (this.overlapNode && this.overlapNode === overlap.node) return;
+    this.renderer.clearActiveNodes();
+    if (!overlap.node) return;
+    overlap.node.active();
   }
 }
 

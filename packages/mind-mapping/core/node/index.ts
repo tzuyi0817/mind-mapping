@@ -46,6 +46,12 @@ class MindNode extends CreateNode {
 
     this.setBounding();
   }
+  get right() {
+    return this.left + this.width;
+  }
+  get bottom() {
+    return this.top + this.height;
+  }
   get parent() {
     return this.renderTree.parent?.instance;
   }
@@ -155,7 +161,7 @@ class MindNode extends CreateNode {
     this.line.remove();
     this.generalization.reset();
     this.parent?.line.remove();
-    this.cancelActive();
+    this.inactive();
     this.event.off();
     this.nodeGroup = null;
   }
@@ -177,7 +183,12 @@ class MindNode extends CreateNode {
     if (!this.nodeGroup) return;
     this.nodeGroup.transform({ translate: [this.left, this.top] });
   }
-  cancelActive() {
+  active() {
+    if (this.isActive) return;
+    this.renderer.activeNodes.add(this);
+    this.updateActive(true);
+  }
+  inactive() {
     if (!this.isActive) return;
     this.renderer.activeNodes.delete(this);
     this.updateActive(false);
