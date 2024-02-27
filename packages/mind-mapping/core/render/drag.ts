@@ -137,10 +137,12 @@ class Drag {
       overlap.deep = deep;
       break;
     }
-    // if (this.overlapNode && this.overlapNode === overlap.node) return;
+    if (this.overlapNode && this.overlapNode === overlap.node) return;
     this.renderer.clearActiveNodes();
+    this.overlapNode = null;
     if (!overlap.node) return;
     overlap.node.active();
+    this.overlapNode = overlap.node;
   }
 }
 
