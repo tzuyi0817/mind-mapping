@@ -61,6 +61,9 @@ class MindNode extends CreateNode {
   get node() {
     return this.renderTree.node;
   }
+  get deep() {
+    return this.renderTree.deep ?? 0;
+  }
   get isActive() {
     return this.renderTree.node.isActive ?? false;
   }
@@ -119,10 +122,11 @@ class MindNode extends CreateNode {
         this.nodeGroup = new G();
         this.nodeGroup.addClass('mind-mapping-node');
         this.event.on();
-        this.setLayout();
         this.nodesGroup.add(this.nodeGroup);
+        this.isResize = true;
       }
       this.line.render();
+      this.setLayout();
       this.update();
       window.requestAnimationFrame(async () => {
         if (this.children.length && this.isExpand) {
@@ -136,6 +140,7 @@ class MindNode extends CreateNode {
     return new Promise<boolean>(resolve => {
       const isChangeSize = this.setBounding();
 
+      this.isResize = true;
       this.setLayout();
       resolve(isChangeSize);
     });
@@ -149,10 +154,12 @@ class MindNode extends CreateNode {
     }
     this.expandButton.hide();
   }
-  reset(renderer: Renderer) {
+  reset(renderTree: RenderTree) {
     this.left = 0;
     this.top = 0;
-    this.renderer = renderer;
+    this.children = [];
+    this.isResize = this.isChangeDeep(renderTree);
+    this.renderTree = renderTree;
     this.generalization.reset();
   }
   destroy() {
@@ -166,7 +173,7 @@ class MindNode extends CreateNode {
     this.nodeGroup = null;
   }
   setLayout() {
-    if (!this.nodeGroup) return;
+    if (!this.nodeGroup || !this.isResize) return;
     this.nodeGroup.clear();
     const contentGroup = this.createContentGroup();
     this.shapeNode = this.shape.createShape();
@@ -239,6 +246,11 @@ class MindNode extends CreateNode {
       child.hide();
       child.hideChildren();
     });
+  }
+  isChangeDeep(renderTree: RenderTree) {
+    const { deep: deep = 0 } = renderTree;
+
+    return (deep < 2 && this.deep >= 2) || (deep >= 2 && this.deep < 2);
   }
 }
 

@@ -61,12 +61,8 @@ class Drag {
   onMouseup() {
     if (!this.isMousedown) return;
     this.isMousedown = this.isDragging = false;
-    if (!this.target) return;
-    this.removeCloneNode();
-    this.target.setOpacity(1);
-    this.target.showComponent();
-    this.target.showChildren();
-    this.target = this.nodesMap = this.clone = this.overlapNode = null;
+    this.renderer.moveNodeToBeChild(this.target, this.overlapNode);
+    this.reset();
   }
   isDragAction(a: number, b: number) {
     return Math.abs(a - b) > this.MIN_DRAG_DISTANCE;
@@ -143,6 +139,15 @@ class Drag {
     if (!overlap.node) return;
     overlap.node.active();
     this.overlapNode = overlap.node;
+  }
+  reset() {
+    if (!this.target) return;
+    this.removeCloneNode();
+    this.renderer.clearActiveNodes();
+    this.target.setOpacity(1);
+    this.target.showComponent();
+    this.target.showChildren();
+    this.target = this.nodesMap = this.clone = this.overlapNode = null;
   }
 }
 

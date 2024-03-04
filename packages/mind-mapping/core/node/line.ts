@@ -16,6 +16,11 @@ class Line {
         this.lines.push(linesGroup.path());
       }
     }
+    if (diffSize < 0) {
+      for (let index = 0; index < Math.abs(diffSize); index++) {
+        this.lines.pop()?.remove();
+      }
+    }
     this.parent.renderer.layout.renderLine({
       node: this.parent,
       lineStyle: style.getCommonStyle('lineStyle'),

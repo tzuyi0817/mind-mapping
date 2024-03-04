@@ -83,6 +83,16 @@ class Renderer {
     });
     return nodesMap;
   }
+  moveNodeToBeChild(node: MindNode | null, toNode: MindNode | null) {
+    if (!toNode || !node?.parent) return;
+    const { parent } = node;
+    const index = parent.children.indexOf(node);
+
+    if (index < 0) return;
+    parent.renderTree.node.children.splice(index, 1);
+    toNode.renderTree.node.children.push(node.renderTree.node);
+    this.render();
+  }
 }
 
 export default Renderer;

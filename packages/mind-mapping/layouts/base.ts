@@ -29,8 +29,9 @@ class Base {
     const { instance: cacheNode } = renderTree.node;
 
     if (cacheNode) {
-      cacheNode.reset(this.renderer);
-      this.renderer.cachedNodes.set(cacheNode.uid, cacheNode);
+      cacheNode.reset(renderTree);
+      cacheNode.renderer = this.renderer;
+      cacheNode.parent?.children.push(cacheNode);
       return cacheNode;
     }
     const uid = uuidv4();
