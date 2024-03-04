@@ -89,8 +89,8 @@ class Renderer {
     const index = parent.children.indexOf(node);
 
     if (index < 0) return;
-    parent.renderTree.node.children.splice(index, 1);
-    toNode.renderTree.node.children.push(node.renderTree.node);
+    parent.node.children.splice(index, 1);
+    toNode.node.children.push(node.renderTree.node);
     this.render();
   }
 }

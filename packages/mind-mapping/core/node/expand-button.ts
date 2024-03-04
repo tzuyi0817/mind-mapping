@@ -13,7 +13,7 @@ class ExpandButton {
   constructor(public parent: MindNode) {}
 
   get isRequired() {
-    return this.parent.children.length && !this.parent.renderTree.isRoot;
+    return this.parent.node.children.length && !this.parent.renderTree.isRoot;
   }
   get expandButtonSize() {
     return this.parent.renderer.options.expandButtonSize;

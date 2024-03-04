@@ -27,19 +27,20 @@ class Base {
   }
   createNode(renderTree: RenderTree) {
     const { instance: cacheNode } = renderTree.node;
+    let node = null;
 
     if (cacheNode) {
-      cacheNode.reset(renderTree);
-      cacheNode.renderer = this.renderer;
-      cacheNode.parent?.children.push(cacheNode);
-      return cacheNode;
-    }
-    const uid = uuidv4();
-    const node = new MindNode(uid, renderTree, this.renderer);
+      node = cacheNode;
+      node.renderer = this.renderer;
+      node.reset(renderTree);
+    } else {
+      const uid = uuidv4();
 
-    renderTree.node.instance = node;
+      node = new MindNode(uid, renderTree, this.renderer);
+      renderTree.node.instance = node;
+    }
     node.parent?.children.push(node);
-    this.renderer.cachedNodes.set(uid, node);
+    this.renderer.cachedNodes.set(node.uid, node);
     return node;
   }
   async startLayout() {
