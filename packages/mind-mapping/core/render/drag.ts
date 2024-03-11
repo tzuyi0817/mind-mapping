@@ -147,7 +147,7 @@ class Drag {
     this.target.setOpacity(1);
     this.target.showComponent();
     this.target.showChildren();
-    this.target = this.nodesMap = this.clone = this.overlapNode = null;
+    this.target = this.nodesMap = this.overlapNode = null;
   }
 }
 

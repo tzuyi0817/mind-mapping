@@ -6,6 +6,9 @@ export const DEFAULT_OPTIONS = {
   scaleRatio: 0.1,
   scaleCenterUseMousePosition: true,
 
+  drawBorder: 20,
+  drawMoveStep: 5,
+
   mousewheelAction: MOUSE_WHEEL_ACTION.MOVE,
   mousewheelMoveStep: 100,
   disableMouseWheelZoom: false,
@@ -20,14 +23,8 @@ export const DEFAULT_OPTIONS = {
     fontSize: 12,
     strokeColor: '#333333',
   },
-  expandButtonSvg: {
-    openSvg,
-    closeSvg,
-  },
+  expandButtonSvg: { openSvg, closeSvg },
   showExpandChildrenCount: true,
 
-  dragOpacity: {
-    target: 0.3,
-    clone: 0.5,
-  },
+  dragOpacity: { target: 0.3, clone: 0.5 },
 };

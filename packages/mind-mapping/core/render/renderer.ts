@@ -3,6 +3,7 @@ import MindMapping from '../../index';
 import MindNode from '../node';
 import Editor from './editor';
 import Drag from './drag';
+import Select from './select';
 import Base from '../../layouts/base';
 import { bfsNodeTree } from '../../utils/bfs';
 import type { MappingRoot, MappingBase } from '../../types/mapping';
@@ -18,6 +19,7 @@ class Renderer {
   group: G;
   editor: Editor;
   drag: Drag;
+  select: Select;
   layout!: Base;
 
   constructor(public mindMapping: MindMapping) {
@@ -25,6 +27,7 @@ class Renderer {
     this.group = mindMapping.group;
     this.editor = new Editor(this);
     this.drag = new Drag(this);
+    this.select = new Select(this);
     this.initLayout();
     this.onEvents();
   }
