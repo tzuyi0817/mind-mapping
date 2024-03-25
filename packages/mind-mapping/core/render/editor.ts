@@ -1,6 +1,6 @@
 import MindNode from '../node';
 import Renderer from './renderer';
-import { focusElement, replaceHtmlBr, covertToHtml } from '../../utils/element';
+import { focusElement, replaceHtmlBr, convertToHtml } from '../../utils/element';
 import type { NodeMouseEvent } from '../../types/node';
 
 class Editor {
@@ -37,7 +37,7 @@ class Editor {
       document.body.appendChild(div);
       this.frame = div;
     }
-    this.frame.innerHTML = covertToHtml(node.content.text);
+    this.frame.innerHTML = convertToHtml(node.content.text);
     this.frame.style.minWidth = `${width + this.paddingX * 2}px`;
     this.frame.style.minHeight = `${height + this.paddingY * 2}px`;
     this.frame.style.left = `${left}px`;

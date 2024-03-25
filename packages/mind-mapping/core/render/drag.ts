@@ -57,6 +57,9 @@ class Drag {
     if (!this.isDragging && !this.isDragAction(clientX, x) && !this.isDragAction(clientY, y)) return;
     this.startDrag();
     this.dragCloneNode(clientX, clientY);
+    this.updateDrawGroupMatrix();
+    this.renderer.select.stopMoveDrawEdge();
+    this.renderer.select.checkDrawEdge(clientX, clientY);
   }
   onMouseup() {
     if (!this.isMousedown) return;
@@ -64,16 +67,18 @@ class Drag {
     this.renderer.moveNodeToBeChild(this.target, this.overlapNode);
     this.reset();
   }
+  updateDrawGroupMatrix() {
+    return (this.drawGroupMatrix = this.renderer.group.transform());
+  }
   isDragAction(a: number, b: number) {
     return Math.abs(a - b) > this.MIN_DRAG_DISTANCE;
   }
   startDrag() {
     if (this.isDragging || !this.target) return;
-    const drawGroupMatrix = this.renderer.group.transform();
+    const drawGroupMatrix = this.updateDrawGroupMatrix();
     const { scaleX = 1, scaleY = 1, translateX = 0, translateY = 0 } = drawGroupMatrix;
 
     this.isDragging = true;
-    this.drawGroupMatrix = drawGroupMatrix;
     this.offset.x = this.startPosition.x - this.target.left * scaleX - translateX;
     this.offset.y = this.startPosition.y - this.target.top * scaleY - translateY;
     this.cloneNode(this.target);

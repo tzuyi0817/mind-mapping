@@ -17,6 +17,8 @@ class Renderer {
 
   renderTree: MappingRoot;
   group: G;
+  elementRect: DOMRect;
+  moveDraw: (moveX: number, moveY: number) => void;
   editor: Editor;
   drag: Drag;
   select: Select;
@@ -25,6 +27,8 @@ class Renderer {
   constructor(public mindMapping: MindMapping) {
     this.renderTree = mindMapping.options.data;
     this.group = mindMapping.group;
+    this.elementRect = mindMapping.elementRect;
+    this.moveDraw = mindMapping.moveDraw.bind(mindMapping);
     this.editor = new Editor(this);
     this.drag = new Drag(this);
     this.select = new Select(this);

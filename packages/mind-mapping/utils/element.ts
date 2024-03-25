@@ -22,7 +22,7 @@ export function htmlEscape(str: string) {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-export function covertToHtml(str: string) {
+export function convertToHtml(str: string) {
   return str.split(/\n/).map(htmlEscape).join('<br>');
 }
 
