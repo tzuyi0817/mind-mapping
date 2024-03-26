@@ -60,14 +60,15 @@ class Event extends EventEmitter {
   }
   onMousemove(event: MouseEvent) {
     if (!this.isFramePoint) return;
-    event.preventDefault();
-    const { x, y } = this.mousedownPosition;
 
     this.isFramePoint = false;
     window.requestAnimationFrame(() => {
       this.emit('mousemove', event);
       this.isFramePoint = true;
       if (!isDragButton(this.mousedownButton)) return;
+      const { x, y } = this.mousedownPosition;
+
+      event.preventDefault();
       this.mousemoveOffset.x = event.clientX - x;
       this.mousemoveOffset.y = event.clientY - y;
       this.emit('drag-draw', event);

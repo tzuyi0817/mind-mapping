@@ -41,7 +41,8 @@ abstract class Draw {
     this.event.on('mousewheel', this.onMouseWheel);
     this.event.on('drag-draw', this.dragDraw);
   }
-  dragDraw() {
+  dragDraw(event: MouseEvent) {
+    if (event.ctrlKey) return;
     const { mousemoveOffset } = this.event;
 
     this.currentPosition.x = this.startPosition.x + mousemoveOffset.x;

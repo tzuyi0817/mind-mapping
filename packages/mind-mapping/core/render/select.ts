@@ -1,4 +1,5 @@
 import Renderer from './renderer';
+import { MOUSE_BUTTON_ENUM } from '../../configs/mouse';
 
 class Select {
   perFrame = 1000 / 60;
@@ -9,16 +10,23 @@ class Select {
     this.onEvents();
   }
   bindEvents() {
-    // this.onMousedown = this.onMousedown.bind(this);
+    this.onMousedown = this.onMousedown.bind(this);
     // this.onMousemove = this.onMousemove.bind(this);
     this.onMouseup = this.onMouseup.bind(this);
   }
   onEvents() {
-    // this.renderer.event.on('mousedown', this.onMousedown);
+    this.renderer.event.on('mousedown', this.onMousedown);
     // this.renderer.event.on('mousemove', this.onMousemove);
     this.renderer.event.on('mouseup', this.onMouseup);
   }
-  // onMousedown(event: MouseEvent) {}
+  onMousedown(event: MouseEvent) {
+    const { ctrlKey, button } = event;
+    const { RIGHT } = MOUSE_BUTTON_ENUM;
+
+    if (!ctrlKey && button !== RIGHT) return;
+    event.preventDefault();
+    console.log('select');
+  }
   // onMousemove(event: MouseEvent) {}
   onMouseup() {
     this.stopMoveDrawEdge();
