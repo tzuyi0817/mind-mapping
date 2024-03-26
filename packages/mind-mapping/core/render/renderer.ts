@@ -1,11 +1,11 @@
 import type { Svg, G } from '@svgdotjs/svg.js';
 import MindMapping from '../../index';
-import MindNode from '../node';
 import Editor from './editor';
 import Drag from './drag';
 import Select from './select';
 import Base from '../../layouts/base';
 import { bfsNodeTree } from '../../utils/bfs';
+import type MindNode from '../node';
 import type { MappingRoot, MappingBase } from '../../types/mapping';
 
 class Renderer {
@@ -84,11 +84,9 @@ class Renderer {
     bfsNodeTree(this.rootNode.instance, node => {
       const { deep } = node.renderTree;
       if (deep === undefined || filterNode === node) return true;
+      const nodes = nodesMap.get(deep);
 
-      const nodes = nodesMap.get(deep) ?? [];
-
-      nodes.push(node);
-      nodesMap.set(deep, nodes);
+      nodes ? nodes.push(node) : nodesMap.set(deep, [node]);
     });
     return nodesMap;
   }

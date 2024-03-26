@@ -1,9 +1,9 @@
 import { G, type MatrixExtract, type Box } from '@svgdotjs/svg.js';
-import Renderer from './renderer';
-import MindNode from '../node';
 import { throttle } from '../../utils/common';
 import { isOverlap, isDragAction } from '../../utils/element';
 import { MOUSE_BUTTON_ENUM } from '../../configs/mouse';
+import type Renderer from './renderer';
+import type MindNode from '../node';
 import type { NodeMouseEvent, NodeOverlap } from '../../types/node';
 
 class Drag {

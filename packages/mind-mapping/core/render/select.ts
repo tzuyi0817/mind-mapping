@@ -1,7 +1,9 @@
 import type { Polygon } from '@svgdotjs/svg.js';
-import Renderer from './renderer';
-import { isDragAction } from '../../utils/element';
+import { isDragAction, isOverlap } from '../../utils/element';
+import { throttle } from '../../utils/common';
+import { bfsNodeTree } from '../../utils/bfs';
 import { MOUSE_BUTTON_ENUM } from '../../configs/mouse';
+import type Renderer from './renderer';
 
 class Select {
   perFrame = 1000 / 60;
@@ -12,6 +14,7 @@ class Select {
   constructor(public renderer: Renderer) {
     this.bindEvents();
     this.onEvents();
+    this.checkOverlap = throttle(this.checkOverlap);
   }
   bindEvents() {
     this.onMousedown = this.onMousedown.bind(this);
@@ -40,6 +43,7 @@ class Select {
     const { clientX, clientY } = event;
 
     this.selectArea?.plot([start.x, start.y, clientX, start.y, clientX, clientY, start.x, clientY]);
+    this.checkOverlap();
   }
   onMouseup() {
     this.stopMoveDrawEdge();
@@ -78,6 +82,26 @@ class Select {
       .polygon()
       .fill(selectAreaStyle.fill)
       .stroke({ color: selectAreaStyle.strokeColor });
+  }
+  checkOverlap() {
+    window.requestAnimationFrame(() => {
+      const rootNode = this.renderer.rootNode?.instance;
+
+      if (!this.selectArea || !rootNode) return;
+      const drawGroupMatrix = this.renderer.group.transform();
+      const { scaleX = 1, scaleY = 1, translateX = 0, translateY = 0 } = drawGroupMatrix;
+      const { x, x2, y, y2 } = this.selectArea.bbox();
+      const selectRect = {
+        left: (x - translateX) / scaleX,
+        top: (y - translateY) / scaleY,
+        right: (x2 - translateX) / scaleX,
+        bottom: (y2 - translateY) / scaleY,
+      };
+
+      bfsNodeTree(rootNode, node => {
+        isOverlap(node, selectRect) ? node.active() : node.inactive();
+      });
+    });
   }
 }
 
