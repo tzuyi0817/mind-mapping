@@ -1,4 +1,4 @@
-import { G } from '@svgdotjs/svg.js';
+import type { Svg, G } from '@svgdotjs/svg.js';
 import MindMapping from '../../index';
 import MindNode from '../node';
 import Editor from './editor';
@@ -18,6 +18,7 @@ class Renderer {
   renderTree: MappingRoot;
   group: G;
   elementRect: DOMRect;
+  draw: Svg;
   moveDraw: (moveX: number, moveY: number) => void;
   editor: Editor;
   drag: Drag;
@@ -28,6 +29,7 @@ class Renderer {
     this.renderTree = mindMapping.options.data;
     this.group = mindMapping.group;
     this.elementRect = mindMapping.elementRect;
+    this.draw = mindMapping.draw;
     this.moveDraw = mindMapping.moveDraw.bind(mindMapping);
     this.editor = new Editor(this);
     this.drag = new Drag(this);

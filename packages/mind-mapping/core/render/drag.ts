@@ -2,12 +2,11 @@ import { G, type MatrixExtract, type Box } from '@svgdotjs/svg.js';
 import Renderer from './renderer';
 import MindNode from '../node';
 import { throttle } from '../../utils/common';
-import { isOverlap } from '../../utils/element';
+import { isOverlap, isDragAction } from '../../utils/element';
 import { MOUSE_BUTTON_ENUM } from '../../configs/mouse';
 import type { NodeMouseEvent, NodeOverlap } from '../../types/node';
 
 class Drag {
-  MIN_DRAG_DISTANCE = 10;
   isMousedown = false;
   isDragging = false;
   target: MindNode | null = null;
@@ -54,7 +53,7 @@ class Drag {
     const { clientX, clientY } = event;
     const { x, y } = this.startPosition;
 
-    if (!this.isDragging && !this.isDragAction(clientX, x) && !this.isDragAction(clientY, y)) return;
+    if (!this.isDragging && !isDragAction(clientX - x) && !isDragAction(clientY - y)) return;
     this.startDrag();
     this.dragCloneNode(clientX, clientY);
     this.updateDrawGroupMatrix();
@@ -69,9 +68,6 @@ class Drag {
   }
   updateDrawGroupMatrix() {
     return (this.drawGroupMatrix = this.renderer.group.transform());
-  }
-  isDragAction(a: number, b: number) {
-    return Math.abs(a - b) > this.MIN_DRAG_DISTANCE;
   }
   startDrag() {
     if (this.isDragging || !this.target) return;

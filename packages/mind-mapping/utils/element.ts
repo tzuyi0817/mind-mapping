@@ -1,4 +1,5 @@
 import { MOUSE_BUTTON_ENUM } from '../configs/mouse';
+import { MIN_DRAG_DISTANCE } from '../configs/constants';
 
 interface Rect {
   top: number;
@@ -37,6 +38,10 @@ export function isDragButton(button: number | null) {
   const { LEFT, MIDDLE } = MOUSE_BUTTON_ENUM;
 
   return button === LEFT || button === MIDDLE;
+}
+
+export function isDragAction(offset: number) {
+  return Math.abs(offset) > MIN_DRAG_DISTANCE;
 }
 
 export function isOverlap(rectA: Rect, rectB: Rect) {

@@ -9,6 +9,11 @@ export const DEFAULT_OPTIONS = {
   drawBorder: 20,
   drawMoveStep: 5,
 
+  selectAreaStyle: {
+    fill: 'rgba(9,132,227,0.3)',
+    strokeColor: '#0984e3',
+  },
+
   mousewheelAction: MOUSE_WHEEL_ACTION.MOVE,
   mousewheelMoveStep: 100,
   disableMouseWheelZoom: false,

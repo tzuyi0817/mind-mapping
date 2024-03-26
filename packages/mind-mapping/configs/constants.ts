@@ -9,3 +9,5 @@ export const DIRECTION = {
   DOWN: 'down',
   LEFT: 'left',
 } as const;
+
+export const MIN_DRAG_DISTANCE = 10;
