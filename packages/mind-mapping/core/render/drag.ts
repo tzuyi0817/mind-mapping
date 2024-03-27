@@ -82,9 +82,9 @@ class Drag {
   findDragNodes(node: MindNode) {
     if (!node.isActive) return [node];
     const nodes: MindNode[] = [];
-    const activeNodes = [...this.renderer.activeNodes];
+    const activeNodes = [...this.renderer.activeNodes].filter(node => !node.renderTree.isRoot);
 
-    for (const nodeA of this.renderer.activeNodes) {
+    for (const nodeA of activeNodes) {
       const isAncestor = activeNodes.every(nodeB => !nodeB.isAncestor(nodeA));
 
       isAncestor && nodes.push(nodeA);
@@ -122,8 +122,8 @@ class Drag {
     return rect;
   }
   cloneNode(node: MindNode) {
-    if (!node?.nodeGroup) return;
-    const { scaleX = 1, scaleY = 1, translateX = 0, translateY = 0 } = this.drawGroupMatrix ?? {};
+    if (!node?.nodeGroup || !this.drawGroupMatrix) return;
+    const { scaleX = 1, scaleY = 1, translateX = 0, translateY = 0 } = this.drawGroupMatrix;
     const clone = node.nodeGroup.clone();
     const expandElement = clone.findOne('.mind-mapping-expand-button');
 
@@ -187,6 +187,7 @@ class Drag {
       node.showChildren();
     });
     this.target = this.nodesMap = this.overlapNode = null;
+    this.dragNodes = [];
   }
 }
 

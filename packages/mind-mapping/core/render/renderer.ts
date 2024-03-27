@@ -102,7 +102,6 @@ class Renderer {
       toNode.node.children.push(node.renderTree.node);
     }
     this.render();
-    console.log(this.rootNode);
   }
 }
 
