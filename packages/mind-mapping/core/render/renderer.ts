@@ -90,15 +90,19 @@ class Renderer {
     });
     return nodesMap;
   }
-  moveNodeToBeChild(node: MindNode | null, toNode: MindNode | null) {
-    if (!toNode || !node?.parent) return;
-    const { parent } = node;
-    const index = parent.children.indexOf(node);
+  moveNodesToBeChild(nodes: MindNode[], toNode: MindNode | null) {
+    if (!toNode || !nodes.length) return;
+    for (const node of nodes) {
+      if (!node.parent) continue;
+      const { children } = node.parent.node;
+      const index = children.findIndex(child => node === child.instance);
 
-    if (index < 0) return;
-    parent.node.children.splice(index, 1);
-    toNode.node.children.push(node.renderTree.node);
+      if (index < 0) return;
+      children.splice(index, 1);
+      toNode.node.children.push(node.renderTree.node);
+    }
     this.render();
+    console.log(this.rootNode);
   }
 }
 

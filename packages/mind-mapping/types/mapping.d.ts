@@ -15,7 +15,6 @@ export interface MappingBase {
   instance?: MindNode;
   isActive?: boolean;
   isExpand?: boolean;
-  uid?: string;
 }
 
 export interface RenderTree {

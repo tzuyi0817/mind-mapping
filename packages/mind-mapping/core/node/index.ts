@@ -248,9 +248,19 @@ class MindNode extends CreateNode {
     });
   }
   isChangeDeep(renderTree: RenderTree) {
-    const { deep: deep = 0 } = renderTree;
+    const { deep = 0 } = renderTree;
 
     return (deep < 2 && this.deep >= 2) || (deep >= 2 && this.deep < 2);
+  }
+  isAncestor(node: MindNode) {
+    if (node.deep <= this.deep || this === node) return false;
+    let parent = node.parent;
+
+    while (parent) {
+      if (parent === this) return true;
+      parent = parent.parent;
+    }
+    return false;
   }
 }
 

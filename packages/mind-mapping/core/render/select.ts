@@ -92,10 +92,10 @@ class Select {
       const { scaleX = 1, scaleY = 1, translateX = 0, translateY = 0 } = drawGroupMatrix;
       const { x, x2, y, y2 } = this.selectArea.bbox();
       const selectRect = {
-        left: (x - translateX) / scaleX,
-        top: (y - translateY) / scaleY,
-        right: (x2 - translateX) / scaleX,
-        bottom: (y2 - translateY) / scaleY,
+        left: x * scaleX - translateX,
+        top: y * scaleY - translateY,
+        right: x2 * scaleX - translateX,
+        bottom: y2 * scaleY - translateY,
       };
 
       bfsNodeTree(rootNode, node => {

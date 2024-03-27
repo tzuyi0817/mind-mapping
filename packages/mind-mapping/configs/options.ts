@@ -32,4 +32,5 @@ export const DEFAULT_OPTIONS = {
   showExpandChildrenCount: true,
 
   dragOpacity: { target: 0.3, clone: 0.5 },
+  dragMultiple: { width: 60, height: 30 },
 };

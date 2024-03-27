@@ -1,4 +1,4 @@
-import { G, type MatrixExtract, type Box } from '@svgdotjs/svg.js';
+import type { G, MatrixExtract, Box, Rect } from '@svgdotjs/svg.js';
 import { throttle } from '../../utils/common';
 import { isOverlap, isDragAction } from '../../utils/element';
 import { MOUSE_BUTTON_ENUM } from '../../configs/mouse';
@@ -12,9 +12,10 @@ class Drag {
   target: MindNode | null = null;
   drawGroupMatrix: MatrixExtract | null = null;
   nodesMap: Map<number, MindNode[]> | null = null;
-  clone: G | null = null;
+  clone: G | Rect | null = null;
   cloneBbox?: Box;
   overlapNode: MindNode | null = null;
+  dragNodes: MindNode[] = [];
 
   startPosition = { x: 0, y: 0 };
   offset = { x: 0, y: 0 };
@@ -56,14 +57,14 @@ class Drag {
     if (!this.isDragging && !isDragAction(clientX - x) && !isDragAction(clientY - y)) return;
     this.startDrag();
     this.dragCloneNode(clientX, clientY);
-    this.updateDrawGroupMatrix();
     this.renderer.select.stopMoveDrawEdge();
     this.renderer.select.checkDrawEdge(clientX, clientY);
+    this.updateDrawGroupMatrix();
   }
   onMouseup() {
     if (!this.isMousedown) return;
     this.isMousedown = this.isDragging = false;
-    this.renderer.moveNodeToBeChild(this.target, this.overlapNode);
+    this.renderer.moveNodesToBeChild(this.dragNodes, this.overlapNode);
     this.reset();
   }
   updateDrawGroupMatrix() {
@@ -71,31 +72,67 @@ class Drag {
   }
   startDrag() {
     if (this.isDragging || !this.target) return;
-    const drawGroupMatrix = this.updateDrawGroupMatrix();
-    const { scaleX = 1, scaleY = 1, translateX = 0, translateY = 0 } = drawGroupMatrix;
 
+    this.updateDrawGroupMatrix();
     this.isDragging = true;
-    this.offset.x = this.startPosition.x - this.target.left * scaleX - translateX;
-    this.offset.y = this.startPosition.y - this.target.top * scaleY - translateY;
-    this.cloneNode(this.target);
+    this.dragNodes = this.findDragNodes(this.target);
+    this.createDragNode(this.dragNodes);
     this.generateCheckMap();
   }
-  cloneNode(node: MindNode) {
-    if (!node.nodeGroup) return;
+  findDragNodes(node: MindNode) {
+    if (!node.isActive) return [node];
+    const nodes: MindNode[] = [];
+    const activeNodes = [...this.renderer.activeNodes];
+
+    for (const nodeA of this.renderer.activeNodes) {
+      const isAncestor = activeNodes.every(nodeB => !nodeB.isAncestor(nodeA));
+
+      isAncestor && nodes.push(nodeA);
+    }
+    return nodes;
+  }
+  createDragNode(nodes: MindNode[]) {
+    const [firstNode] = nodes;
     const { dragOpacity } = this.renderer.options;
+    const fillColor = firstNode.style.getCommonStyle('lineColor');
+    const clone = nodes.length > 1 ? this.createRectNode(fillColor) : this.cloneNode(firstNode);
+
+    if (!clone) return;
+    this.cloneBbox = clone.bbox();
+    this.clone = clone;
+    clone.opacity(dragOpacity.clone);
+    nodes.forEach(node => {
+      node.setOpacity(dragOpacity.target);
+      node.inactive();
+      node.hideComponent();
+      node.hideChildren();
+    });
+  }
+  createRectNode(fillColor: string) {
+    const {
+      dragMultiple: { width, height },
+    } = this.renderer.options;
+    const rect = this.backupGroup
+      .rect(width, height)
+      .fill({ color: fillColor })
+      .radius(height / 2);
+
+    this.offset.x = width / 2;
+    this.offset.y = height / 2;
+    return rect;
+  }
+  cloneNode(node: MindNode) {
+    if (!node?.nodeGroup) return;
+    const { scaleX = 1, scaleY = 1, translateX = 0, translateY = 0 } = this.drawGroupMatrix ?? {};
     const clone = node.nodeGroup.clone();
     const expandElement = clone.findOne('.mind-mapping-expand-button');
 
     expandElement?.remove();
     this.clone = clone;
-    this.cloneBbox = clone.bbox();
     this.backupGroup.add(clone);
-
-    clone.opacity(dragOpacity.clone);
-    node.setOpacity(dragOpacity.target);
-    node.inactive();
-    node.hideComponent();
-    node.hideChildren();
+    this.offset.x = this.startPosition.x - node.left * scaleX - translateX;
+    this.offset.y = this.startPosition.y - node.top * scaleY - translateY;
+    return clone;
   }
   generateCheckMap() {
     window.requestAnimationFrame(() => {
@@ -104,8 +141,8 @@ class Drag {
     });
   }
   dragCloneNode(clientX: number, clientY: number) {
-    if (!this.isDragging || !this.clone) return;
-    const { scaleX = 1, scaleY = 1, translateX = 0, translateY = 0 } = this.drawGroupMatrix ?? {};
+    if (!this.isDragging || !this.clone || !this.drawGroupMatrix) return;
+    const { scaleX = 1, scaleY = 1, translateX = 0, translateY = 0 } = this.drawGroupMatrix;
     const x = (clientX - this.offset.x - translateX) / scaleX;
     const y = (clientY - this.offset.y - translateY) / scaleY;
 
@@ -142,12 +179,13 @@ class Drag {
     this.overlapNode = overlap.node;
   }
   reset() {
-    if (!this.target) return;
     this.removeCloneNode();
     this.renderer.clearActiveNodes();
-    this.target.setOpacity(1);
-    this.target.showComponent();
-    this.target.showChildren();
+    this.dragNodes.forEach(node => {
+      node.setOpacity(1);
+      node.showComponent();
+      node.showChildren();
+    });
     this.target = this.nodesMap = this.overlapNode = null;
   }
 }
