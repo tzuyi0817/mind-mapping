@@ -1,10 +1,13 @@
 import type { G, MatrixExtract, Box, Rect } from '@svgdotjs/svg.js';
 import { throttle } from '../../utils/common';
-import { isOverlap, isDragAction } from '../../utils/element';
+import { isOverlap, isDragAction, getInsertPosition } from '../../utils/element';
 import { MOUSE_BUTTON_ENUM } from '../../configs/mouse';
+import { INSERT_PLACEHOLDER_HEIGHT } from '../../configs/constants';
 import type Renderer from './renderer';
 import type MindNode from '../node';
-import type { NodeMouseEvent, NodeOverlap } from '../../types/node';
+import type { NodeMouseEvent } from '../../types/node';
+
+type insertPosition = 'before' | 'after' | 'child' | 'none';
 
 class Drag {
   isMousedown = false;
@@ -16,6 +19,8 @@ class Drag {
   cloneBbox?: Box;
   overlapNode: MindNode | null = null;
   dragNodes: MindNode[] = [];
+  insertPlaceholder: Rect | null = null;
+  insertPosition: insertPosition = 'none';
 
   startPosition = { x: 0, y: 0 };
   offset = { x: 0, y: 0 };
@@ -74,11 +79,13 @@ class Drag {
   }
   startDrag() {
     if (this.isDragging || !this.target) return;
+    const fillColor = this.target.style.getCommonStyle('lineColor');
 
     this.updateDrawGroupMatrix();
     this.isDragging = true;
     this.dragNodes = this.findDragNodes(this.target);
-    this.createDragNode(this.dragNodes);
+    this.insertPlaceholder = this.backupGroup.rect().fill(fillColor);
+    this.createDragNode(this.dragNodes, fillColor);
     this.generateCheckMap();
   }
   findDragNodes(node: MindNode) {
@@ -93,10 +100,9 @@ class Drag {
     }
     return nodes;
   }
-  createDragNode(nodes: MindNode[]) {
+  createDragNode(nodes: MindNode[], fillColor: string) {
     const [firstNode] = nodes;
     const { dragOpacity } = this.renderer.options;
-    const fillColor = firstNode.style.getCommonStyle('lineColor');
     const clone = nodes.length > 1 ? this.createRectNode(fillColor) : this.cloneNode(firstNode);
 
     if (!clone) return;
@@ -116,7 +122,7 @@ class Drag {
     } = this.renderer.options;
     const rect = this.backupGroup
       .rect(width, height)
-      .fill({ color: fillColor })
+      .fill(fillColor)
       .radius(height / 2);
 
     this.offset.x = width / 2;
@@ -158,30 +164,52 @@ class Drag {
     this.clone.remove();
     this.clone = null;
   }
+  removeInsertPlaceholder() {
+    if (!this.insertPlaceholder) return;
+    this.insertPlaceholder.remove();
+    this.insertPlaceholder = null;
+  }
   checkOverlap() {
     if (!this.cloneBbox || !this.nodesMap) return;
     const { width, height } = this.cloneBbox;
     const { x: left, y: top } = this.transform;
     const rect = { left, top, right: left + width, bottom: top + height };
-    const overlap: NodeOverlap = { node: null, deep: -1 };
+    let overlapNode: MindNode | null = null;
 
-    for (const [deep, nodes] of this.nodesMap) {
+    for (const nodes of this.nodesMap.values()) {
       const node = nodes.find(node => isOverlap(node, rect));
 
       if (!node) continue;
-      overlap.node = node;
-      overlap.deep = deep;
+      overlapNode = node;
       break;
     }
-    if (this.overlapNode && this.overlapNode === overlap.node) return;
-    this.renderer.clearActiveNodes();
+    const position = getInsertPosition(overlapNode, rect);
+
+    this.setupOverlapEffect(overlapNode, position);
+  }
+  setupOverlapEffect(node: MindNode | null, position: insertPosition) {
+    if (this.overlapNode === node && this.insertPosition === position) return;
+    this.insertPosition = position;
+    this.insertPlaceholder?.size(0, 0);
+    this.overlapNode?.inactive();
     this.overlapNode = null;
-    if (!overlap.node) return;
-    overlap.node.active();
-    this.overlapNode = overlap.node;
+    if (!node || position === 'none') return;
+    const effectMap = {
+      before: () => this.setupInsertPlaceholder(node, node.top - INSERT_PLACEHOLDER_HEIGHT),
+      after: () => this.setupInsertPlaceholder(node, node.bottom),
+      child: () => node.active(),
+    };
+
+    effectMap[position]();
+    this.overlapNode = node;
+  }
+  setupInsertPlaceholder(node: MindNode, y: number) {
+    if (!this.insertPlaceholder) return;
+    this.insertPlaceholder.size(node.width, INSERT_PLACEHOLDER_HEIGHT).move(node.left, y);
   }
   reset() {
     this.removeCloneNode();
+    this.removeInsertPlaceholder();
     this.renderer.clearActiveNodes();
     this.dragNodes.forEach(node => {
       node.setOpacity(1);

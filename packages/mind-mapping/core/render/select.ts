@@ -95,7 +95,7 @@ class Select {
     if (!this.selectArea) return;
     const { mousedownPosition: start } = this.renderer.event;
 
-    this.selectArea?.plot([start.x, start.y, clientX, start.y, clientX, clientY, start.x, clientY]);
+    this.selectArea.plot([start.x, start.y, clientX, start.y, clientX, clientY, start.x, clientY]);
     this.checkOverlap();
   }
   checkOverlap() {
