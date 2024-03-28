@@ -5,6 +5,8 @@ import { bfsNodeTree } from '../../utils/bfs';
 import { MOUSE_BUTTON_ENUM } from '../../configs/mouse';
 import type Renderer from './renderer';
 
+type checkDrawEdgeCallback = (moveX: number, moveY: number) => void;
+
 class Select {
   perFrame = 1000 / 60;
   moveEdgeTimer: NodeJS.Timeout | null = null;
@@ -37,13 +39,18 @@ class Select {
   }
   onMousemove(event: MouseEvent) {
     if (!this.isMouseDown) return;
-    const { mousemoveOffset: offset, mousedownPosition: start } = this.renderer.event;
+    const { mousemoveOffset: offset } = this.renderer.event;
 
     if (!isDragAction(offset.x) && !isDragAction(offset.y)) return;
     const { clientX, clientY } = event;
 
-    this.selectArea?.plot([start.x, start.y, clientX, start.y, clientX, clientY, start.x, clientY]);
-    this.checkOverlap();
+    this.stopMoveDrawEdge();
+    this.drawSelectArea(clientX, clientY);
+    this.checkDrawEdge(clientX, clientY, (moveX: number, moveY: number) => {
+      this.renderer.event.mousedownPosition.x += moveX;
+      this.renderer.event.mousedownPosition.y += moveY;
+      this.drawSelectArea(clientX, clientY);
+    });
   }
   onMouseup() {
     this.stopMoveDrawEdge();
@@ -52,7 +59,7 @@ class Select {
     this.selectArea?.remove();
     this.selectArea = null;
   }
-  checkDrawEdge(clientX: number, clientY: number) {
+  checkDrawEdge(clientX: number, clientY: number, moveDrawCallback?: checkDrawEdgeCallback) {
     const {
       elementRect: { left, top, right, bottom },
       options: { drawBorder: border, drawMoveStep: moveStep },
@@ -60,13 +67,14 @@ class Select {
     const moveX = clientX <= left + border ? moveStep : clientX >= right - border ? -moveStep : 0;
     const moveY = clientY <= top + border ? moveStep : clientY >= bottom - border ? -moveStep : 0;
 
-    this.moveDrawEdge(moveX, moveY);
+    this.moveDrawEdge(moveX, moveY, moveDrawCallback);
   }
-  moveDrawEdge(moveX: number, moveY: number) {
+  moveDrawEdge(moveX: number, moveY: number, moveDrawCallback?: checkDrawEdgeCallback) {
     if (!moveX && !moveY) return;
     this.renderer.moveDraw(moveX, moveY);
+    moveDrawCallback?.(moveX, moveY);
     this.moveEdgeTimer = setTimeout(() => {
-      this.moveDrawEdge(moveX, moveY);
+      this.moveDrawEdge(moveX, moveY, moveDrawCallback);
     }, this.perFrame);
   }
   stopMoveDrawEdge() {
@@ -82,6 +90,13 @@ class Select {
       .polygon()
       .fill(selectAreaStyle.fill)
       .stroke({ color: selectAreaStyle.strokeColor });
+  }
+  drawSelectArea(clientX: number, clientY: number) {
+    if (!this.selectArea) return;
+    const { mousedownPosition: start } = this.renderer.event;
+
+    this.selectArea?.plot([start.x, start.y, clientX, start.y, clientX, clientY, start.x, clientY]);
+    this.checkOverlap();
   }
   checkOverlap() {
     window.requestAnimationFrame(() => {

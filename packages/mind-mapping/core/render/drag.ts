@@ -58,8 +58,10 @@ class Drag {
     this.startDrag();
     this.dragCloneNode(clientX, clientY);
     this.renderer.select.stopMoveDrawEdge();
-    this.renderer.select.checkDrawEdge(clientX, clientY);
-    this.updateDrawGroupMatrix();
+    this.renderer.select.checkDrawEdge(clientX, clientY, () => {
+      this.updateDrawGroupMatrix();
+      this.dragCloneNode(clientX, clientY);
+    });
   }
   onMouseup() {
     if (!this.isMousedown) return;

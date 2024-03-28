@@ -97,7 +97,7 @@ class Renderer {
       const { children } = node.parent.node;
       const index = children.findIndex(child => node === child.instance);
 
-      if (index < 0) return;
+      if (index < 0) continue;
       children.splice(index, 1);
       toNode.node.children.push(node.renderTree.node);
     }
