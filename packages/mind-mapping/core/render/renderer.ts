@@ -90,8 +90,28 @@ class Renderer {
     });
     return nodesMap;
   }
-  moveNodesToBeChild(nodes: MindNode[], toNode: MindNode | null) {
-    if (!toNode || !nodes.length) return;
+  moveNodesToBeChild(nodes: MindNode[], toNode: MindNode) {
+    if (!nodes.length) return;
+    const insertNodes = this.separateNodes(nodes);
+
+    toNode.node.children.push(...insertNodes);
+    this.render();
+  }
+  moveNodesToBeSibling(nodes: MindNode[], toNode: MindNode, position: 'before' | 'after') {
+    if (!toNode.parent || !nodes.length) return;
+    const { children } = toNode.parent.node;
+    const index = children.findIndex(child => toNode === child.instance);
+
+    if (index < 0) return;
+    const insertIndex = position === 'before' ? index : index + 1;
+    const insertNodes = this.separateNodes(nodes);
+
+    children.splice(insertIndex, 0, ...insertNodes);
+    this.render();
+  }
+  separateNodes(nodes: MindNode[]) {
+    const result: MappingBase[] = [];
+
     for (const node of nodes) {
       if (!node.parent) continue;
       const { children } = node.parent.node;
@@ -99,9 +119,9 @@ class Renderer {
 
       if (index < 0) continue;
       children.splice(index, 1);
-      toNode.node.children.push(node.renderTree.node);
+      result.push(node.renderTree.node);
     }
-    this.render();
+    return result;
   }
 }
 

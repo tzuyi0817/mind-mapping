@@ -71,7 +71,15 @@ class Drag {
   onMouseup() {
     if (!this.isMousedown) return;
     this.isMousedown = this.isDragging = false;
-    this.renderer.moveNodesToBeChild(this.dragNodes, this.overlapNode);
+    if (this.overlapNode && this.insertPosition !== 'none') {
+      const moveNodesMap = {
+        before: (overlapNode: MindNode) => this.renderer.moveNodesToBeSibling(this.dragNodes, overlapNode, 'before'),
+        after: (overlapNode: MindNode) => this.renderer.moveNodesToBeSibling(this.dragNodes, overlapNode, 'after'),
+        child: (overlapNode: MindNode) => this.renderer.moveNodesToBeChild(this.dragNodes, overlapNode),
+      };
+
+      moveNodesMap[this.insertPosition](this.overlapNode);
+    }
     this.reset();
   }
   updateDrawGroupMatrix() {
