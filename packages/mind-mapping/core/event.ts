@@ -7,6 +7,10 @@ interface props {
   element: HTMLElement;
 }
 
+interface MouseEventEmitter extends MouseEventInit {
+  preventDefault: () => void;
+}
+
 class Event extends EventEmitter {
   draw: Svg;
   element: HTMLElement;
@@ -48,7 +52,7 @@ class Event extends EventEmitter {
     window.removeEventListener('mouseup', this.onMouseup);
     this.removeAllListeners();
   }
-  onDrawClick(event: MouseEventInit) {
+  onDrawClick(event: MouseEventEmitter) {
     this.emit('click-draw', event);
   }
   onMousedown(event: MouseEvent) {
@@ -87,7 +91,7 @@ class Event extends EventEmitter {
     event.preventDefault();
     this.emit('mousewheel', event);
   }
-  onContextmenu(event: MouseEventInit & { preventDefault: () => void }) {
+  onContextmenu(event: MouseEventEmitter) {
     event.preventDefault();
     // On Mac, hold down the ctrl key and click the left mouse button to trigger the contextmenu event.
     if (event.ctrlKey) return;

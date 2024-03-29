@@ -7,6 +7,9 @@ class NodeEvent {
   get isRoot() {
     return this.node.renderTree.isRoot;
   }
+  get renderer() {
+    return this.node.renderer;
+  }
   bindEvents() {
     this.onClick = this.onClick.bind(this);
     this.onMouseenter = this.onMouseenter.bind(this);
@@ -14,6 +17,7 @@ class NodeEvent {
     this.onMousedown = this.onMousedown.bind(this);
     this.onMouseup = this.onMouseup.bind(this);
     this.onDblclick = this.onDblclick.bind(this);
+    this.onContextmenu = this.onContextmenu.bind(this);
   }
   on() {
     if (!this.node.nodeGroup) return;
@@ -23,6 +27,7 @@ class NodeEvent {
     this.node.nodeGroup.on('mousedown', this.onMousedown);
     // this.node.nodeGroup.on('mouseup', this.onMouseup);
     this.node.nodeGroup.on('dblclick', this.onDblclick);
+    this.node.nodeGroup.on('contextmenu', this.onContextmenu);
   }
   off() {
     if (!this.node.nodeGroup) return;
@@ -32,11 +37,12 @@ class NodeEvent {
     this.node.nodeGroup.off('mousedown', this.onMousedown);
     // this.node.nodeGroup.off('mouseup', this.onMouseup);
     this.node.nodeGroup.off('dblclick', this.onDblclick);
+    this.node.nodeGroup.off('contextmenu', this.onContextmenu);
   }
   onClick(event: Event) {
     event.stopPropagation();
     if (this.node.isActive) return;
-    this.node.renderer.clearActiveNodes();
+    this.renderer.clearActiveNodes();
     this.node.active();
   }
   onMouseenter() {
@@ -50,15 +56,24 @@ class NodeEvent {
   }
   onMousedown(event: Event) {
     if (!this.isRoot) event.stopPropagation();
-    this.node.renderer.event.emit('mousedown-node', { node: this.node, event });
+    this.renderer.event.emit('mousedown-node', { node: this.node, event });
   }
   onMouseup(event: Event) {
     event.stopPropagation();
-    this.node.renderer.event.emit('mouseup-node', { node: this.node, event });
+    this.renderer.event.emit('mouseup-node', { node: this.node, event });
   }
   onDblclick(event: Event) {
     event.stopPropagation();
-    this.node.renderer.event.emit('dblclick-node', { node: this.node, event });
+    this.renderer.event.emit('dblclick-node', { node: this.node, event });
+  }
+  onContextmenu(event: MouseEventInit) {
+    // On Mac, hold down the ctrl key and click the left mouse button to trigger the contextmenu event.
+    if (event.ctrlKey) return;
+    if (!this.node.isActive || this.renderer.activeNodes.size > 1) {
+      this.renderer.clearOtherActiveNodes(this.node);
+      this.node.active();
+    }
+    this.renderer.event.emit('contextmenu-node', { node: this.node, event });
   }
 }
 

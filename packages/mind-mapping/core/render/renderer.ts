@@ -77,6 +77,13 @@ class Renderer {
     });
     this.activeNodes.clear();
   }
+  clearOtherActiveNodes(node: MindNode) {
+    this.activeNodes.forEach(activeNode => {
+      if (activeNode === node) return;
+      activeNode.updateActive(false);
+      this.activeNodes.delete(activeNode);
+    });
+  }
   createNodesMap(filterNode?: MindNode) {
     const nodesMap = new Map<number, MindNode[]>();
 

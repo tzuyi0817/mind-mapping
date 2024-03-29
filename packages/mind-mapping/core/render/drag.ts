@@ -105,6 +105,7 @@ class Drag {
       const isAncestor = activeNodes.every(nodeB => !nodeB.isAncestor(nodeA));
 
       isAncestor && nodes.push(nodeA);
+      nodeA.inactive();
     }
     return nodes;
   }
@@ -119,7 +120,6 @@ class Drag {
     clone.opacity(dragOpacity.clone);
     nodes.forEach(node => {
       node.setOpacity(dragOpacity.target);
-      node.inactive();
       node.hideComponent();
       node.hideChildren();
     });
@@ -218,7 +218,6 @@ class Drag {
   reset() {
     this.removeCloneNode();
     this.removeInsertPlaceholder();
-    this.renderer.clearActiveNodes();
     this.dragNodes.forEach(node => {
       node.setOpacity(1);
       node.showComponent();
