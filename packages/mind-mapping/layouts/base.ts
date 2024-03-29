@@ -4,7 +4,7 @@ import Renderer from '../core/render/renderer';
 import MindNode from '../core/node';
 import MindMapping from '../index';
 import { dfsRenderTree, dfsBoundingNode } from '../utils/dfs';
-import { POSITION_ENUM, INIT_POSITION_MAP } from '../configs/position';
+import { POSITION_ENUM, INIT_POSITION_MAP } from '../configs/constants';
 import type { MappingBase, RenderTree } from '../types/mapping';
 import type {
   LayoutRenderLine,

@@ -2,7 +2,7 @@ import type { Polygon } from '@svgdotjs/svg.js';
 import { isDragAction, isOverlap } from '../../utils/element';
 import { throttle } from '../../utils/common';
 import { bfsNodeTree } from '../../utils/bfs';
-import { MOUSE_BUTTON_ENUM } from '../../configs/mouse';
+import { MOUSE_BUTTON_ENUM } from '../../configs/constants';
 import type Renderer from './renderer';
 
 type checkDrawEdgeCallback = (moveX: number, moveY: number) => void;

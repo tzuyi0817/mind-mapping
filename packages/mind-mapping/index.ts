@@ -3,6 +3,7 @@ import Renderer from './core/render/renderer';
 import Style from './core/render/style';
 import Event from './core/event';
 import Draw from './core/draw';
+import Command from './core/command';
 import * as themes from './themes';
 import { DEFAULT_OPTIONS } from './configs/options';
 import { DEFAULT_MAPPING } from './configs/default-mapping';
@@ -23,6 +24,7 @@ class MindMapping extends Draw {
   renderer: Renderer;
   theme!: Theme;
   event: Event;
+  command: Command;
 
   constructor(
     options: PickPartial<MindMappingOptions, 'data'>,
@@ -35,9 +37,10 @@ class MindMapping extends Draw {
     this.options = this.mergeOption(options);
     this.initElement();
     this.initDraw();
-    this.event = new Event({ draw: this.draw, element: this.element });
+    this.event = new Event(this.draw, this.element);
     this.onEvents();
-    this.renderer = new Renderer(this);
+    this.renderer = new Renderer(this, this.moveDraw.bind(this));
+    this.command = new Command(this.event);
     this.render();
   }
   mergeOption(options: PickPartial<MindMappingOptions, 'data'>) {

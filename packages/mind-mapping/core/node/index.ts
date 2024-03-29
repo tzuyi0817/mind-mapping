@@ -1,5 +1,4 @@
-import { G, Path, Rect } from '@svgdotjs/svg.js';
-import Renderer from '../render/renderer';
+import { G, type Path, type Rect } from '@svgdotjs/svg.js';
 import Style from '../render/style';
 import Shape from './shape';
 import Line from './line';
@@ -7,6 +6,7 @@ import Generalization from './generalization';
 import ExpandButton from './expand-button';
 import CreateNode from './create-node';
 import NodeEvent from './node-event';
+import type Renderer from '../render/renderer';
 import type { RenderTree } from '../../types/mapping';
 import type { NodeMap } from '../../types/node';
 

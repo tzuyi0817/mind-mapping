@@ -1,12 +1,11 @@
-import type { Svg, G } from '@svgdotjs/svg.js';
-import MindMapping from '../../index';
 import Editor from './editor';
 import Drag from './drag';
 import Select from './select';
 import Base from '../../layouts/base';
 import { bfsNodeTree } from '../../utils/bfs';
+import type MindMapping from '../../index';
 import type MindNode from '../node';
-import type { MappingRoot, MappingBase } from '../../types/mapping';
+import type { MappingBase } from '../../types/mapping';
 
 class Renderer {
   isRendering = false;
@@ -15,27 +14,32 @@ class Renderer {
   previousCachedNodes: Map<string, MindNode> = new Map();
   rootNode?: MappingBase;
 
-  renderTree: MappingRoot;
-  group: G;
-  elementRect: DOMRect;
-  draw: Svg;
-  moveDraw: (moveX: number, moveY: number) => void;
   editor: Editor;
   drag: Drag;
   select: Select;
   layout!: Base;
 
-  constructor(public mindMapping: MindMapping) {
-    this.renderTree = mindMapping.options.data;
-    this.group = mindMapping.group;
-    this.elementRect = mindMapping.elementRect;
-    this.draw = mindMapping.draw;
-    this.moveDraw = mindMapping.moveDraw.bind(mindMapping);
+  constructor(
+    public mindMapping: MindMapping,
+    public moveDraw: (moveX: number, moveY: number) => void,
+  ) {
     this.editor = new Editor(this);
     this.drag = new Drag(this);
     this.select = new Select(this);
     this.initLayout();
     this.onEvents();
+  }
+  get renderTree() {
+    return this.mindMapping.options.data;
+  }
+  get group() {
+    return this.mindMapping.group;
+  }
+  get elementRect() {
+    return this.mindMapping.elementRect;
+  }
+  get draw() {
+    return this.mindMapping.draw;
   }
   get options() {
     return this.mindMapping.options;
@@ -45,6 +49,9 @@ class Renderer {
   }
   get event() {
     return this.mindMapping.event;
+  }
+  get command() {
+    return this.mindMapping.command;
   }
   initLayout() {
     this.layout = new Base(this);
@@ -78,11 +85,11 @@ class Renderer {
     this.activeNodes.clear();
   }
   clearOtherActiveNodes(node: MindNode) {
-    this.activeNodes.forEach(activeNode => {
-      if (activeNode === node) return;
+    for (const activeNode of this.activeNodes) {
+      if (activeNode === node) continue;
       activeNode.updateActive(false);
       this.activeNodes.delete(activeNode);
-    });
+    }
   }
   createNodesMap(filterNode?: MindNode) {
     const nodesMap = new Map<number, MindNode[]>();

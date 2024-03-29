@@ -2,28 +2,21 @@ import EventEmitter from 'eventemitter3';
 import { isDragButton } from '../utils/element';
 import type { Svg } from '@svgdotjs/svg.js';
 
-interface props {
-  draw: Svg;
-  element: HTMLElement;
-}
-
 interface MouseEventEmitter extends MouseEventInit {
   preventDefault: () => void;
 }
 
 class Event extends EventEmitter {
-  draw: Svg;
-  element: HTMLElement;
-
   isFramePoint = true;
   mousedownButton: number | null = null;
   mousedownPosition = { x: 0, y: 0 };
   mousemoveOffset = { x: 0, y: 0 };
 
-  constructor({ draw, element }: props) {
+  constructor(
+    public draw: Svg,
+    public element: HTMLElement,
+  ) {
     super();
-    this.draw = draw;
-    this.element = element;
     this.bindEvents();
     this.addEventListeners();
   }

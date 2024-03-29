@@ -1,5 +1,4 @@
-import { MOUSE_BUTTON_ENUM } from '../configs/mouse';
-import { MIN_DRAG_DISTANCE } from '../configs/constants';
+import { MIN_DRAG_DISTANCE, MOUSE_BUTTON_ENUM } from '../configs/constants';
 import type { Rect, NodeRect } from '../types/element';
 
 export function focusElement(element: HTMLElement) {
