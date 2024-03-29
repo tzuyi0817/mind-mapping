@@ -34,6 +34,10 @@ class Command {
     if (!commands) return;
     commands.delete(command);
   }
+  clear() {
+    this.commandMap.forEach(commands => commands.clear());
+    this.commandMap.clear();
+  }
 }
 
 export default Command;

@@ -19,7 +19,7 @@ import {
   Save,
 } from 'lucide-react';
 import { clsx } from 'clsx';
-import { Button } from '@/components/ui/button';
+import { Button, type ButtonProps } from '@/components/ui/button';
 
 const ICON_MAP = {
   UndoDot,
@@ -42,13 +42,11 @@ const ICON_MAP = {
   Save,
 } as const;
 
-interface Props {
+interface Props extends ButtonProps {
   icon: keyof typeof ICON_MAP;
-  children?: React.ReactNode;
-  disabled?: boolean;
 }
 
-function IconButton({ icon, children, disabled = false }: Props) {
+function IconButton({ icon, children, disabled = false, ...props }: Props) {
   const Comp = ICON_MAP[icon];
 
   return (
@@ -58,6 +56,7 @@ function IconButton({ icon, children, disabled = false }: Props) {
         size="icon"
         className="w-full min-w-[36px] h-9"
         disabled={disabled}
+        {...props}
       >
         <Comp size={16} />
       </Button>

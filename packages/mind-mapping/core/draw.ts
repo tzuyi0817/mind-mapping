@@ -1,6 +1,6 @@
 import { G } from '@svgdotjs/svg.js';
 import Event from './event';
-import Renderer from './render/renderer';
+import Renderer from './renderer';
 import { MOUSE_WHEEL_ACTION, DIRECTION } from '../configs/constants';
 import type { MindMappingMergeOptions } from '../types/options';
 

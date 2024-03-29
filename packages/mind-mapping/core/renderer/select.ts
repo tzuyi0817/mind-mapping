@@ -3,7 +3,7 @@ import { isDragAction, isOverlap } from '../../utils/element';
 import { throttle } from '../../utils/common';
 import { bfsNodeTree } from '../../utils/bfs';
 import { MOUSE_BUTTON_ENUM } from '../../configs/constants';
-import type Renderer from './renderer';
+import type Renderer from './index';
 
 type checkDrawEdgeCallback = (moveX: number, moveY: number) => void;
 

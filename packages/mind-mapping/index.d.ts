@@ -1,4 +1,4 @@
-import Renderer from './core/render/renderer';
+import type Renderer from './core/renderer';
 import type { RenderTree } from './types/mapping';
 import type { MindMappingOptions } from './types/options';
 

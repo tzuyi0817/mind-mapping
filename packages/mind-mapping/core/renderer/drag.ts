@@ -2,7 +2,7 @@ import type { G, MatrixExtract, Box, Rect } from '@svgdotjs/svg.js';
 import { throttle } from '../../utils/common';
 import { isOverlap, isDragAction, getInsertPosition } from '../../utils/element';
 import { INSERT_PLACEHOLDER_HEIGHT, MOUSE_BUTTON_ENUM } from '../../configs/constants';
-import type Renderer from './renderer';
+import type Renderer from './index';
 import type MindNode from '../node';
 import type { NodeMouseEvent } from '../../types/node';
 

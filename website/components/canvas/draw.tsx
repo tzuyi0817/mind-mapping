@@ -1,11 +1,12 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import MindMapping from 'mind-mapping';
+import { useMindMapping } from '@/providers/mind-mapping';
 
 function Draw() {
   const container = useRef(null);
-  const [mindMapping, setMindMapping] = useState<MindMapping | null>(null);
+  const { setupMindMapping } = useMindMapping();
 
   useEffect(() => {
     if (!container.current) return;
@@ -13,8 +14,7 @@ function Draw() {
       element: container.current,
     });
 
-    setMindMapping(mapping);
-    console.log(mindMapping);
+    setupMindMapping(mapping);
     return () => mapping.destroy();
   }, []);
 

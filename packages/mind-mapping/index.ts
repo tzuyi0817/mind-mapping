@@ -1,6 +1,6 @@
 import { SVG, type Svg, type G } from '@svgdotjs/svg.js';
-import Renderer from './core/render/renderer';
-import Style from './core/render/style';
+import Renderer from './core/renderer';
+import Style from './core/node/style';
 import Event from './core/event';
 import Draw from './core/draw';
 import Command from './core/command';
@@ -39,8 +39,8 @@ class MindMapping extends Draw {
     this.initDraw();
     this.event = new Event(this.draw, this.element);
     this.onEvents();
-    this.renderer = new Renderer(this, this.moveDraw.bind(this));
     this.command = new Command(this.event);
+    this.renderer = new Renderer(this, this.moveDraw.bind(this));
     this.render();
   }
   mergeOption(options: PickPartial<MindMappingOptions, 'data'>) {
@@ -95,6 +95,7 @@ class MindMapping extends Draw {
   destroy() {
     this.draw.remove();
     this.event.removeEventListeners();
+    this.command.clear();
   }
 }
 

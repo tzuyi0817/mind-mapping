@@ -1,6 +1,6 @@
 import { G } from '@svgdotjs/svg.js';
 import { v4 as uuidv4 } from 'uuid';
-import Renderer from '../core/render/renderer';
+import Renderer from '../core/renderer';
 import MindNode from '../core/node';
 import MindMapping from '../index';
 import { dfsRenderTree, dfsBoundingNode } from '../utils/dfs';

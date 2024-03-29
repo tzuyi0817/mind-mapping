@@ -1,5 +1,5 @@
 import MindNode from '../node';
-import Renderer from './renderer';
+import Renderer from './index';
 import { focusElement, replaceHtmlBr, convertToHtml } from '../../utils/element';
 import type { NodeMouseEvent } from '../../types/node';
 

@@ -1,14 +1,28 @@
+'use client';
+
 import IconButton from '@/components/common/icon-button';
 import styles from '@/styles/toolbar.module.css';
+import { useMindMapping } from '@/providers/mind-mapping';
 
 function Toolbar() {
+  const { instance } = useMindMapping();
+
+  function handleInsertNode() {
+    instance.current?.command.execute('INSERT_NODE');
+  }
+
   return (
     <div className="fixed top-5 left-1/2 -translate-x-1/2 flex gap-5">
       <div className={styles.toolbarBlock}>
         <IconButton icon="UndoDot">上一步</IconButton>
         <IconButton icon="RedoDot">下一步</IconButton>
         <IconButton icon="GitCommit">格式化</IconButton>
-        <IconButton icon="GitBranchPlus">插入同級節點</IconButton>
+        <IconButton
+          icon="GitBranchPlus"
+          onClick={handleInsertNode}
+        >
+          插入同級節點
+        </IconButton>
         <IconButton icon="GitPullRequest">插入子節點</IconButton>
         <IconButton icon="Trash2">刪除節點</IconButton>
         <IconButton icon="Image">圖片</IconButton>

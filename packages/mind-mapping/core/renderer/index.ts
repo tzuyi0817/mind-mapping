@@ -1,13 +1,14 @@
 import Editor from './editor';
 import Drag from './drag';
 import Select from './select';
+import RendererCommand from './command';
 import Base from '../../layouts/base';
 import { bfsNodeTree } from '../../utils/bfs';
 import type MindMapping from '../../index';
 import type MindNode from '../node';
 import type { MappingBase } from '../../types/mapping';
 
-class Renderer {
+class Renderer extends RendererCommand {
   isRendering = false;
   activeNodes: Set<MindNode> = new Set();
   cachedNodes: Map<string, MindNode> = new Map();
@@ -23,10 +24,12 @@ class Renderer {
     public mindMapping: MindMapping,
     public moveDraw: (moveX: number, moveY: number) => void,
   ) {
+    super(mindMapping.command);
     this.editor = new Editor(this);
     this.drag = new Drag(this);
     this.select = new Select(this);
     this.initLayout();
+    this.bindEvents();
     this.onEvents();
   }
   get renderTree() {
@@ -49,9 +52,6 @@ class Renderer {
   }
   get event() {
     return this.mindMapping.event;
-  }
-  get command() {
-    return this.mindMapping.command;
   }
   initLayout() {
     this.layout = new Base(this);
