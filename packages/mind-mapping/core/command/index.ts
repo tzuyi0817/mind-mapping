@@ -1,4 +1,4 @@
-import { COMMAND_NAME } from '../../configs/command';
+import { COMMANDS } from '../../configs/command';
 import type Event from '../event';
 
 type CommandExecute = (...args: unknown[]) => void;
@@ -8,7 +8,7 @@ class Command {
 
   static checkCommandName(name: unknown) {
     if (typeof name !== 'string') throw new Error('The command name must be a string');
-    if (COMMAND_NAME.includes(name)) return;
+    if (COMMANDS.includes(name)) return;
     throw new Error(`The command name "${name}" is not supported`);
   }
 

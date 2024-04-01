@@ -1,6 +1,7 @@
 import { SHAPE } from '../configs/shape';
 
 export type ThemeLineStyle = 'straight';
+export type ThemeKey<T> = T extends keyof ThemeNode ? keyof ThemeNode : keyof Theme['root'];
 
 export interface Theme {
   paddingX: number;

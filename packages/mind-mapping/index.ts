@@ -12,6 +12,8 @@ import type { MindMappingMergeOptions, MindMappingOptions } from './types/option
 import type { Theme } from './types/theme';
 import type { PickPartial } from './types/common';
 
+export { EVENTS } from './configs/event';
+
 class MindMapping extends Draw {
   options: MindMappingMergeOptions;
   element!: MindMappingOptions['element'];

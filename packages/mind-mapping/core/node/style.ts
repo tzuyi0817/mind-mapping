@@ -1,6 +1,6 @@
-import { Text, Path, Rect } from '@svgdotjs/svg.js';
-import MindNode from '.';
-import type { Theme, ThemeNode } from '../../types/theme';
+import type { Text, Path, Rect } from '@svgdotjs/svg.js';
+import type MindNode from './index';
+import type { Theme, ThemeNode, ThemeKey } from '../../types/theme';
 import type { Shape } from '../../types/shape';
 import type { NodeExpandButton } from '../../types/node';
 
@@ -15,20 +15,17 @@ class Style {
   getCommonStyle<T extends keyof Omit<Theme, 'root' | 'second' | 'node' | 'generalization'>>(prop: T): Theme[T] {
     return this.node.renderer.theme[prop];
   }
-  getStyle<T extends keyof ThemeNode>(prop: T): ThemeNode[T] {
+  getStyle<T extends ThemeKey<ThemeNode>>(prop: T): (ThemeNode | Theme['root'])[T] {
     const {
       renderer: { theme },
       renderTree: { deep = 0 },
       isGeneralization,
     } = this.node;
-    const themeMap = {
-      0: theme.root,
-      1: theme.second,
-      generalization: theme.generalization,
-    };
-    if (isGeneralization) return themeMap.generalization[prop];
-    // @ts-ignore
-    return themeMap[deep]?.[prop] ?? theme.node[prop];
+
+    if (isGeneralization) return theme.generalization[prop];
+    if (deep === 0) return theme.root[prop];
+    if (deep === 1) return theme.second[prop];
+    return theme.node[prop];
   }
   getTextStyle() {
     return {

@@ -1,1 +1,1 @@
-export const COMMAND_NAME = ['INSERT_NODE'];
+export const COMMANDS = ['INSERT_NODE'];

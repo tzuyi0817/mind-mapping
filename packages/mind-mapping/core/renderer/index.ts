@@ -87,8 +87,7 @@ class Renderer extends RendererCommand {
   clearOtherActiveNodes(node: MindNode) {
     for (const activeNode of this.activeNodes) {
       if (activeNode === node) continue;
-      activeNode.updateActive(false);
-      this.activeNodes.delete(activeNode);
+      activeNode.inactive();
     }
   }
   createNodesMap(filterNode?: MindNode) {

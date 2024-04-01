@@ -194,6 +194,7 @@ class MindNode extends CreateNode {
     if (this.isActive) return;
     this.renderer.activeNodes.add(this);
     this.updateActive(true);
+    this.renderer.event.emit('active-node-list', { node: this, list: this.renderer.activeNodes });
   }
   inactive() {
     if (!this.isActive) return;
