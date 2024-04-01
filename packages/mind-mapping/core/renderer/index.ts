@@ -83,12 +83,14 @@ class Renderer extends RendererCommand {
       node.updateActive(false);
     });
     this.activeNodes.clear();
+    this.event.emit('active-node-list', { node: null, list: this.activeNodes });
   }
   clearOtherActiveNodes(node: MindNode) {
     for (const activeNode of this.activeNodes) {
       if (activeNode === node) continue;
       activeNode.inactive();
     }
+    this.event.emit('active-node-list', { node, list: this.activeNodes });
   }
   createNodesMap(filterNode?: MindNode) {
     const nodesMap = new Map<number, MindNode[]>();

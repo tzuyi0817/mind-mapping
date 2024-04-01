@@ -1,11 +1,26 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+import type { MindNode } from 'mind-mapping';
 import IconButton from '@/components/common/icon-button';
 import styles from '@/styles/toolbar.module.css';
 import { useMindMapping } from '@/providers/mind-mapping';
 
 function Toolbar() {
+  const [activeNodes, setActiveNodes] = useState<MindNode[]>([]);
   const { instance } = useMindMapping();
+  const isSelected = activeNodes.length > 0;
+
+  useEffect(() => {
+    if (!instance.current) return;
+    const { event } = instance.current;
+
+    event.on('active-node-list', ({ list }) => setActiveNodes([...list]));
+
+    () => {
+      event.off('active-node-list');
+    };
+  }, []);
 
   function handleInsertNode() {
     instance.current?.command.execute('INSERT_NODE');
@@ -20,6 +35,7 @@ function Toolbar() {
         <IconButton
           icon="GitBranchPlus"
           onClick={handleInsertNode}
+          disabled={!isSelected}
         >
           插入同級節點
         </IconButton>

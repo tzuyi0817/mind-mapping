@@ -1,12 +1,30 @@
 import EventEmitter from 'eventemitter3';
-import { isDragButton } from '../utils/element';
 import type { Svg } from '@svgdotjs/svg.js';
+import { isDragButton } from '../utils/element';
+import type MindNode from './node';
+import type { NodeMouseEvent } from '../types/node';
 
 interface MouseEventEmitter extends MouseEventInit {
   preventDefault: () => void;
 }
 
-class Event extends EventEmitter {
+interface Events {
+  mousedown: (event: MouseEvent) => void;
+  'mousedown-draw': (event: MouseEvent) => void;
+  'mousedown-node': NodeMouseEvent;
+  mousemove: (event: MouseEvent) => void;
+  mouseup: (event: MouseEvent) => void;
+  'mouseup-node': NodeMouseEvent;
+  mousewheel: (event: WheelEvent) => void;
+  contextmenu: (event: MouseEventEmitter) => void;
+  'contextmenu-node': NodeMouseEvent;
+  'drag-draw': (event: MouseEvent) => void;
+  'click-draw': (event: MouseEventEmitter) => void;
+  'dblclick-node': NodeMouseEvent;
+  'active-node-list': (args: { node: MindNode | null; list: Set<MindNode> }) => void;
+}
+
+class Event extends EventEmitter<Events> {
   isFramePoint = true;
   mousedownButton: number | null = null;
   mousedownPosition = { x: 0, y: 0 };

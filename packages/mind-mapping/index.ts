@@ -13,6 +13,7 @@ import type { Theme } from './types/theme';
 import type { PickPartial } from './types/common';
 
 export { EVENTS } from './configs/event';
+export type { default as MindNode } from './core/node';
 
 class MindMapping extends Draw {
   options: MindMappingMergeOptions;

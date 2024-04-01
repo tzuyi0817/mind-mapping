@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useRef, type PropsWithChildren } from 'react';
-import type MindMapping from 'mind-mapping';
+import { type default as MindMapping } from 'mind-mapping';
 
 interface MindMappingContext {
   instance: React.MutableRefObject<MindMapping | null>;
