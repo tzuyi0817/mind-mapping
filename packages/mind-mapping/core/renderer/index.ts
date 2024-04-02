@@ -5,6 +5,7 @@ import RendererCommand from './command';
 import Base from '../../layouts/base';
 import { bfsNodeTree } from '../../utils/bfs';
 import { nextTick } from '../../utils/next-tick';
+import { isChangeList } from '../../utils/compare';
 import type MindMapping from '../../index';
 import type MindNode from '../node';
 import type { MappingBase } from '../../types/mapping';
@@ -95,6 +96,7 @@ class Renderer extends RendererCommand {
     this.emitActiveNodes(node);
   }
   emitActiveNodes(node: MindNode | null = null) {
+    if (!isChangeList(this.activeNodes, this.previousActiveNodes)) return;
     nextTick('EMIT_ACTIVE_NODES', () => {
       this.event.emit('active-node-list', { node, list: this.activeNodes });
     });
