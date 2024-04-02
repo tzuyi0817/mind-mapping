@@ -4,6 +4,7 @@ import Select from './select';
 import RendererCommand from './command';
 import Base from '../../layouts/base';
 import { bfsNodeTree } from '../../utils/bfs';
+import { nextTick } from '../../utils/next-tick';
 import type MindMapping from '../../index';
 import type MindNode from '../node';
 import type { MappingBase } from '../../types/mapping';
@@ -11,6 +12,7 @@ import type { MappingBase } from '../../types/mapping';
 class Renderer extends RendererCommand {
   isRendering = false;
   activeNodes: Set<MindNode> = new Set();
+  previousActiveNodes: Set<MindNode> = new Set();
   cachedNodes: Map<string, MindNode> = new Map();
   previousCachedNodes: Map<string, MindNode> = new Map();
   rootNode?: MappingBase;
@@ -83,14 +85,20 @@ class Renderer extends RendererCommand {
       node.updateActive(false);
     });
     this.activeNodes.clear();
-    this.event.emit('active-node-list', { node: null, list: this.activeNodes });
+    this.emitActiveNodes();
   }
   clearOtherActiveNodes(node: MindNode) {
     for (const activeNode of this.activeNodes) {
       if (activeNode === node) continue;
       activeNode.inactive();
     }
-    this.event.emit('active-node-list', { node, list: this.activeNodes });
+    this.emitActiveNodes(node);
+  }
+  emitActiveNodes(node: MindNode | null = null) {
+    nextTick('EMIT_ACTIVE_NODES', () => {
+      this.event.emit('active-node-list', { node, list: this.activeNodes });
+    });
+    this.previousActiveNodes = new Set(this.activeNodes);
   }
   createNodesMap(filterNode?: MindNode) {
     const nodesMap = new Map<number, MindNode[]>();

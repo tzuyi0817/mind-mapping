@@ -194,7 +194,7 @@ class MindNode extends CreateNode {
     if (this.isActive) return;
     this.renderer.activeNodes.add(this);
     this.updateActive(true);
-    this.renderer.event.emit('active-node-list', { node: this, list: this.renderer.activeNodes });
+    this.renderer.emitActiveNodes(this);
   }
   inactive() {
     if (!this.isActive) return;
@@ -204,13 +204,8 @@ class MindNode extends CreateNode {
   updateActive(isActive: boolean) {
     if (!this.nodeGroup) return;
     this.isActive = isActive;
-    if (isActive) {
-      this.nodeGroup.addClass('active');
-      this.expandButton.show();
-      return;
-    }
-    this.nodeGroup.removeClass('active');
-    this.expandButton.hide();
+    isActive ? this.nodeGroup.addClass('active') : this.nodeGroup.removeClass('active');
+    isActive ? this.expandButton.show() : this.expandButton.hide();
   }
   setOpacity(opacity: number) {
     if (!this.nodeGroup) return;

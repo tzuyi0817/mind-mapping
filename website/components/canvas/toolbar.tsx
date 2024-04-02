@@ -15,7 +15,10 @@ function Toolbar() {
     if (!instance.current) return;
     const { event } = instance.current;
 
-    event.on('active-node-list', ({ list }) => setActiveNodes([...list]));
+    event.on('active-node-list', ({ list }) => {
+      console.log('active-list', { list });
+      setActiveNodes([...list]);
+    });
 
     () => {
       event.off('active-node-list');

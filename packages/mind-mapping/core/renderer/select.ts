@@ -116,6 +116,7 @@ class Select {
       bfsNodeTree(rootNode, node => {
         isOverlap(node, selectRect) ? node.active() : node.inactive();
       });
+      this.renderer.emitActiveNodes();
     });
   }
 }
