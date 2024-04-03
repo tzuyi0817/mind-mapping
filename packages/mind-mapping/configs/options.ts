@@ -1,4 +1,4 @@
-import { MOUSE_WHEEL_ACTION } from './constants';
+import { MOUSE_WHEEL_ACTION, CREATE_NODE_BEHAVIOR } from './constants';
 import openSvg from '../assets/svg/expand-open';
 import closeSvg from '../assets/svg/expand-close';
 
@@ -33,4 +33,6 @@ export const DEFAULT_OPTIONS = {
 
   dragOpacity: { target: 0.3, clone: 0.5 },
   dragMultiple: { width: 60, height: 30 },
+
+  createNodeBehavior: CREATE_NODE_BEHAVIOR.DEFAULT,
 };

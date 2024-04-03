@@ -1,7 +1,7 @@
 import { COMMANDS } from '../../configs/command';
 import type Event from '../event';
 
-type CommandExecute = (...args: unknown[]) => void;
+type CommandExecute<T = never> = (...args: T[]) => void;
 
 class Command {
   private commandMap = new Map<string, Set<CommandExecute>>();
@@ -14,20 +14,20 @@ class Command {
 
   constructor(public event: Event) {}
 
-  execute(name: string, ...args: unknown[]) {
+  execute(name: string, ...args: never[]) {
     Command.checkCommandName(name);
     const commands = this.commandMap.get(name);
 
     if (!commands) return;
     commands.forEach(command => command(...args));
   }
-  add(name: string, command: CommandExecute) {
+  add<T>(name: string, command: CommandExecute<T>) {
     Command.checkCommandName(name);
     const commands = this.commandMap.get(name);
 
     commands ? commands.add(command) : this.commandMap.set(name, new Set([command]));
   }
-  delete(name: string, command: CommandExecute) {
+  delete<T>(name: string, command: CommandExecute<T>) {
     Command.checkCommandName(name);
     const commands = this.commandMap.get(name);
 

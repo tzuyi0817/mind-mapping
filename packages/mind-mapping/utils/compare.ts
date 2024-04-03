@@ -1,4 +1,4 @@
-import { isArray } from './check';
+import { isArray } from './check-type';
 
 export function isChangeList<T>(a: T, b: T) {
   if (isArray(a) && isArray(b)) {

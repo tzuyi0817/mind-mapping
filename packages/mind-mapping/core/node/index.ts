@@ -32,11 +32,9 @@ class MindNode extends CreateNode {
     public renderer: Renderer,
     public isGeneralization = false,
 
-    public width = 0,
-    public height = 0,
     public text?: NodeMap,
   ) {
-    super(renderTree, renderer, width, height, text);
+    super(renderTree, renderer, text);
     this.shape = new Shape(this);
     this.style = new Style(this);
     this.line = new Line(this);

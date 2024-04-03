@@ -1,8 +1,11 @@
-import { G } from '@svgdotjs/svg.js';
+import { SVG, type Svg, type G } from '@svgdotjs/svg.js';
 import Event from './event';
 import Renderer from './renderer';
 import { MOUSE_WHEEL_ACTION, DIRECTION } from '../configs/constants';
-import type { MindMappingMergeOptions } from '../types/options';
+import { DEFAULT_OPTIONS } from '../configs/options';
+import { DEFAULT_MAPPING } from '../configs/default-mapping';
+import type { MindMappingMergeOptions, MindMappingOptions } from '../types/options';
+import type { PickPartial } from '../types/common';
 
 interface ScaleParams {
   x: number;
@@ -11,23 +14,61 @@ interface ScaleParams {
 }
 
 abstract class Draw {
+  width = 0;
+  height = 0;
+  initialWidth = 0;
+  initialHeight = 0;
   startPosition = { x: 0, y: 0 };
   currentPosition = { x: 0, y: 0 };
   scale = 1;
 
-  options!: MindMappingMergeOptions;
-  group!: G;
-  event!: Event;
+  element!: MindMappingOptions['element'];
   elementRect!: DOMRect;
+  options: MindMappingMergeOptions;
+  draw!: Svg;
+  group!: G;
+  linesGroup!: G;
+  nodesGroup!: G;
+  backupGroup!: G;
+  event: Event;
   renderer!: Renderer;
 
-  constructor(
-    public width = 0,
-    public height = 0,
-    public initialWidth = 0,
-    public initialHeight = 0,
-  ) {
+  constructor(options: PickPartial<MindMappingOptions, 'data'>) {
+    this.options = this.mergeOption(options);
+    this.initElement();
+    this.initDraw();
     this.bindEvents();
+    this.event = new Event(this.draw, this.element);
+  }
+  mergeOption(options: PickPartial<MindMappingOptions, 'data'>) {
+    return { data: DEFAULT_MAPPING, ...DEFAULT_OPTIONS, ...options };
+  }
+  initElement() {
+    this.element = this.options.element;
+    if (!this.element) throw new Error('The element cannot be empty');
+    this.getElementRect();
+    this.initialWidth = this.width;
+    this.initialHeight = this.height;
+  }
+  initDraw() {
+    this.draw = SVG().addTo(this.element).size(this.width, this.height);
+    this.group = this.draw.group();
+    this.group.addClass('mind-mapping-group');
+    this.linesGroup = this.group.group();
+    this.linesGroup.addClass('mind-mapping-lines-group');
+    this.nodesGroup = this.group.group();
+    this.nodesGroup.addClass('mind-mapping-nodes-group');
+    this.backupGroup = this.group.group();
+    this.backupGroup.addClass('mind-mapping-backup-group');
+  }
+  getElementRect() {
+    this.elementRect = this.element.getBoundingClientRect();
+    this.width = this.elementRect.width;
+    this.height = this.elementRect.height;
+
+    if (!this.width || !this.height) {
+      throw new Error('The width and height of the container element cannot be 0');
+    }
   }
   bindEvents() {
     this.dragDraw = this.dragDraw.bind(this);

@@ -34,3 +34,7 @@ export const INIT_POSITION_MAP = {
 
 export const MIN_DRAG_DISTANCE = 10;
 export const INSERT_PLACEHOLDER_HEIGHT = 5;
+
+export const CREATE_NODE_BEHAVIOR = {
+  DEFAULT: 'default',
+} as const;

@@ -8,13 +8,14 @@ import type { RenderTree } from '../../types/mapping';
 import type { NodeMap } from '../../types/node';
 
 abstract class CreateNode {
+  width = 0;
+  height = 0;
+
   style!: Style;
 
   constructor(
     public renderTree: RenderTree,
     public renderer: Renderer,
-    public width: number,
-    public height: number,
     public text?: NodeMap,
   ) {}
   get content() {

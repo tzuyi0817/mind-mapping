@@ -12,7 +12,6 @@ import type { MappingBase } from '../../types/mapping';
 
 class Renderer extends RendererCommand {
   isRendering = false;
-  activeNodes: Set<MindNode> = new Set();
   previousActiveNodes: Set<MindNode> = new Set();
   cachedNodes: Map<string, MindNode> = new Map();
   previousCachedNodes: Map<string, MindNode> = new Map();
@@ -27,7 +26,7 @@ class Renderer extends RendererCommand {
     public mindMapping: MindMapping,
     public moveDraw: (moveX: number, moveY: number) => void,
   ) {
-    super(mindMapping.command);
+    super(mindMapping.command, mindMapping.options);
     this.editor = new Editor(this);
     this.drag = new Drag(this);
     this.select = new Select(this);
@@ -46,9 +45,6 @@ class Renderer extends RendererCommand {
   }
   get draw() {
     return this.mindMapping.draw;
-  }
-  get options() {
-    return this.mindMapping.options;
   }
   get theme() {
     return this.mindMapping.theme;
