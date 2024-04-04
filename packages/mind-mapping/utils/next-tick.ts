@@ -55,11 +55,12 @@ function addTask(task: Task) {
   taskMap.set(task.name, task);
 }
 
-export function nextTick(name = 'nextTick', callback?: () => void, thisArg?: unknown) {
-  addTask({
-    name,
-    callback: () => (thisArg ? callback?.call(thisArg) : callback?.()),
-  });
+export function nextTick(name: string, callback: () => void, thisArg?: unknown) {
+  const taskCallback = () => {
+    thisArg ? callback.call(thisArg) : callback();
+  };
+
+  addTask({ name, callback: taskCallback });
   if (isPending) return;
   isPending = true;
   timerFun?.();
