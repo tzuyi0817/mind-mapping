@@ -71,7 +71,7 @@ class Select {
   }
   moveDrawEdge(moveX: number, moveY: number, moveDrawCallback?: checkDrawEdgeCallback) {
     if (!moveX && !moveY) return;
-    this.renderer.moveDraw(moveX, moveY);
+    this.renderer.mindMapping.moveDraw(moveX, moveY);
     moveDrawCallback?.(moveX, moveY);
     this.moveEdgeTimer = setTimeout(() => {
       this.moveDrawEdge(moveX, moveY, moveDrawCallback);

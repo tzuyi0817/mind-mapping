@@ -35,4 +35,8 @@ export const DEFAULT_OPTIONS = {
   dragMultiple: { width: 60, height: 30 },
 
   createNodeBehavior: CREATE_NODE_BEHAVIOR.DEFAULT,
+  createNodeText: {
+    secondary: 'secondary node',
+    branch: 'branch topic',
+  },
 };

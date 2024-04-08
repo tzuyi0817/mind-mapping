@@ -1,6 +1,6 @@
 import MindNode from '../node';
 import Renderer from './index';
-import { focusElement, replaceHtmlBr, convertToHtml } from '../../utils/element';
+import { selectElement, replaceHtmlBr, convertToHtml } from '../../utils/element';
 import type { NodeMouseEvent } from '../../types/node';
 
 class Editor {
@@ -15,17 +15,20 @@ class Editor {
     this.onEvents();
   }
   bindEvents() {
-    this.show = this.show.bind(this);
+    this.onDblclick = this.onDblclick.bind(this);
     this.hide = this.hide.bind(this);
   }
   onEvents() {
-    this.renderer.event.on('dblclick-node', this.show);
+    this.renderer.event.on('dblclick-node', this.onDblclick);
     this.renderer.event.on('mousedown', ({ target }) => {
       if (target === this.frame) return;
       this.hide();
     });
   }
-  show({ node }: NodeMouseEvent) {
+  private onDblclick({ node, isInsert }: NodeMouseEvent) {
+    this.show({ node, isInsert });
+  }
+  show({ node, isInsert }: Omit<NodeMouseEvent, 'event'>) {
     const textNode = node.text?.node;
     if (!textNode || this.isShow) return;
     const { width, height, left, top } = textNode.node.getBoundingClientRect();
@@ -46,7 +49,7 @@ class Editor {
     node.style.setDomTextStyle(this.frame);
     this.target = node;
     this.isShow = true;
-    focusElement(this.frame);
+    selectElement(this.frame, !isInsert);
   }
   hide() {
     if (!this.isShow || !this.frame || !this.target) return;

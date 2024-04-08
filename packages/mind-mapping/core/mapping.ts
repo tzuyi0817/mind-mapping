@@ -17,16 +17,16 @@ class MindMapping extends Draw {
     super(options);
     this.onEvents();
     this.command = new Command(this.event);
-    this.renderer = new Renderer(this, this.moveDraw.bind(this));
+    this.renderer = new Renderer(this);
     this.render();
   }
-  initTheme() {
+  render() {
+    this.setupTheme();
+    this.renderer.render();
+  }
+  setupTheme() {
     this.theme = themes.SKY_BLUE;
     Style.setBackgroundStyle(this.theme, this.element);
-  }
-  render() {
-    this.initTheme();
-    this.renderer.render();
   }
   rerender() {
     this.group.clear();

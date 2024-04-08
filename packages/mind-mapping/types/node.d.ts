@@ -17,4 +17,5 @@ export interface NodeExpandButton {
 export interface NodeMouseEvent {
   node: MindNode;
   event: MouseEvent;
+  isInsert?: boolean;
 }

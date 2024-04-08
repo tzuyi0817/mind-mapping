@@ -15,6 +15,7 @@ export interface MappingBase {
   instance?: MindNode;
   isActive?: boolean;
   isExpand?: boolean;
+  isEditor?: boolean;
 }
 
 export interface RenderTree {

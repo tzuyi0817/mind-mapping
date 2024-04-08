@@ -10,35 +10,48 @@ import type MindMapping from '../../index';
 import type MindNode from '../node';
 import type { MappingBase } from '../../types/mapping';
 
-class Renderer extends RendererCommand {
+class Renderer {
   isRendering = false;
-  previousActiveNodes: Set<MindNode> = new Set();
   cachedNodes: Map<string, MindNode> = new Map();
   previousCachedNodes: Map<string, MindNode> = new Map();
+  activeNodes: Set<MindNode> = new Set();
+  previousActiveNodes: Set<MindNode> = new Set();
   rootNode?: MappingBase;
 
+  layout!: Base;
   editor: Editor;
   drag: Drag;
   select: Select;
-  layout!: Base;
+  command: RendererCommand;
 
-  constructor(
-    public mindMapping: MindMapping,
-    public moveDraw: (moveX: number, moveY: number) => void,
-  ) {
-    super(mindMapping.command, mindMapping.options);
+  constructor(public mindMapping: MindMapping) {
     this.editor = new Editor(this);
     this.drag = new Drag(this);
     this.select = new Select(this);
-    this.initLayout();
-    this.bindEvents();
+    this.command = new RendererCommand(this, mindMapping.command);
+    this.setupLayout(this);
     this.onEvents();
   }
   get renderTree() {
     return this.mindMapping.options.data;
   }
+  get options() {
+    return this.mindMapping.options;
+  }
   get group() {
     return this.mindMapping.group;
+  }
+  get linesGroup() {
+    return this.mindMapping.linesGroup;
+  }
+  get nodesGroup() {
+    return this.mindMapping.nodesGroup;
+  }
+  get height() {
+    return this.mindMapping.height;
+  }
+  get width() {
+    return this.mindMapping.width;
   }
   get elementRect() {
     return this.mindMapping.elementRect;
@@ -52,13 +65,13 @@ class Renderer extends RendererCommand {
   get event() {
     return this.mindMapping.event;
   }
-  initLayout() {
-    this.layout = new Base(this);
-  }
   onEvents() {
     this.event.on('mousedown-draw', () => {
       this.clearActiveNodes();
     });
+  }
+  setupLayout(renderer: Renderer) {
+    this.layout = new Base(renderer);
   }
   async render() {
     this.isRendering = true;

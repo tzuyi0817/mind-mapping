@@ -6,6 +6,7 @@ import Generalization from './generalization';
 import ExpandButton from './expand-button';
 import CreateNode from './create-node';
 import NodeEvent from './node-event';
+import { isChangeDeep } from '../../utils/element';
 import type Renderer from '../renderer';
 import type { RenderTree } from '../../types/mapping';
 import type { NodeMap } from '../../types/node';
@@ -63,10 +64,10 @@ class MindNode extends CreateNode {
     return this.renderTree.deep ?? 0;
   }
   get isActive() {
-    return this.renderTree.node.isActive ?? false;
+    return this.node.isActive ?? false;
   }
   get isExpand() {
-    return this.renderTree.node.isExpand ?? true;
+    return this.node.isExpand ?? true;
   }
   get isShowGeneralization() {
     return this.isExpand && !!this.node.data.generalization;
@@ -131,6 +132,9 @@ class MindNode extends CreateNode {
           await Promise.all(this.children.map(child => child.render()));
         }
         resolve(true);
+        if (!this.node.isEditor) return;
+        this.renderer.editor.show({ node: this, isInsert: true });
+        this.node.isEditor = false;
       });
     });
   }
@@ -144,19 +148,18 @@ class MindNode extends CreateNode {
     });
   }
   update() {
+    const isShowExpandButton = this.isMouseover || !this.isExpand;
+
+    this.isActive && this.manualActive();
     this.generalization.render();
     this.setPosition();
-    if (this.isMouseover || !this.isExpand) {
-      this.expandButton.show();
-      return;
-    }
-    this.expandButton.hide();
+    isShowExpandButton ? this.expandButton.show() : this.expandButton.hide();
   }
   reset(renderTree: RenderTree) {
     this.left = 0;
     this.top = 0;
     this.children = [];
-    this.isResize = this.isChangeDeep(renderTree);
+    this.isResize = isChangeDeep(renderTree.deep ?? 0, this.deep);
     this.renderTree = renderTree;
     this.generalization.reset();
   }
@@ -190,14 +193,17 @@ class MindNode extends CreateNode {
   }
   active() {
     if (this.isActive) return;
-    this.renderer.activeNodes.add(this);
-    this.updateActive(true);
-    this.renderer.emitActiveNodes(this);
+    this.manualActive();
   }
   inactive() {
     if (!this.isActive) return;
     this.renderer.activeNodes.delete(this);
     this.updateActive(false);
+  }
+  private manualActive() {
+    this.renderer.activeNodes.add(this);
+    this.updateActive(true);
+    this.renderer.emitActiveNodes(this);
   }
   updateActive(isActive: boolean) {
     if (!this.nodeGroup) return;
@@ -240,11 +246,6 @@ class MindNode extends CreateNode {
       child.hide();
       child.hideChildren();
     });
-  }
-  isChangeDeep(renderTree: RenderTree) {
-    const { deep = 0 } = renderTree;
-
-    return (deep < 2 && this.deep >= 2) || (deep >= 2 && this.deep < 2);
   }
   isAncestor(node: MindNode) {
     if (node.deep <= this.deep || this === node) return false;

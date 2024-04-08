@@ -1,13 +1,13 @@
 import { MIN_DRAG_DISTANCE, MOUSE_BUTTON_ENUM } from '../configs/constants';
 import type { Rect, NodeRect } from '../types/element';
 
-export function focusElement(element: HTMLElement) {
+export function selectElement(element: HTMLElement, isCollapse = false) {
   const selection = window.getSelection();
   if (!selection) return;
   const range = document.createRange();
 
   range.selectNodeContents(element);
-  range.collapse();
+  isCollapse && range.collapse();
   selection.removeAllRanges();
   selection.addRange(range);
 }
@@ -44,6 +44,10 @@ export function isOverlap(rectA: Rect, rectB: Rect) {
     rectA.bottom < rectB.top ||
     rectA.top > rectB.bottom
   );
+}
+
+export function isChangeDeep(newDeep: number, oldDeep: number) {
+  return (newDeep < 2 && oldDeep >= 2) || (newDeep >= 2 && oldDeep < 2);
 }
 
 export function getInsertPosition(node: NodeRect | null, move: Rect) {

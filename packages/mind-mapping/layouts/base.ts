@@ -1,10 +1,8 @@
-import { G } from '@svgdotjs/svg.js';
 import { v4 as uuidv4 } from 'uuid';
-import Renderer from '../core/renderer';
 import MindNode from '../core/node';
-import MindMapping from '../index';
 import { dfsRenderTree, dfsBoundingNode } from '../utils/dfs';
 import { POSITION_ENUM, INIT_POSITION_MAP } from '../configs/constants';
+import type Renderer from '../core/renderer';
 import type { MappingBase, RenderTree } from '../types/mapping';
 import type {
   LayoutRenderLine,
@@ -14,16 +12,10 @@ import type {
 } from '../types/layout';
 
 class Base {
-  renderTreeRoot: MappingBase;
-  mindMapping: MindMapping;
-  linesGroup: G;
-  nodesGroup: G;
+  constructor(public renderer: Renderer) {}
 
-  constructor(public renderer: Renderer) {
-    this.renderTreeRoot = renderer.renderTree.root;
-    this.mindMapping = renderer.mindMapping;
-    this.linesGroup = renderer.mindMapping.linesGroup;
-    this.nodesGroup = renderer.mindMapping.nodesGroup;
+  get root() {
+    return this.renderer.renderTree.root;
   }
   createNode(renderTree: RenderTree) {
     const { instance: cacheNode } = renderTree.node;
@@ -52,7 +44,7 @@ class Base {
   renderNodes() {
     return new Promise<MappingBase>(resolve => {
       dfsRenderTree(
-        { node: this.renderTreeRoot, isRoot: true },
+        { node: this.root, isRoot: true },
         renderTree => {
           const node = this.createNode(renderTree);
           const { isRoot, deep = 0 } = renderTree;
@@ -85,7 +77,7 @@ class Base {
   }
   renderGeneralization({ node, line, generalization }: LayoutRenderGeneralization) {
     if (!generalization) return;
-    const { generalizationLineMargin, generalizationNodeMargin } = this.mindMapping.theme;
+    const { generalizationLineMargin, generalizationNodeMargin } = this.renderer.theme;
     const { top, right, bottom } = this.getBoundingNode(node, 'horizontal');
     const x = right + generalizationLineMargin;
 
@@ -135,19 +127,19 @@ class Base {
   setNodeCenter(node: MindNode) {
     const { CENTER } = POSITION_ENUM;
 
-    node.top = this.mindMapping.height * INIT_POSITION_MAP[CENTER];
-    node.left = this.mindMapping.width * INIT_POSITION_MAP[CENTER];
+    node.top = this.renderer.height * INIT_POSITION_MAP[CENTER];
+    node.left = this.renderer.width * INIT_POSITION_MAP[CENTER];
   }
   getMargin(direction: 'marginX' | 'marginY', deep = 1) {
     const {
       theme: { second, node },
       options: { hoverRectPadding },
-    } = this.mindMapping;
+    } = this.renderer;
 
     return (deep > 1 ? node[direction] : second[direction]) + hoverRectPadding * 2;
   }
   getBoundingNode(node: MindNode, direction: 'horizontal' | 'vertical') {
-    const { generalizationNodeMargin } = this.mindMapping.theme;
+    const { generalizationNodeMargin } = this.renderer.theme;
 
     return dfsBoundingNode(node, generalizationNodeMargin, direction);
   }
