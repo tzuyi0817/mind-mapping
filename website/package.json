@@ -16,11 +16,11 @@
   },
   "devDependencies": {
     "@radix-ui/react-slot": "^1.0.2",
-    "@types/react": "18.2.73",
-    "@types/react-dom": "18.2.23",
+    "@types/react": "18.2.74",
+    "@types/react-dom": "18.2.24",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
-    "lucide-react": "^0.363.0",
+    "lucide-react": "^0.365.0",
     "tailwind-merge": "^2.0.0",
     "tailwindcss-animate": "^1.0.7"
   },
