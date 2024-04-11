@@ -8,7 +8,7 @@ module.exports = [
   eslintConfigPrettier,
   eslintPluginPrettierRecommended,
   // 'plugin:sonarjs/recommended',
-  // pluginSecurity.configs.recommended,
+  pluginSecurity.configs.recommended,
   {
     ignores: ['node_modules', 'dist', 'pnpm-lock.yaml'],
   },
