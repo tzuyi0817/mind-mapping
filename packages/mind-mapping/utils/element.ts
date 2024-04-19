@@ -1,4 +1,6 @@
 import { MIN_DRAG_DISTANCE, MOUSE_BUTTON_ENUM } from '../configs/constants';
+import type MindNode from '../core/node';
+import type { MappingBase } from '../types/mapping';
 import type { Rect, NodeRect } from '../types/element';
 
 export function selectElement(element: HTMLElement, isCollapse = false) {
@@ -60,4 +62,18 @@ export function getInsertPosition(node: NodeRect | null, move: Rect) {
   if (offsetTop > 0 && offsetTop < OFFSET_HEIGHT) return 'before';
   if (offsetBottom > 0 && offsetBottom < OFFSET_HEIGHT) return 'after';
   return 'child';
+}
+
+export function findNodeIndex(node: MindNode, children: MappingBase[]) {
+  return children.findIndex(child => node === child.instance);
+}
+
+export function removeNode(node: MindNode) {
+  if (!node.parent) return false;
+  const { children } = node.parent.node;
+  const index = findNodeIndex(node, children);
+
+  if (index < 0) return false;
+  children.splice(index, 1);
+  return true;
 }

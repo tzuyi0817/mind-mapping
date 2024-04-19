@@ -6,6 +6,7 @@ import Base from '../../layouts/base';
 import { bfsNodeTree } from '../../utils/bfs';
 import { nextTick } from '../../utils/next-tick';
 import { isChangeList } from '../../utils/compare';
+import { findNodeIndex, removeNode } from '../../utils/element';
 import type MindMapping from '../../index';
 import type MindNode from '../node';
 import type { MappingBase } from '../../types/mapping';
@@ -134,7 +135,7 @@ class Renderer {
   moveNodesToBeSibling(nodes: MindNode[], toNode: MindNode, position: 'before' | 'after') {
     if (!toNode.parent || !nodes.length) return;
     const { children } = toNode.parent.node;
-    const index = children.findIndex(child => toNode === child.instance);
+    const index = findNodeIndex(toNode, children);
 
     if (index < 0) return;
     const insertIndex = position === 'before' ? index : index + 1;
@@ -147,12 +148,9 @@ class Renderer {
     const result: MappingBase[] = [];
 
     for (const node of nodes) {
-      if (!node.parent) continue;
-      const { children } = node.parent.node;
-      const index = children.findIndex(child => node === child.instance);
+      const isRemoved = removeNode(node);
 
-      if (index < 0) continue;
-      children.splice(index, 1);
+      if (!isRemoved) continue;
       result.push(node.renderTree.node);
     }
     return result;

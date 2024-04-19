@@ -15,8 +15,8 @@ function Toolbar() {
     if (!instance.current) return;
     const { event } = instance.current;
 
-    event.on('active-node-list', ({ node, list }) => {
-      console.log('active-list', { node, list });
+    event.on('active-node-list', ({ list }) => {
+      console.log({ list });
       setActiveNodes([...list]);
     });
 
@@ -27,6 +27,10 @@ function Toolbar() {
 
   function handleInsertNode() {
     instance.current?.command.execute('INSERT_NODE');
+  }
+
+  function handleRemoveNode() {
+    instance.current?.command.execute('REMOVE_NODE');
   }
 
   return (
@@ -43,7 +47,13 @@ function Toolbar() {
           插入同級節點
         </IconButton>
         <IconButton icon="GitPullRequest">插入子節點</IconButton>
-        <IconButton icon="Trash2">刪除節點</IconButton>
+        <IconButton
+          icon="Trash2"
+          onClick={handleRemoveNode}
+          disabled={!isSelected}
+        >
+          刪除節點
+        </IconButton>
         <IconButton icon="Image">圖片</IconButton>
         <IconButton icon="Smile">圖標</IconButton>
         <IconButton icon="Link">超連結</IconButton>

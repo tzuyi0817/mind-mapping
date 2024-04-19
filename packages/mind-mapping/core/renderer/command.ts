@@ -1,4 +1,5 @@
 import { CREATE_NODE_BEHAVIOR } from '../../configs/constants';
+import { removeNode } from '../../utils/element';
 import type Renderer from './index';
 import type MindNode from '../node';
 import type Command from '../command';
@@ -13,9 +14,11 @@ class RendererCommand {
   }
   bindEvents() {
     this.insertNode = this.insertNode.bind(this);
+    this.removeNode = this.removeNode.bind(this);
   }
   registerCommand() {
     this.command.add('INSERT_NODE', this.insertNode);
+    this.command.add('REMOVE_NODE', this.removeNode);
   }
   insertNode(specifyNodes: MindNode[] = []) {
     if (!this.renderer.activeNodes.size && !specifyNodes.length) return;
@@ -41,6 +44,24 @@ class RendererCommand {
       children.splice(index + 1, 0, insertData);
     }
     this.renderer.clearActiveNodes();
+    this.renderer.render();
+  }
+  removeNode(specifyNodes: MindNode[] = []) {
+    if (!this.renderer.activeNodes.size && !specifyNodes.length) return;
+    const nodes = specifyNodes.length ? specifyNodes : [...this.renderer.activeNodes];
+    const root = nodes.find(node => node.renderTree.isRoot);
+
+    if (root) {
+      root.node.children = [];
+      this.renderer.clearActiveNodes();
+    } else {
+      for (const node of nodes) {
+        const isRemoved = removeNode(node);
+
+        if (!isRemoved) continue;
+        node.inactive();
+      }
+    }
     this.renderer.render();
   }
   getNodeBehavior(isMultiple: boolean) {
