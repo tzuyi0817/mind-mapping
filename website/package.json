@@ -10,17 +10,17 @@
   },
   "dependencies": {
     "mind-mapping": "workspace:*",
-    "next": "14.1.4",
+    "next": "14.2.2",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
     "@radix-ui/react-slot": "^1.0.2",
-    "@types/react": "18.2.74",
-    "@types/react-dom": "18.2.24",
+    "@types/react": "18.2.79",
+    "@types/react-dom": "18.2.25",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
-    "lucide-react": "^0.365.0",
+    "lucide-react": "^0.371.0",
     "tailwind-merge": "^2.0.0",
     "tailwindcss-animate": "^1.0.7"
   },
