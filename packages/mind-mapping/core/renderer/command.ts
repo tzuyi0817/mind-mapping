@@ -1,5 +1,5 @@
 import { CREATE_NODE_BEHAVIOR } from '../../configs/constants';
-import { removeNode } from '../../utils/element';
+import { removeNode, findNodeIndex } from '../../utils/element';
 import type Renderer from './index';
 import type MindNode from '../node';
 import type Command from '../command';
@@ -55,13 +55,18 @@ class RendererCommand {
       root.node.children = [];
       this.renderer.clearActiveNodes();
     } else {
+      const manualActiveNode = this.getManualActiveNode(nodes);
+
       for (const node of nodes) {
         const isRemoved = removeNode(node);
 
         if (!isRemoved) continue;
         node.inactive();
       }
+      this.renderer.emitActiveNodes();
+      manualActiveNode?.active();
     }
+    this.renderer.editor.hide();
     this.renderer.render();
   }
   getNodeBehavior(isMultiple: boolean) {
@@ -72,6 +77,21 @@ class RendererCommand {
     };
 
     return behaviorMap[createNodeBehavior];
+  }
+  getManualActiveNode(removeNodes: MindNode[]) {
+    const activeNodes = this.renderer.activeNodes;
+    if (removeNodes.length !== 1 || activeNodes.size !== 1) return null;
+    const node = removeNodes[0];
+    const parent = node.parent;
+
+    if (!parent || !activeNodes.has(node)) return null;
+    const siblings = parent.node.children;
+
+    if (siblings.length === 1) return parent;
+    const index = findNodeIndex(node, siblings);
+
+    if (index === siblings.length - 1) return siblings[index - 1].instance;
+    return siblings[index + 1].instance;
   }
 }
 

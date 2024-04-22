@@ -64,8 +64,8 @@ export function getInsertPosition(node: NodeRect | null, move: Rect) {
   return 'child';
 }
 
-export function findNodeIndex(node: MindNode, children: MappingBase[]) {
-  return children.findIndex(child => node === child.instance);
+export function findNodeIndex(node: MindNode, siblings: MappingBase[]) {
+  return siblings.findIndex(sibling => node === sibling.instance);
 }
 
 export function removeNode(node: MindNode) {
