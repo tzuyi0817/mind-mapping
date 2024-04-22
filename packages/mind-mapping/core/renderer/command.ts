@@ -43,6 +43,7 @@ class RendererCommand {
 
       children.splice(index + 1, 0, insertData);
     }
+    this.renderer.editor.hide();
     this.renderer.clearActiveNodes();
     this.renderer.render();
   }
