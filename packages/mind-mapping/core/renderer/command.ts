@@ -23,25 +23,20 @@ class RendererCommand {
     this.command.add('REMOVE_NODE', this.removeNode);
   }
   insertNode(specifyNodes: MindNode[] = []) {
-    if (!this.renderer.activeNodes.size && !specifyNodes.length) return;
-    const nodes = specifyNodes.length ? specifyNodes : [...this.renderer.activeNodes];
+    const nodes = this.setupSelectNodes(specifyNodes);
+    if (!nodes) return;
     const isMultiple = nodes.length > 1;
     const { isActive, isEditor } = this.getNodeBehavior(isMultiple);
     const { secondary, branch } = this.renderer.options.createNodeText;
 
     for (const node of nodes) {
       if (!node.parent) continue;
-      const { children } = node.parent.node;
+      const { children } = node.parent.nodeData;
       const index = children.findIndex(child => child.instance === node);
 
       if (index < 0) continue;
       const text = node.deep === 1 ? secondary : branch;
-      const insertData = {
-        data: { text },
-        children: [],
-        isActive,
-        isEditor,
-      };
+      const insertData = { data: { text }, children: [], isActive, isEditor };
 
       children.splice(index + 1, 0, insertData);
     }
@@ -50,15 +45,29 @@ class RendererCommand {
     this.renderer.render();
   }
   insertChildNode(specifyNodes: MindNode[] = []) {
-    console.log(specifyNodes, 'insertChildNode');
+    const nodes = this.setupSelectNodes(specifyNodes);
+    if (!nodes) return;
+    const isMultiple = nodes.length > 1;
+    const { isActive, isEditor } = this.getNodeBehavior(isMultiple);
+    const { secondary, branch } = this.renderer.options.createNodeText;
+
+    for (const node of nodes) {
+      const text = node.renderTree.isRoot ? secondary : branch;
+      const insertData = { data: { text }, children: [], isActive, isEditor };
+
+      node.nodeData.children.push(insertData);
+    }
+    this.renderer.editor.hide();
+    this.renderer.clearActiveNodes();
+    this.renderer.render();
   }
   removeNode(specifyNodes: MindNode[] = []) {
-    if (!this.renderer.activeNodes.size && !specifyNodes.length) return;
-    const nodes = specifyNodes.length ? specifyNodes : [...this.renderer.activeNodes];
+    const nodes = this.setupSelectNodes(specifyNodes);
+    if (!nodes) return;
     const root = nodes.find(node => node.renderTree.isRoot);
 
     if (root) {
-      root.node.children = [];
+      root.nodeData.children = [];
       this.renderer.clearActiveNodes();
     } else {
       const manualActiveNode = this.getManualActiveNode(nodes);
@@ -74,6 +83,11 @@ class RendererCommand {
     }
     this.renderer.editor.hide();
     this.renderer.render();
+  }
+  setupSelectNodes(specifyNodes: MindNode[]) {
+    if (!this.renderer.activeNodes.size && !specifyNodes.length) return null;
+
+    return specifyNodes.length ? specifyNodes : [...this.renderer.activeNodes];
   }
   getNodeBehavior(isMultiple: boolean) {
     const { createNodeBehavior } = this.renderer.options;
@@ -91,7 +105,7 @@ class RendererCommand {
     const parent = node.parent;
 
     if (!parent || !activeNodes.has(node)) return null;
-    const siblings = parent.node.children;
+    const siblings = parent.nodeData.children;
 
     if (siblings.length === 1) return parent;
     const index = findNodeIndex(node, siblings);

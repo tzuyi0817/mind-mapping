@@ -129,12 +129,12 @@ class Renderer {
     if (!nodes.length) return;
     const insertNodes = this.separateNodes(nodes);
 
-    toNode.node.children.push(...insertNodes);
+    toNode.nodeData.children.push(...insertNodes);
     this.render();
   }
   moveNodesToBeSibling(nodes: MindNode[], toNode: MindNode, position: 'before' | 'after') {
     if (!toNode.parent || !nodes.length) return;
-    const { children } = toNode.parent.node;
+    const { children } = toNode.parent.nodeData;
     const index = findNodeIndex(toNode, children);
 
     if (index < 0) return;

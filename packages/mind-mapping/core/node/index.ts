@@ -57,20 +57,20 @@ class MindNode extends CreateNode {
   get childrenAreaHeight() {
     return this.children.reduce((total, { height }) => total + height, 0);
   }
-  get node() {
+  get nodeData() {
     return this.renderTree.node;
   }
   get deep() {
     return this.renderTree.deep ?? 0;
   }
   get isActive() {
-    return this.node.isActive ?? false;
+    return this.nodeData.isActive ?? false;
   }
   get isExpand() {
-    return this.node.isExpand ?? true;
+    return this.nodeData.isExpand ?? true;
   }
   get isShowGeneralization() {
-    return this.isExpand && !!this.node.data.generalization;
+    return this.isExpand && !!this.nodeData.data.generalization;
   }
   get linesGroup() {
     return this.renderer.mindMapping.linesGroup;
@@ -79,10 +79,10 @@ class MindNode extends CreateNode {
     return this.renderer.mindMapping.nodesGroup;
   }
   set isActive(value: boolean) {
-    this.renderTree.node.isActive = value;
+    this.nodeData.isActive = value;
   }
   set isExpand(value: boolean) {
-    this.renderTree.node.isExpand = value;
+    this.nodeData.isExpand = value;
   }
   createContent() {
     this.text = this.createTextNode();
@@ -132,9 +132,9 @@ class MindNode extends CreateNode {
           await Promise.all(this.children.map(child => child.render()));
         }
         resolve(true);
-        if (!this.node.isEditor) return;
+        if (!this.nodeData.isEditor) return;
         this.renderer.editor.show({ node: this, isInsert: true });
-        this.node.isEditor = false;
+        this.nodeData.isEditor = false;
       });
     });
   }

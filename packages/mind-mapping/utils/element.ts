@@ -70,7 +70,7 @@ export function findNodeIndex(node: MindNode, siblings: MappingBase[]) {
 
 export function removeNode(node: MindNode) {
   if (!node.parent) return false;
-  const { children } = node.parent.node;
+  const { children } = node.parent.nodeData;
   const index = findNodeIndex(node, children);
 
   if (index < 0) return false;
