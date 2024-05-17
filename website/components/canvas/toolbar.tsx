@@ -25,12 +25,8 @@ function Toolbar() {
     };
   }, []);
 
-  function handleInsertNode() {
-    instance.current?.command.execute('INSERT_NODE');
-  }
-
-  function handleRemoveNode() {
-    instance.current?.command.execute('REMOVE_NODE');
+  function sendCommand(command: string) {
+    instance.current?.command.execute(command);
   }
 
   return (
@@ -41,15 +37,21 @@ function Toolbar() {
         <IconButton icon="GitCommit">格式化</IconButton>
         <IconButton
           icon="GitBranchPlus"
-          onClick={handleInsertNode}
+          onClick={() => sendCommand('INSERT_NODE')}
           disabled={!isSelected}
         >
           插入同級節點
         </IconButton>
-        <IconButton icon="GitPullRequest">插入子節點</IconButton>
+        <IconButton
+          icon="GitPullRequest"
+          onClick={() => sendCommand('INSERT_CHILD_NODE')}
+          disabled={!isSelected}
+        >
+          插入子節點
+        </IconButton>
         <IconButton
           icon="Trash2"
-          onClick={handleRemoveNode}
+          onClick={() => sendCommand('REMOVE_NODE')}
           disabled={!isSelected}
         >
           刪除節點

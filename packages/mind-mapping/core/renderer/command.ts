@@ -14,10 +14,12 @@ class RendererCommand {
   }
   bindEvents() {
     this.insertNode = this.insertNode.bind(this);
+    this.insertChildNode = this.insertChildNode.bind(this);
     this.removeNode = this.removeNode.bind(this);
   }
   registerCommand() {
     this.command.add('INSERT_NODE', this.insertNode);
+    this.command.add('INSERT_CHILD_NODE', this.insertChildNode);
     this.command.add('REMOVE_NODE', this.removeNode);
   }
   insertNode(specifyNodes: MindNode[] = []) {
@@ -46,6 +48,9 @@ class RendererCommand {
     this.renderer.editor.hide();
     this.renderer.clearActiveNodes();
     this.renderer.render();
+  }
+  insertChildNode(specifyNodes: MindNode[] = []) {
+    console.log(specifyNodes, 'insertChildNode');
   }
   removeNode(specifyNodes: MindNode[] = []) {
     if (!this.renderer.activeNodes.size && !specifyNodes.length) return;

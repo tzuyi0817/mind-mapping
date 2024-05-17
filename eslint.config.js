@@ -3,6 +3,7 @@ const configPrettier = require('eslint-config-prettier');
 const pluginPrettierRecommended = require('eslint-plugin-prettier/recommended');
 const pluginSecurity = require('eslint-plugin-security');
 const pluginNext = require('@next/eslint-plugin-next');
+const pluginSonarjs = require('eslint-plugin-sonarjs');
 const globals = require('globals');
 
 const nextConfig = {
@@ -22,7 +23,7 @@ module.exports = [
   ...tsEslint.configs.recommended,
   configPrettier,
   pluginPrettierRecommended,
-  // 'plugin:sonarjs/recommended',
+  pluginSonarjs.configs.recommended,
   pluginSecurity.configs.recommended,
   nextConfig,
   { files: ['**/*.js', '**/*./ts', '**/*./txs'] },
