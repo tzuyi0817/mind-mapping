@@ -3,6 +3,7 @@ import Drag from './drag';
 import Select from './select';
 import RendererCommand from './command';
 import Base from '../../layouts/base';
+import { simpleDeepClone } from '../../utils/common';
 import { bfsNodeTree } from '../../utils/bfs';
 import { nextTick } from '../../utils/next-tick';
 import { isChangeList } from '../../utils/compare';
@@ -104,6 +105,19 @@ class Renderer {
       activeNode.inactive();
     }
     this.emitActiveNodes(node);
+  }
+  cloneRenderTree(node = this.renderTree, clearActive = true) {
+    const { data, children } = node;
+    const clone: MappingBase = {
+      data: simpleDeepClone(data),
+      children: [],
+      isActive: !clearActive,
+    };
+
+    for (const child of children) {
+      clone.children.push(this.cloneRenderTree(child, clearActive));
+    }
+    return clone;
   }
   emitActiveNodes(node: MindNode | null = null) {
     if (!isChangeList(this.activeNodes, this.previousActiveNodes)) return;

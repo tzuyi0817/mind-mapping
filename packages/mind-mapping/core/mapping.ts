@@ -16,7 +16,7 @@ class MindMapping extends Draw {
   constructor(options: PickPartial<MindMappingOptions, 'data'>) {
     super(options);
     this.onEvents();
-    this.command = new Command(this.event);
+    this.command = new Command(this);
     this.renderer = new Renderer(this);
     this.render();
   }

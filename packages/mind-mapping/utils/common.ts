@@ -23,3 +23,7 @@ export function debounce(fun: unknown, ms = 300) {
     }, ms);
   };
 }
+
+export function simpleDeepClone<T>(data: T): T {
+  return JSON.parse(JSON.stringify(data));
+}

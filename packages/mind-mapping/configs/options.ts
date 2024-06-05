@@ -39,4 +39,6 @@ export const DEFAULT_OPTIONS = {
     secondary: 'secondary node',
     branch: 'branch topic',
   },
+
+  maxHistoryCount: 500,
 };

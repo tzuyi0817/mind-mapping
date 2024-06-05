@@ -15,7 +15,7 @@ class Base {
   constructor(public renderer: Renderer) {}
 
   get root() {
-    return this.renderer.renderTree.root;
+    return this.renderer.renderTree;
   }
   createNode(renderTree: RenderTree) {
     const { instance: cacheNode } = renderTree.node;

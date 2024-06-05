@@ -1,6 +1,7 @@
 import { SVG, type Svg, type G } from '@svgdotjs/svg.js';
 import Event from './event';
 import Renderer from './renderer';
+import { simpleDeepClone } from '../utils/common';
 import { MOUSE_WHEEL_ACTION, DIRECTION } from '../configs/constants';
 import { DEFAULT_OPTIONS } from '../configs/options';
 import { DEFAULT_MAPPING } from '../configs/default-mapping';
@@ -41,7 +42,7 @@ abstract class Draw {
     this.event = new Event(this.draw, this.element);
   }
   mergeOption(options: PickPartial<MindMappingOptions, 'data'>) {
-    return { data: DEFAULT_MAPPING, ...DEFAULT_OPTIONS, ...options };
+    return { data: simpleDeepClone(DEFAULT_MAPPING.root), ...DEFAULT_OPTIONS, ...options };
   }
   initElement() {
     this.element = this.options.element;
