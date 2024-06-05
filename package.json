@@ -1,6 +1,7 @@
 {
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@9.1.4",
   "scripts": {
     "dev:website": "pnpm -C website dev",
     "lint:packages": "eslint packages/**/*.ts --fix",
